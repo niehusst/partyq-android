@@ -2,7 +2,7 @@
 *.apk
 *.aar
 *.ap_
-*.aab
+#*.aab
 
 # Files for the ART/Dalvik VM
 *.dex
@@ -83,3 +83,7 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+# Spotify client ID
+apikey.properties
+
