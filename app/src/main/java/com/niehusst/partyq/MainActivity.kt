@@ -2,11 +2,12 @@ package com.niehusst.partyq
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import com.spotify.android.appremote.api.ConnectionParams;
-import com.spotify.android.appremote.api.Connector;
-import com.spotify.android.appremote.api.SpotifyAppRemote;
-import com.spotify.protocol.types.Track;
+import android.widget.Toast
+import com.spotify.android.appremote.api.ConnectionParams
+import com.spotify.android.appremote.api.Connector
+import com.spotify.android.appremote.api.SpotifyAppRemote
+import com.spotify.protocol.types.Track
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,14 +31,15 @@ class MainActivity : AppCompatActivity() {
         SpotifyAppRemote.connect(this, connectionParams, object : Connector.ConnectionListener {
             override fun onConnected(appRemote: SpotifyAppRemote) {
                 spotifyAppRemote = appRemote
-                Log.d("MainActivity", "Connected! Yay!")
+                Timber.d("Connected!")
                 // Now you can start interacting with App Remote
                 connected()
             }
 
             override fun onFailure(throwable: Throwable) {
-                Log.e("MainActivity", throwable.message, throwable)
+                Timber.e(throwable)
                 // Something went wrong when attempting to connect! Handle errors here
+                Toast.makeText(baseContext, "Error connecting to Spotify app", Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -49,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         // Subscribe to PlayerState
         spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback {
             val track: Track = it.track
-            Log.d("MainActivity", track.name + " by " + track.artist.name)
+            Timber.d( "${track.name} by ${track.artist.name}")
         }
     }
 
