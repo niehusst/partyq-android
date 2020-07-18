@@ -59,6 +59,7 @@ dependencies {
 
     // Architecture deps
     implementation "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "androidx.lifecycle:lifecycle-compiler:$archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$archLifecycleVersion"
@@ -83,6 +84,6 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     // FragmentScenario (should be test impl, but bug forces to be regular impl)
-    implementation "androidx.fragment:fragment-testing:$fragmentKtxVersion"
+    debugImplementation "androidx.fragment:fragment-testing:$fragmentKtxVersion"
     implementation "androidx.test:core:$androidXTestCoreVersion"
 }

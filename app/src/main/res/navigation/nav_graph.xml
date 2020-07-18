@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph">
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/partyConnectFragment">
 
+    <fragment
+        android:id="@+id/partyConnectFragment"
+        android:name="com.niehusst.partyq.partyConnect.PartyConnectFragment"
+        android:label="PartyConnectFragment" />
 </navigation>
