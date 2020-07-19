@@ -1,11 +1,23 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/secondaryColor</item>
+<!--        <item name="android:fontFamily"></item>-->
+<!--        <item name="fontFamily"></item>-->
     </style>
 
+    <style name="PartyqButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/onPrimaryColor</item>
+        <item name="cornerRadius">@dimen/rounded</item>
+        <item name="android:textSize">@dimen/textMedium</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingTop">@dimen/largePadding</item>
+        <item name="android:paddingBottom">@dimen/largePadding</item>
+<!--        <item name="android:backgroundTint">@color/secondaryColor</item>-->
+    </style>
 </resources>
