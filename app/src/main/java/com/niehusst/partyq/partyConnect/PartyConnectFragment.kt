@@ -23,7 +23,6 @@ class PartyConnectFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = PartyConnectFragmentBinding.inflate(layoutInflater)
-
         return binding.root
     }
 

@@ -16,7 +16,8 @@
         <item name="android:textSize">@dimen/textMedium</item>
         <item name="android:minWidth">48dp</item>
         <item name="android:minHeight">48dp</item>
-
+        <item name="android:paddingTop">@dimen/largePadding</item>
+        <item name="android:paddingBottom">@dimen/largePadding</item>
 <!--        <item name="android:backgroundTint">@color/secondaryColor</item>-->
     </style>
 </resources>
