@@ -3,6 +3,7 @@
     <dimen name="rounded">1000dp</dimen>
 
     <dimen name="marginSpace">16dp</dimen>
+    <dimen name="marginSpaceLarge">32dp</dimen>
 
     <dimen name="largePadding">16dp</dimen>
     <dimen name="mediumPadding">8dp</dimen>
