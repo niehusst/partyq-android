@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".mainActivity.MainActivity">
 
-    <!-- TODO: make app bar/ action bar here -->
+    <!-- TODO: make app bar/ action bar here? or should it be in each fragemtn?? -->
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
