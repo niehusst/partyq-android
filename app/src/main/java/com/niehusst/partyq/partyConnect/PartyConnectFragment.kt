@@ -31,6 +31,7 @@ class PartyConnectFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         // setup click listeners
         binding.partyJoinButton.setOnClickListener {
+            // TODO: add navigation
             Toast.makeText(requireContext(), "Not yet implemented", Toast.LENGTH_SHORT).show()
         }
 

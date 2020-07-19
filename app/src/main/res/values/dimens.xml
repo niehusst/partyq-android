@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="rounded">1000dp</dimen>
+
+    <dimen name="marginSpace">16dp</dimen>
+
+    <dimen name="textMassive">48sp</dimen>
+    <dimen name="textHuge">32sp</dimen>
+    <dimen name="textLarge">24sp</dimen>
+    <dimen name="textMedium">18sp</dimen>
+    <dimen name="textSmall">12sp</dimen>
+</resources>
