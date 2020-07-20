@@ -13,6 +13,10 @@ jobs:
 #      - run:
 #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
 #         command: sudo chmod +x ./gradlew
+      - run: 
+          name: "Generate secrets files from env var"
+          command: |
+            echo "SPOTIFY_CLIENT_ID="$SPOTIFY_CLIENT_ID > apikey.properties
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
