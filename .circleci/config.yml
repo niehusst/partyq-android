@@ -40,7 +40,7 @@ jobs:
           paths:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-
+#-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
   lint:
     <<: *defaults
     steps:
