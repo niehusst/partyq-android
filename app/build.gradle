@@ -4,9 +4,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
-def apikeyPropertiesFile = rootProject.file("apikey.properties")
-def apikeyProperties = new Properties()
-apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+//def apikeyPropertiesFile = rootProject.file("apikey.properties")
+//def apikeyProperties = new Properties()
+//apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -19,7 +19,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        buildConfigField("String", "SPOTIFY_CLIENT_ID", apikeyProperties['SPOTIFY_CLIENT_ID'])
+//        buildConfigField("String", "SPOTIFY_CLIENT_ID", apikeyProperties['SPOTIFY_CLIENT_ID'])
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
