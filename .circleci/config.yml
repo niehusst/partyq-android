@@ -1,0 +1,88 @@
+aliases:
+  - &root_dir
+    ~/code
+
+  - &set_api_keys
+    name: Generate secrets file
+    command: |
+      echo "SPOTIFY_CLIENT_ID="$SPOTIFY_CLIENT_ID > apikey.properties
+
+defaults: &defaults
+  working_directory: *root_dir
+  docker:
+    - image: circleci/android:api-29-node
+  environment:
+    JVM_OPTS: -Xmx3200m
+    GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.workers.max=2
+
+restore_deps: &restore_deps
+  restore_cache:
+    key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+
+attach_workspace: &attach_workspace
+  attach_workspace:
+    at: *root_dir
+
+
+
+version: 2.1
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - *restore_deps
+      - run: *set_api_keys
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+#-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+  lint:
+    <<: *defaults
+    steps:
+      - checkout
+      - *attach_workspace
+      - *restore_deps
+      - run: *set_api_keys
+      - run:
+          name: Lint
+          command: ./gradlew lint --stacktrace
+
+  unit-tests:
+    <<: *defaults
+    parallelism: 2
+    steps:
+      - checkout
+      - *attach_workspace
+      - *restore_deps
+      - run: *set_api_keys
+      - run:
+          name: Run Unit Tests
+          command: ./gradlew test --stacktrace
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/junit
+
+# See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
+
+workflows:
+  branch-validation:
+    jobs:
+      - build
+      - lint:
+          requires:
+            - build
+      - unit-tests:
+          requires:
+            - build
