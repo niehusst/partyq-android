@@ -44,6 +44,7 @@ jobs:
   lint:
     <<: *defaults
     steps:
+      - checkout
       - *attach_workspace
       - *restore_deps
       - run: *set_api_keys
@@ -55,6 +56,7 @@ jobs:
     <<: *defaults
     parallelism: 2
     steps:
+      - checkout
       - *attach_workspace
       - *restore_deps
       - run: *set_api_keys
