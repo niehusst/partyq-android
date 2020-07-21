@@ -35,7 +35,7 @@ jobs:
       - run: *set_api_keys
       - run:
           name: Download Dependencies
-          command: ./gradlew androidDependencies
+          command: ./gradlew androidDependencies; java -version
       - save_cache:
           paths:
             - ~/.gradle
@@ -50,7 +50,7 @@ jobs:
       - run: *set_api_keys
       - run:
           name: Lint
-          command: ./gradlew lint --stacktrace --status
+          command: ./gradlew lint --stacktrace
 
   unit-tests:
     <<: *defaults
