@@ -3,7 +3,7 @@ aliases:
     ~/code
 
   - &set_api_keys
-    name: "Generate secrets files from env var"
+    name: Generate secrets file
     command: |
       echo "SPOTIFY_CLIENT_ID="$SPOTIFY_CLIENT_ID > apikey.properties
 
@@ -48,7 +48,7 @@ jobs:
       - *restore_deps
       - run: *set_api_keys
       - run:
-          name: "Lint"
+          name: Lint
           command: ./gradlew lint --debug
 
   unit-tests:
@@ -59,7 +59,7 @@ jobs:
       - *restore_deps
       - run: *set_api_keys
       - run:
-          name: "Run Unit Tests"
+          name: Run Unit Tests
           command: ./gradlew test --debug
       - store_artifacts:
           path: app/build/reports
@@ -78,4 +78,4 @@ workflows:
             - build
       - unit-tests:
           requires:
-            -build
+            - build
