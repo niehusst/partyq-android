@@ -50,7 +50,7 @@ jobs:
       - run: *set_api_keys
       - run:
           name: Lint
-          command: ./gradlew lint --debug
+          command: ./gradlew lint --stacktrace
 
   unit-tests:
     <<: *defaults
@@ -62,7 +62,7 @@ jobs:
       - run: *set_api_keys
       - run:
           name: Run Unit Tests
-          command: ./gradlew test --debug
+          command: ./gradlew test --stacktrace
       - store_artifacts:
           path: app/build/reports
           destination: reports
