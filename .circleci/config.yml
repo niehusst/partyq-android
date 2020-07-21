@@ -50,7 +50,7 @@ jobs:
       - run: *set_api_keys
       - run:
           name: Lint
-          command: ./gradlew lint --stacktrace
+          command: ./gradlew lint --stacktrace --status
 
   unit-tests:
     <<: *defaults
