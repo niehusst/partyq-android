@@ -13,7 +13,7 @@ import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
-//    private val clientId = BuildConfig.SPOTIFY_CLIENT_ID
+//    private val clientId = System.getenv("SPOTIFY_CLIENT_ID") ?: "default
 //    private val redirectUri = "com.niehusst.partyq://callback"
 //    private var spotifyAppRemote: SpotifyAppRemote? = null
 
