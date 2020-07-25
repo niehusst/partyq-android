@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/party_code_item"
+        android:title="@string/party_code"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/end_party_item"
+        android:title="@string/end_party"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/about_item"
+        android:title="@string/about"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/legal_item"
+        android:title="@string/legal"
+        app:showAsAction="never"/>
+
+</menu>
