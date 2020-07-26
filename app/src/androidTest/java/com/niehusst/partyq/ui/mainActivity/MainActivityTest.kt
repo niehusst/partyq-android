@@ -3,6 +3,7 @@ package com.niehusst.partyq.ui.mainActivity
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
@@ -19,6 +20,7 @@ import com.niehusst.partyq.R
 import com.niehusst.partyq.ui.partyConnect.PartyConnectFragment
 import io.mockk.mockk
 import kotlinx.android.synthetic.main.activity_main.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,15 +30,18 @@ import org.junit.runner.RunWith
 class MainActivityTest {
 
     private lateinit var scenario: ActivityScenario<MainActivity>
-    private lateinit var navController: NavController
+    private lateinit var nav: NavController
 
     @Before
     fun setup() {
-        scenario = ActivityScenario.launch(MainActivity::class.java)
+        nav = TestNavHostController(
+            ApplicationProvider.getApplicationContext()
+        )
+        nav.setGraph(R.navigation.nav_graph)
 
-        navController = mockk<NavController>()
+        scenario = ActivityScenario.launch(MainActivity::class.java)
         scenario.onActivity {
-            Navigation.setViewNavController(it.nav_host_fragment!!, navController)
+            Navigation.setViewNavController(it.nav_host_fragment!!, nav)
         }
     }
 
@@ -49,12 +54,8 @@ class MainActivityTest {
         // WHEN - about_item is clicked
         onView(withText("About")).perform(click())
 
-        // THEN - navigation to AboutFragment is initiated
-//        verify { TODO:
-//            navController.navigate(
-//                PartyConnectFragmentDirections.actionPartyConnectFragmentToPartyStartFragment()
-//            )
-//        }
+        // THEN - navigation to AboutFragment is the current location
+        assertEquals(R.id.aboutFragment, nav.currentDestination?.id)
     }
 
     @Test
@@ -66,11 +67,7 @@ class MainActivityTest {
         // WHEN - legal_item is clicked
         onView(withText("Legal")).perform(click())
 
-        // THEN - navigation to LegalFragment is initiated
-//        verify { TODO:
-//            navController.navigate(
-//                PartyConnectFragmentDirections.actionPartyConnectFragmentToPartyStartFragment()
-//            )
-//        }
+        // THEN - navigation to LegalFragment is the current location
+        assertEquals(R.id.legalFragment, nav.currentDestination?.id)
     }
 }
