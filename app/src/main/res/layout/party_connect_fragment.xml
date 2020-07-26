@@ -30,9 +30,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/start_party"
+            android:layout_marginStart="@dimen/marginSpaceLarge"
+            android:layout_marginEnd="@dimen/marginSpaceLarge"
             app:layout_constraintBottom_toTopOf="@id/party_join_button"
-            app:layout_constraintEnd_toEndOf="@id/partyq_logo"
-            app:layout_constraintStart_toStartOf="@id/partyq_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/partyq_logo" />
 
         <Button
@@ -42,9 +44,11 @@
             android:layout_height="wrap_content"
             android:text="@string/join_party"
             android:layout_marginBottom="@dimen/marginSpaceLarge"
+            android:layout_marginStart="@dimen/marginSpaceLarge"
+            android:layout_marginEnd="@dimen/marginSpaceLarge"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/partyq_logo"
-            app:layout_constraintStart_toStartOf="@id/partyq_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/party_start_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

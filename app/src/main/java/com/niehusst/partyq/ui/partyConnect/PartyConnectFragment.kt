@@ -1,4 +1,4 @@
-package com.niehusst.partyq.partyConnect
+package com.niehusst.partyq.ui.partyConnect
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.PartyConnectFragmentBinding
 
 /**

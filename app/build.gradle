@@ -74,6 +74,7 @@ dependencies {
 
     // Instrumented test deps
     androidTestImplementation "io.mockk:mockk-android:$mockkVersion"
+    androidTestImplementation "androidx.navigation:navigation-testing:$navigationVersion"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation "androidx.test:core:$androidXTestCoreVersion"
     androidTestImplementation 'androidx.test:runner:1.2.0'

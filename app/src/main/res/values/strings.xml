@@ -3,4 +3,14 @@
     <string name="join_party">Join Party</string>
     <string name="start_party">Start Party</string>
     <string name="partyq_logo">Party queue logo</string>
+    <string name="about">About</string>
+    <string name="legal">Legal</string>
+    <string name="end_party">End Party</string>
+    <string name="party_code">Party Code</string>
+
+    <!-- TODO: fill in -->
+    <string name="about_title">About partyq</string>
+    <string name="about_content">content</string>
+    <string name="legal_title">Legal Information</string>
+    <string name="legal_content">content</string>
 </resources>
