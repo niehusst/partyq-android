@@ -1,4 +1,4 @@
-package com.niehusst.partyq.partyConnect
+package com.niehusst.partyq.ui.partyConnect
 
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
@@ -11,7 +11,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.niehusst.partyq.R
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,7 +38,7 @@ class PartyConnectFragmentTest {
         onView(withId(R.id.party_start_button)).perform(click())
 
         // THEN - navigation to PartyStartFragment is initiated
-//        verify {
+//        verify { TODO:
 //            navController.navigate(
 //                PartyConnectFragmentDirections.actionPartyConnectFragmentToPartyStartFragment()
 //            )
@@ -52,7 +51,7 @@ class PartyConnectFragmentTest {
         onView(withId(R.id.party_join_button)).perform(click())
 
         // THEN - navigation to PartyStartFragment is initiated
-//        verify {
+//        verify { TODO:
 //            navController.navigate(
 //                PartyConnectFragmentDirections.actionPartyConnectFragmentToPartyJoinFragment()
 //            )

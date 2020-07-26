@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <merge xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <com.google.android.material.appbar.MaterialToolbar
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/primaryColor"
+        android:minHeight="@dimen/toolBarHeight"
+        android:elevation="4dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
-            android:minHeight="@dimen/toolBarHeight"
-            android:elevation="4dp">
+            android:layout_height="wrap_content">
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/mediumPadding"
+                android:layout_marginTop="@dimen/mediumPadding"
+                android:importantForAccessibility="no"
+                app:layout_constraintDimensionRatio="1:1"
 
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/q" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <!-- keeps the logo image in place -->
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"/>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="@dimen/iconWH"
-                    android:layout_height="@dimen/iconWH"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:srcCompat="@drawable/q" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.appbar.MaterialToolbar>
-    </merge>
-</layout>
+    </com.google.android.material.appbar.MaterialToolbar>
+</merge>

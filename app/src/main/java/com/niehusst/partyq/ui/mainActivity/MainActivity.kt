@@ -1,14 +1,14 @@
-package com.niehusst.partyq.mainActivity
+package com.niehusst.partyq.ui.mainActivity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import com.niehusst.partyq.BuildConfig
 import com.niehusst.partyq.R
-import com.spotify.android.appremote.api.ConnectionParams
-import com.spotify.android.appremote.api.Connector
-import com.spotify.android.appremote.api.SpotifyAppRemote
-import com.spotify.protocol.types.Track
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +20,33 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setSupportActionBar(findViewById(R.id.toolbar))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // from the launch activity, everyone starts as a guest
+        menuInflater.inflate(R.menu.toolbar_menu_guest, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.about_item -> {
+                // TODO: perform navigation
+                Toast.makeText(this, "clicked about", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.legal_item -> {
+                // TODO: perform navigation
+                Toast.makeText(this, "clicked legal", Toast.LENGTH_SHORT).show()
+                true
+            }
+            else -> {
+                Timber.e("Menu item not found")
+                false
+            }
+        }
     }
 
 //    override fun onStart() {
