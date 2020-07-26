@@ -13,12 +13,12 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/about_item"
+        android:id="@+id/aboutFragment"
         android:title="@string/about"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/legal_item"
+        android:id="@+id/legalFragment"
         android:title="@string/legal"
         app:showAsAction="never"/>
 

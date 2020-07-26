@@ -9,4 +9,12 @@
         android:id="@+id/partyConnectFragment"
         android:name="com.niehusst.partyq.ui.partyConnect.PartyConnectFragment"
         android:label="PartyConnectFragment" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.niehusst.partyq.ui.about.AboutFragment"
+        android:label="AboutFragment" />
+    <fragment
+        android:id="@+id/legalFragment"
+        android:name="com.niehusst.partyq.ui.legal.LegalFragment"
+        android:label="LegalFragment" />
 </navigation>

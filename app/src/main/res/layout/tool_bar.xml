@@ -17,8 +17,8 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/mediumPadding"
-                android:layout_marginTop="@dimen/mediumPadding"
+                android:layout_marginBottom="@dimen/largePadding"
+                android:layout_marginTop="@dimen/largePadding"
                 android:importantForAccessibility="no"
                 app:layout_constraintDimensionRatio="1:1"
 
