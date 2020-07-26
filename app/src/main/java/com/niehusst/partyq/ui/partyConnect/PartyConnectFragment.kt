@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
+import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.PartyConnectFragmentBinding
 
 /**
@@ -34,8 +36,7 @@ class PartyConnectFragment : Fragment() {
         }
 
         binding.partyStartButton.setOnClickListener {
-            // TODO: add navigation
-            Toast.makeText(requireContext(), "Not yet implemented", Toast.LENGTH_SHORT).show()
+            this.findNavController().navigate(R.id.spotifyLoginFragment)
         }
     }
 }
