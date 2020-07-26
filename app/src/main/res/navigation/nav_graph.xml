@@ -8,7 +8,11 @@
     <fragment
         android:id="@+id/partyConnectFragment"
         android:name="com.niehusst.partyq.ui.partyConnect.PartyConnectFragment"
-        android:label="PartyConnectFragment" />
+        android:label="PartyConnectFragment" >
+        <action
+            android:id="@+id/action_partyConnectFragment_to_spotifyLoginFragment"
+            app:destination="@id/spotifyLoginFragment" />
+    </fragment>
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.niehusst.partyq.ui.about.AboutFragment"
@@ -17,4 +21,8 @@
         android:id="@+id/legalFragment"
         android:name="com.niehusst.partyq.ui.legal.LegalFragment"
         android:label="LegalFragment" />
+    <fragment
+        android:id="@+id/spotifyLoginFragment"
+        android:name="com.niehusst.partyq.ui.spotifyLogin.SpotifyLoginFragment"
+        android:label="SpotifyLoginFragment" />
 </navigation>

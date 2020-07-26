@@ -33,4 +33,5 @@
 
   <color name="black">#000000</color>
   <color name="white">#FFFFFF</color>
+  <color name="spotifyGreen">#1db945</color>
 </resources>

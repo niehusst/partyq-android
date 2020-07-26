@@ -13,4 +13,9 @@
     <string name="about_content">content</string>
     <string name="legal_title">Legal Information</string>
     <string name="legal_content">content</string>
+
+    <string name="authenticate_with_spotify">Authenticate with Spotify</string>
+    <string name="info">INFO</string>
+    <string name="why_is_this">Why is this?</string>
+    <string name="info_content">Starting a party requires you have a Spotify premium account and that you have the Spotify mobile app downloaded on this device.</string>
 </resources>
