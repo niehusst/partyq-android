@@ -4,6 +4,8 @@ import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.testing.TestNavHostController
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -11,6 +13,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.niehusst.partyq.R
 import io.mockk.mockk
+import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,9 +27,12 @@ class PartyConnectFragmentTest {
 
     @Before
     fun setup() {
-        scenario = launchFragmentInContainer<PartyConnectFragment>(null, R.style.AppTheme)
+        navController = TestNavHostController(
+            ApplicationProvider.getApplicationContext()
+        )
+        navController.setGraph(R.navigation.nav_graph)
 
-        navController = mockk<NavController>()
+        scenario = launchFragmentInContainer<PartyConnectFragment>(null, R.style.AppTheme)
         scenario.onFragment {
             Navigation.setViewNavController(it.view!!, navController)
         }
@@ -38,11 +44,7 @@ class PartyConnectFragmentTest {
         onView(withId(R.id.party_start_button)).perform(click())
 
         // THEN - navigation to PartyStartFragment is initiated
-//        verify { TODO:
-//            navController.navigate(
-//                PartyConnectFragmentDirections.actionPartyConnectFragmentToPartyStartFragment()
-//            )
-//        }
+        assertEquals(R.id.spotifyLoginFragment, navController.currentDestination?.id)
     }
 
     @Test
@@ -50,11 +52,7 @@ class PartyConnectFragmentTest {
         // WHEN - party_start_button is clicked
         onView(withId(R.id.party_join_button)).perform(click())
 
-        // THEN - navigation to PartyStartFragment is initiated
-//        verify { TODO:
-//            navController.navigate(
-//                PartyConnectFragmentDirections.actionPartyConnectFragmentToPartyJoinFragment()
-//            )
-//        }
+        // THEN - navigation to PartyStartFragment is initiated TODO:
+//        assertEquals(R.id.partyJoinFragment, navController.currentDestination?.id)
     }
 }
