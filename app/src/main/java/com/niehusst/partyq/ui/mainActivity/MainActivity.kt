@@ -54,34 +54,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    private val clientId = System.getenv("SPOTIFY_CLIENT_ID") ?: "default
-//    private val redirectUri = "com.niehusst.partyq://callback"
-//    private var spotifyAppRemote: SpotifyAppRemote? = null
-//
-//    override fun onStart() {
-//        super.onStart()
-//        // Set the connection parameters
-//        val connectionParams = ConnectionParams.Builder(clientId)
-//            .setRedirectUri(redirectUri)
-//            .showAuthView(true)
-//            .build()
-//
-//        SpotifyAppRemote.connect(this, connectionParams, object : Connector.ConnectionListener {
-//            override fun onConnected(appRemote: SpotifyAppRemote) {
-//                spotifyAppRemote = appRemote
-//                Timber.d("Connected!")
-//                // Now you can start interacting with App Remote
-//                connected()
-//            }
-//
-//            override fun onFailure(throwable: Throwable) {
-//                Timber.e(throwable)
-//                // Something went wrong when attempting to connect! Handle errors here
-//                Toast.makeText(baseContext, "Error connecting to Spotify app", Toast.LENGTH_LONG).show()
-//            }
-//        })
-//    }
-//
 //    private fun connected() {
 //        // Play a playlist
 //        spotifyAppRemote?.playerApi?.play("spotify:playlist:37i9dQZF1DX2sUQwD7tbmL")
