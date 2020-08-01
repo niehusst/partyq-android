@@ -6,18 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SpotifyLoginFragmentBinding
-import com.niehusst.partyq.services.KeyFetchService
-import com.spotify.android.appremote.api.ConnectionParams
-import com.spotify.android.appremote.api.Connector
-import com.spotify.android.appremote.api.SpotifyAppRemote
-import timber.log.Timber
 
 class SpotifyLoginFragment : Fragment() {
 
     private lateinit var binding: SpotifyLoginFragmentBinding
+    private val viewModel by viewModels<SpotifyLoginViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,17 +29,20 @@ class SpotifyLoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.spotifyAuthButton.setOnClickListener {
-            // TODO: auth with spotify
-            connectToSpotify()
+            viewModel.connectToSpotify(requireContext(), {
+                // on success
+                // TODO: navigate to party code fragment/ party activity
+                Toast.makeText(requireContext(), "success! TODO nav", Toast.LENGTH_SHORT).show()
+            }, {
+                // on failure
+                // TODO: insert some sort of error remediation. Troubleshooting instructions?
+                //  Requirements for party start?
+                Toast.makeText(requireContext(), "Failed to connect to Spotify", Toast.LENGTH_LONG).show()
+            })
         }
 
         binding.infoButton.setOnClickListener {
             view.findNavController().navigate(R.id.aboutFragment)
         }
-    }
-
-    // TODO: this should go in its own service, which should be accessed in the viewModel
-    private fun connectToSpotify() {
-
     }
 }
