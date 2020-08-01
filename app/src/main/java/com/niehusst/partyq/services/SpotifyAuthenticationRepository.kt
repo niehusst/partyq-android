@@ -9,7 +9,7 @@ interface SpotifyAuthenticationRepository {
 
     fun authenticateWithSpotfiy(
         context: Context?,
-        onConnectCallback: (() -> Unit)?,
-        onFailCallback: (() -> Unit)?
+        onConnectCallback: (() -> Unit)? = null,
+        onFailCallback: (() -> Unit)? = null
     )
 }
