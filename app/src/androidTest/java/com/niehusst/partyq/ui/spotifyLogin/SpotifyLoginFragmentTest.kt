@@ -11,6 +11,6 @@ class SpotifyLoginFragmentTest {
 
     @Test
     fun authenticateButtonCallsSpotifyAppRemoteOnClick() {
-        // TODO: di fake for test subject
+        // TODO: di fake SpotifyAuthenticationService for test subject
     }
 }
