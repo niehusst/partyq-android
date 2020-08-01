@@ -24,5 +24,9 @@
     <fragment
         android:id="@+id/spotifyLoginFragment"
         android:name="com.niehusst.partyq.ui.spotifyLogin.SpotifyLoginFragment"
-        android:label="SpotifyLoginFragment" />
+        android:label="SpotifyLoginFragment" >
+        <action
+            android:id="@+id/action_spotifyLoginFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
+    </fragment>
 </navigation>
