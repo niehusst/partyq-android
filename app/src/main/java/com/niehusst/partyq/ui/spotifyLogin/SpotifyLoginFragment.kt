@@ -8,13 +8,17 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.niehusst.partyq.PartyqApplication
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SpotifyLoginFragmentBinding
 
 class SpotifyLoginFragment : Fragment() {
 
     private lateinit var binding: SpotifyLoginFragmentBinding
-    private val viewModel by viewModels<SpotifyLoginViewModel>()
+    private val viewModel by viewModels<SpotifyLoginViewModel> {
+        SpotifyLoginViewModel.SpotifyLoginViewModelFactory(
+            (requireContext().applicationContext as PartyqApplication).spotifyAuthRepository)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,7 +35,7 @@ class SpotifyLoginFragment : Fragment() {
         binding.spotifyAuthButton.setOnClickListener {
             viewModel.connectToSpotify(requireContext(), {
                 // on success
-                // TODO: navigate to party code fragment/ party activity
+                // TODO: navigate to party code fragment/ party activity. Add some loading wheel for wait?
                 Toast.makeText(requireContext(), "success! TODO nav", Toast.LENGTH_SHORT).show()
             }, {
                 // on failure

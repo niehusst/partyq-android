@@ -6,14 +6,17 @@ import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import timber.log.Timber
 
-object SpotifyAuthenticationService {
+class SpotifyRepository : SpotifyAuthenticationRepository {
 
     // set from the Spotify developer dashboard
     private val clientId = KeyFetchService.getSpotifyKey()
     private val redirectUri = "com.niehusst.partyq://callback"
 
-    lateinit var spotifyAppRemote: SpotifyAppRemote
-        private set
+    private lateinit var spotifyAppRemote: SpotifyAppRemote
+
+    override fun getSpotifyAppRemote(): SpotifyAppRemote? {
+        return spotifyAppRemote
+    }
 
     /**
      * Send a request to the Spotify app (must be downloaded on same device as partyq is
@@ -29,11 +32,12 @@ object SpotifyAuthenticationService {
      * @param onConnectCallback - lambda to be called on connection success (optional)
      * @param onFailCallback - lambda to be called on connection failure (optional)
      */
-    fun authenticateWithSpotfiy(
+    override fun authenticateWithSpotfiy(
         context: Context?,
-        onConnectCallback: (() -> Unit)? = null,
-        onFailCallback: (() -> Unit)? = null
+        onConnectCallback: (() -> Unit)?,
+        onFailCallback: (() -> Unit)?
     ) {
+        // TODO: make this a suspend function cus it take a hot sec??
         val connectionParams = ConnectionParams.Builder(clientId)
             .setRedirectUri(redirectUri)
             .showAuthView(true)
