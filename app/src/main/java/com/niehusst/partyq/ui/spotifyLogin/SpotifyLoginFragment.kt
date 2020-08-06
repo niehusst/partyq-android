@@ -35,8 +35,10 @@ class SpotifyLoginFragment : Fragment() {
         binding.spotifyAuthButton.setOnClickListener {
             viewModel.connectToSpotify(requireContext(), {
                 // on success
-                // TODO: navigate to party code fragment/ party activity. Add some loading wheel for wait?
-                Toast.makeText(requireContext(), "success! TODO nav", Toast.LENGTH_SHORT).show()
+                // TODO: Add some loading wheel for wait time?
+                view.findNavController().navigate(R.id.partyActivity)
+                // end the MainActivity so user can't go back to pre-login
+                activity?.finish()
             }, {
                 // on failure
                 // TODO: insert some sort of error remediation. Troubleshooting instructions?

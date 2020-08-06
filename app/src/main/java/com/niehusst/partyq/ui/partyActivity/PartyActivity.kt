@@ -18,6 +18,8 @@ class PartyActivity : AppCompatActivity() {
 
         binding = ActivityPartyBinding.inflate(layoutInflater)
         setupBottomNavBinding()
+        startConnectionService()
+        startSpotifyPlayerService()
     }
 
     private fun setupBottomNavBinding() {
@@ -34,5 +36,13 @@ class PartyActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun startConnectionService() {
+        // TODO:
+    }
+
+    private fun startSpotifyPlayerService() {
+        // TODO:
     }
 }
