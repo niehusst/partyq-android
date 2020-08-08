@@ -6,7 +6,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.ActivityPartyBinding
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_party.*
 import timber.log.Timber
 
 class PartyActivity : AppCompatActivity() {
@@ -20,6 +20,11 @@ class PartyActivity : AppCompatActivity() {
         setupBottomNavBinding()
         startConnectionService()
         startSpotifyPlayerService()
+
+        // set search as first active tab
+        binding.bottomNav.selectedItemId = R.id.searchFragment
+
+        setContentView(binding.root)
     }
 
     private fun setupBottomNavBinding() {
@@ -28,7 +33,9 @@ class PartyActivity : AppCompatActivity() {
                 R.id.searchFragment,
                 R.id.queueFragment,
                 R.id.nowPlayingFragment -> {
-                    NavigationUI.onNavDestinationSelected(item, nav_host_fragment.findNavController())
+                    true
+//                    NavigationUI
+//                        .onNavDestinationSelected(item, party_nav_host_fragment.findNavController())
                 }
                 else -> {
                     Timber.e("Bottom Nav selection ${item.title} not recognized")
@@ -39,7 +46,7 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun startConnectionService() {
-        // TODO:
+        // TODO: delegate host vs guest logic to the repo/service
     }
 
     private fun startSpotifyPlayerService() {

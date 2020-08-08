@@ -28,12 +28,5 @@
         <action
             android:id="@+id/action_spotifyLoginFragment_to_aboutFragment"
             app:destination="@id/aboutFragment" />
-        <action
-            android:id="@+id/action_spotifyLoginFragment_to_partyActivity"
-            app:destination="@id/partyActivity" />
     </fragment>
-    <activity
-        android:id="@+id/partyActivity"
-        android:name="com.niehusst.partyq.ui.partyActivity.PartyActivity"
-        android:label="PartyActivity" />
 </navigation>

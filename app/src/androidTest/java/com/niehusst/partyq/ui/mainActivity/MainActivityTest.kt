@@ -30,7 +30,7 @@ class MainActivityTest {
         nav = TestNavHostController(
             ApplicationProvider.getApplicationContext()
         )
-        nav.setGraph(R.navigation.nav_graph)
+        nav.setGraph(R.navigation.pre_login_nav_graph)
 
         scenario = ActivityScenario.launch(MainActivity::class.java)
         scenario.onActivity {

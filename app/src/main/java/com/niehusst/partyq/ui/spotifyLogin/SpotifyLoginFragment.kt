@@ -1,5 +1,6 @@
 package com.niehusst.partyq.ui.spotifyLogin
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.navigation.findNavController
 import com.niehusst.partyq.PartyqApplication
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SpotifyLoginFragmentBinding
+import com.niehusst.partyq.ui.partyActivity.PartyActivity
 
 class SpotifyLoginFragment : Fragment() {
 
@@ -36,7 +38,7 @@ class SpotifyLoginFragment : Fragment() {
             viewModel.connectToSpotify(requireContext(), {
                 // on success
                 // TODO: Add some loading wheel for wait time?
-                view.findNavController().navigate(R.id.partyActivity)
+                launchPartyActivity()
                 // end the MainActivity so user can't go back to pre-login
                 activity?.finish()
             }, {
@@ -50,5 +52,10 @@ class SpotifyLoginFragment : Fragment() {
         binding.infoButton.setOnClickListener {
             view.findNavController().navigate(R.id.aboutFragment)
         }
+    }
+
+    fun launchPartyActivity() {
+        val intent = Intent(requireContext(), PartyActivity::class.java)
+        startActivity(intent)
     }
 }

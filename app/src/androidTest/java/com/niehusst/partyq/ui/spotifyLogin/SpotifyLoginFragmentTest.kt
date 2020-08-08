@@ -34,7 +34,7 @@ class SpotifyLoginFragmentTest {
         navController = TestNavHostController(
             ApplicationProvider.getApplicationContext()
         )
-        navController.setGraph(R.navigation.nav_graph)
+        navController.setGraph(R.navigation.pre_login_nav_graph)
 
         // GIVEN - on SpotifyLoginFragment screen
         scenario = launchFragmentInContainer<SpotifyLoginFragment>(null, R.style.AppTheme)

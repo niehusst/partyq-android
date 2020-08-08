@@ -29,7 +29,7 @@ class PartyConnectFragmentTest {
         navController = TestNavHostController(
             ApplicationProvider.getApplicationContext()
         )
-        navController.setGraph(R.navigation.nav_graph)
+        navController.setGraph(R.navigation.pre_login_nav_graph)
 
         scenario = launchFragmentInContainer<PartyConnectFragment>(null, R.style.AppTheme)
         scenario.onFragment {
