@@ -2,8 +2,13 @@ package com.niehusst.partyq.ui.partyActivity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import kotlinx.android.synthetic.main.activity_party.*
@@ -16,15 +21,19 @@ class PartyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityPartyBinding.inflate(layoutInflater)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_party)
         setupBottomNavBinding()
         startConnectionService()
         startSpotifyPlayerService()
 
         // set search as first active tab
         binding.bottomNav.selectedItemId = R.id.searchFragment
+    }
 
-        setContentView(binding.root)
+    override fun onStart() {
+        super.onStart()
+        findNavController(R.id.party_nav_host_fragment).navigate(R.id.partyCodeFragment)
+        Timber.e("${findNavController(R.id.party_nav_host_fragment).currentDestination}")
     }
 
     private fun setupBottomNavBinding() {
