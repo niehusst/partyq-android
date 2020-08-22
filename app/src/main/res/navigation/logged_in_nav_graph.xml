@@ -10,4 +10,9 @@
         android:name="com.niehusst.partyq.ui.partyCode.PartyCodeFragment"
         android:label="PartyCodeFragment"
         tools:layout="@layout/party_code_fragment" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.niehusst.partyq.ui.about.AboutFragment"
+        android:label="AboutFragment"
+        tools:layout="@layout/about_fragment" />
 </navigation>

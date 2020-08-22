@@ -30,12 +30,6 @@ class PartyActivity : AppCompatActivity() {
         binding.bottomNav.selectedItemId = R.id.searchFragment
     }
 
-    override fun onStart() {
-        super.onStart()
-        findNavController(R.id.party_nav_host_fragment).navigate(R.id.partyCodeFragment)
-        Timber.e("${findNavController(R.id.party_nav_host_fragment).currentDestination}")
-    }
-
     private fun setupBottomNavBinding() {
         binding.bottomNav.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
