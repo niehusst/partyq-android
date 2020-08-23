@@ -36,7 +36,7 @@ ext {
 
     // App dependencies versions
     androidXVersion = '1.0.0'
-    androidXTestCoreVersion = '1.2.0'
+    androidXTestCoreVersion = '1.3.0-rc03'
     androidXTestExtKotlinRunnerVersion = '1.1.1'
     androidXTestRulesVersion = '1.2.0-beta01'
     androidXAnnotations = '1.0.1'
@@ -46,11 +46,10 @@ ext {
     archTestingVersion = '2.1.0'
     coroutinesVersion = '1.2.1'
     espressoVersion = '3.2.0'
-    fragmentVersion = '1.3.0-alpha06'
-    fragmentKtxVersion = '1.3.0-alpha06'
+    fragmentVersion = '1.3.0-alpha08'
     hamcrestVersion = '1.3'
     junitVersion = '4.12'
-    materialVersion = '1.1.0'
+    materialVersion = '1.2.0'
     mockkVersion = '1.10.0'
     recyclerViewVersion = '1.1.0'
     testRulesVersion = '1.2.0'
