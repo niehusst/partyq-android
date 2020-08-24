@@ -49,7 +49,7 @@ jobs:
       - run: *set_api_keys
       - run:
           name: Lint
-          command: ./gradlew lint --stacktrace --debug
+          command: ./gradlew lint --stacktrace
 
   unit-tests:
     <<: *defaults
@@ -61,7 +61,7 @@ jobs:
       - run: *set_api_keys
       - run:
           name: Run Unit Tests
-          command: ./gradlew test --stacktrace --debug
+          command: ./gradlew test --stacktrace
       - run:
           name: Save test results
           command: |

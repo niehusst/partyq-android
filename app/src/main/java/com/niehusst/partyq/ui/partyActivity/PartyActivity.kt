@@ -14,13 +14,15 @@ class PartyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_party)
+        binding = ActivityPartyBinding.inflate(layoutInflater)
         setupBottomNavBinding()
         startConnectionService()
         startSpotifyPlayerService()
 
         // set search as first active tab
         binding.bottomNav.selectedItemId = R.id.searchFragment
+
+        setContentView(binding.root)
     }
 
     private fun setupBottomNavBinding() {
