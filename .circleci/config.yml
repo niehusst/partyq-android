@@ -39,8 +39,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-#-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
   lint:
     <<: *defaults
     steps:
@@ -50,7 +49,7 @@ jobs:
       - run: *set_api_keys
       - run:
           name: Lint
-          command: ./gradlew lint --stacktrace
+          command: ./gradlew lint --stacktrace --debug
 
   unit-tests:
     <<: *defaults
@@ -62,7 +61,7 @@ jobs:
       - run: *set_api_keys
       - run:
           name: Run Unit Tests
-          command: ./gradlew test --stacktrace
+          command: ./gradlew test --stacktrace --debug
       - run:
           name: Save test results
           command: |
