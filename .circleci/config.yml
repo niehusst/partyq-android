@@ -35,7 +35,7 @@ jobs:
       - run: *set_api_keys
       - run:
           name: Download Dependencies
-          command: ./gradlew androidDependencies
+          command: java -version; ./gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle
