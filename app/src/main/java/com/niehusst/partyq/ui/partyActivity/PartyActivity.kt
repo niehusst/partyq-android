@@ -2,7 +2,6 @@ package com.niehusst.partyq.ui.partyActivity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import timber.log.Timber
@@ -19,9 +18,6 @@ class PartyActivity : AppCompatActivity() {
         startConnectionService()
         startSpotifyPlayerService()
 
-        // set search as first active tab
-        binding.bottomNav.selectedItemId = R.id.searchFragment
-
         setContentView(binding.root)
     }
 
@@ -32,8 +28,7 @@ class PartyActivity : AppCompatActivity() {
                 R.id.queueFragment,
                 R.id.nowPlayingFragment -> {
                     true
-//                    NavigationUI
-//                        .onNavDestinationSelected(item, party_nav_host_fragment.findNavController())
+//                    NavigationUI.onNavDestinationSelected(item, nav_host_fragment.findNavController())
                 }
                 else -> {
                     Timber.e("Bottom Nav selection ${item.title} not recognized")
@@ -44,7 +39,7 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun startConnectionService() {
-        // TODO: delegate host vs guest logic to the repo/service
+        // TODO:
     }
 
     private fun startSpotifyPlayerService() {

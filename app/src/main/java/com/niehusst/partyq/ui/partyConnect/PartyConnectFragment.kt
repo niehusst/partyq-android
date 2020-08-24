@@ -36,7 +36,7 @@ class PartyConnectFragment : Fragment() {
         }
 
         binding.partyStartButton.setOnClickListener {
-            this.findNavController().navigate(R.id.spotifyLoginFragment)
+            findNavController().navigate(R.id.spotifyLoginFragment)
         }
     }
 }
