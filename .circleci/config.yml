@@ -12,8 +12,8 @@ defaults: &defaults
   docker:
     - image: circleci/android:api-29-node
   environment:
-    JVM_OPTS: -Xmx3200m
-    GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -XX:+IgnoreUnrecognizedVMOptions -Dorg.gradle.caching=true -Dorg.gradle.workers.max=2
+    JVM_OPTS: -Xmx3200m -XX:+IgnoreUnrecognizedVMOptions
+    GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.workers.max=2
 
 restore_deps: &restore_deps
   restore_cache:
