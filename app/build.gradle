@@ -37,8 +37,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
@@ -92,11 +92,4 @@ dependencies {
     // FragmentScenario (should be test impl, but bug forces to be regular impl)
     debugImplementation "androidx.fragment:fragment-testing:$fragmentVersion"
     implementation "androidx.test:core:$androidXTestCoreVersion"
-
-    // missing deps for kapt annotation processing??
-    if (JavaVersion.current().ordinal() >= JavaVersion.VERSION_1_9.ordinal()) {
-        kapt "com.sun.xml.bind:jaxb-core:2.3.0.1"
-        kapt "javax.xml.bind:jaxb-api:2.3.1"
-        kapt "com.sun.xml.bind:jaxb-impl:2.3.2"
-    }
 }
