@@ -12,6 +12,11 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.niehusst.partyq.R
+import com.niehusst.partyq.repository.SpotifyRepository
+import io.mockk.every
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -31,10 +36,17 @@ class PartyConnectFragmentTest {
         )
         navController.setGraph(R.navigation.pre_login_nav_graph)
 
+        mockSpotify()
+
         scenario = launchFragmentInContainer<PartyConnectFragment>(null, R.style.AppTheme)
         scenario.onFragment {
             Navigation.setViewNavController(it.view!!, navController)
         }
+    }
+
+    @After
+    fun teardown() {
+        unmockkAll()
     }
 
     @Test
@@ -42,7 +54,7 @@ class PartyConnectFragmentTest {
         // WHEN - party_start_button is clicked
         onView(withId(R.id.party_start_button)).perform(click())
 
-        // THEN - navigation to PartyStartFragment is initiated
+        // THEN - navigation to SpotifyLoginFragment is initiated
         assertEquals(R.id.spotifyLoginFragment, navController.currentDestination?.id)
     }
 
@@ -51,7 +63,12 @@ class PartyConnectFragmentTest {
         // WHEN - party_start_button is clicked
         onView(withId(R.id.party_join_button)).perform(click())
 
-        // THEN - navigation to PartyStartFragment is initiated TODO:
+        // THEN - navigation to PartyJoinFragment is initiated TODO:
 //        assertEquals(R.id.partyJoinFragment, navController.currentDestination?.id)
+    }
+
+    private fun mockSpotify() {
+        mockkObject(SpotifyRepository)
+        every { SpotifyRepository.authenticateWithSpotfiy(any(), any(), any()) } returns Unit
     }
 }
