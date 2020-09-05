@@ -1,11 +1,13 @@
 package com.niehusst.partyq.ui.spotifyLogin
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.niehusst.partyq.services.SpotifyAuthenticationRepository
+import androidx.lifecycle.*
+import com.niehusst.partyq.repository.SpotifyRepository
 
-class SpotifyLoginViewModel(private val spotifyRepository: SpotifyAuthenticationRepository) : ViewModel() {
+class SpotifyLoginViewModel : ViewModel() {
+
+    private val _loading: MutableLiveData<Boolean> = MutableLiveData(false)
+    val loading: LiveData<Boolean> = _loading
 
     /**
      * Delegate to SpotifyAuthenticationService, allowing later access to AppRemote connection
@@ -15,16 +17,12 @@ class SpotifyLoginViewModel(private val spotifyRepository: SpotifyAuthentication
         onConnectCallback: (() -> Unit)? = null,
         onFailCallback: (() -> Unit)? = null
     ) {
-        spotifyRepository
+        _loading.value = true
+        SpotifyRepository
             .authenticateWithSpotfiy(context, onConnectCallback, onFailCallback)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    class SpotifyLoginViewModelFactory(
-        private val spotifyRepository: SpotifyAuthenticationRepository
-    ) : ViewModelProvider.NewInstanceFactory() {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return (SpotifyLoginViewModel(spotifyRepository) as T)
-        }
+    fun stopLoading() {
+        _loading.value = false
     }
 }

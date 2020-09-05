@@ -2,13 +2,15 @@
 <navigation
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pre_login_nav_graph"
     app:startDestination="@id/partyConnectFragment">
 
     <fragment
         android:id="@+id/partyConnectFragment"
         android:name="com.niehusst.partyq.ui.partyConnect.PartyConnectFragment"
-        android:label="PartyConnectFragment" >
+        android:label="PartyConnectFragment"
+        tools:layout="@layout/party_connect_fragment">
         <action
             android:id="@+id/action_partyConnectFragment_to_spotifyLoginFragment"
             app:destination="@id/spotifyLoginFragment" />
@@ -16,17 +18,28 @@
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.niehusst.partyq.ui.about.AboutFragment"
-        android:label="AboutFragment" />
+        android:label="AboutFragment"
+        tools:layout="@layout/about_fragment"/>
     <fragment
         android:id="@+id/legalFragment"
         android:name="com.niehusst.partyq.ui.legal.LegalFragment"
-        android:label="LegalFragment" />
+        android:label="LegalFragment"
+        tools:layout="@layout/legal_fragment"/>
     <fragment
         android:id="@+id/spotifyLoginFragment"
         android:name="com.niehusst.partyq.ui.spotifyLogin.SpotifyLoginFragment"
-        android:label="SpotifyLoginFragment" >
+        android:label="SpotifyLoginFragment"
+        tools:layout="@layout/spotify_login_fragment">
         <action
             android:id="@+id/action_spotifyLoginFragment_to_aboutFragment"
             app:destination="@id/aboutFragment" />
+        <action
+            android:id="@+id/action_spotifyLoginFragment_to_partyActivity"
+            app:destination="@id/partyActivity" />
     </fragment>
+    <activity
+        android:id="@+id/partyActivity"
+        android:name="com.niehusst.partyq.ui.partyActivity.PartyActivity"
+        android:label="PartyActivity"
+        tools:layout="@layout/activity_party"/>
 </navigation>

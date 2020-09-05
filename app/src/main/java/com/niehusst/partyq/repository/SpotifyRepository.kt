@@ -1,20 +1,23 @@
-package com.niehusst.partyq.services
+package com.niehusst.partyq.repository
 
 import android.content.Context
+import com.niehusst.partyq.services.KeyFetchService
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import timber.log.Timber
 
-class SpotifyRepository : SpotifyAuthenticationRepository {
+object SpotifyRepository {
 
     // set from the Spotify developer dashboard
-    private val clientId = KeyFetchService.getSpotifyKey()
+    private val clientId =
+        KeyFetchService.getSpotifyKey()
+    // unused deeplink URI. Nevertheless required for Spotify auth
     private val redirectUri = "com.niehusst.partyq://callback"
 
     private lateinit var spotifyAppRemote: SpotifyAppRemote
 
-    override fun getSpotifyAppRemote(): SpotifyAppRemote? {
+    fun getSpotifyAppRemote(): SpotifyAppRemote {
         return spotifyAppRemote
     }
 
@@ -32,12 +35,11 @@ class SpotifyRepository : SpotifyAuthenticationRepository {
      * @param onConnectCallback - lambda to be called on connection success (optional)
      * @param onFailCallback - lambda to be called on connection failure (optional)
      */
-    override fun authenticateWithSpotfiy(
+    fun authenticateWithSpotfiy(
         context: Context?,
         onConnectCallback: (() -> Unit)?,
         onFailCallback: (() -> Unit)?
     ) {
-        // TODO: make this a suspend function cus it take a hot sec??
         val connectionParams = ConnectionParams.Builder(clientId)
             .setRedirectUri(redirectUri)
             .showAuthView(true)

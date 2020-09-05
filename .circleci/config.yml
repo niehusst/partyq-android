@@ -9,10 +9,10 @@ aliases:
 
 defaults: &defaults
   working_directory: *root_dir
-  docker:
-    - image: circleci/android:api-29-node
+  docker: # pins a docker image that runs android w/ jdk8
+    - image: circleci/android@sha256:7d23b280b7d1994ce9f9e8ebd124280d12d94fce531d9a6418ad3c4c68cb29d3
   environment:
-    JVM_OPTS: -Xmx3200m
+    JVM_OPTS: -Xmx3200m -XX:+IgnoreUnrecognizedVMOptions
     GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.workers.max=2
 
 restore_deps: &restore_deps
@@ -39,8 +39,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-#-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
   lint:
     <<: *defaults
     steps:
@@ -50,7 +49,7 @@ jobs:
       - run: *set_api_keys
       - run:
           name: Lint
-          command: ./gradlew lint --stacktrace
+          command: ./gradlew lint --stacktrace --status
 
   unit-tests:
     <<: *defaults
