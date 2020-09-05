@@ -1,13 +1,10 @@
 package com.niehusst.partyq.repository
 
 import android.content.Context
-import android.util.Log
 import com.niehusst.partyq.services.KeyFetchService
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 object SpotifyRepository {

@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.niehusst.partyq.PartyqApplication
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SpotifyLoginFragmentBinding
 

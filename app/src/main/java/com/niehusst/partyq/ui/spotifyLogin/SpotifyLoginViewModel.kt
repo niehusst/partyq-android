@@ -3,7 +3,6 @@ package com.niehusst.partyq.ui.spotifyLogin
 import android.content.Context
 import androidx.lifecycle.*
 import com.niehusst.partyq.repository.SpotifyRepository
-import kotlinx.coroutines.launch
 
 class SpotifyLoginViewModel : ViewModel() {
 
