@@ -12,10 +12,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.niehusst.partyq.R
-import com.niehusst.partyq.ServiceLocator
-import com.niehusst.partyq.services.SpotifyAuthenticationRepository
-import com.niehusst.partyq.ui.fakes.SpotifyRepositoryFake
-import io.mockk.*
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -25,7 +21,6 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SpotifyLoginFragmentTest {
 
-    private lateinit var spotifyRepository: SpotifyAuthenticationRepository
     private lateinit var navController: NavController
     private lateinit var scenario: FragmentScenario<SpotifyLoginFragment>
 
@@ -41,13 +36,6 @@ class SpotifyLoginFragmentTest {
         scenario.onFragment {
             Navigation.setViewNavController(it.view!!, navController)
         }
-    }
-
-    @Before
-    fun setupMocks() {
-        spotifyRepository = mockk<SpotifyRepositoryFake>(relaxed = true)
-
-        ServiceLocator.spotifyRepository = spotifyRepository
     }
 
     @Test
