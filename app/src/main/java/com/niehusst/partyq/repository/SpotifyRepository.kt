@@ -1,10 +1,13 @@
 package com.niehusst.partyq.repository
 
 import android.content.Context
+import android.util.Log
 import com.niehusst.partyq.services.KeyFetchService
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 object SpotifyRepository {
@@ -12,7 +15,8 @@ object SpotifyRepository {
     // set from the Spotify developer dashboard
     private val clientId =
         KeyFetchService.getSpotifyKey()
-    private val redirectUri = "com.niehusst.partyq://callback" // TODO: this is probably a deeplink URI that I'm not actually using. does that matter?
+    // unused deeplink URI. Nevertheless required for Spotify auth
+    private val redirectUri = "com.niehusst.partyq://callback"
 
     private lateinit var spotifyAppRemote: SpotifyAppRemote
 
@@ -34,13 +38,13 @@ object SpotifyRepository {
      * @param onConnectCallback - lambda to be called on connection success (optional)
      * @param onFailCallback - lambda to be called on connection failure (optional)
      */
-    suspend fun authenticateWithSpotfiy(
+    fun authenticateWithSpotfiy(
         context: Context?,
         onConnectCallback: (() -> Unit)?,
         onFailCallback: (() -> Unit)?
     ) {
         val connectionParams = ConnectionParams.Builder(clientId)
-            .setRedirectUri(redirectUri) //TODO: can this be deleted?
+            .setRedirectUri(redirectUri)
             .showAuthView(true)
             .build()
 

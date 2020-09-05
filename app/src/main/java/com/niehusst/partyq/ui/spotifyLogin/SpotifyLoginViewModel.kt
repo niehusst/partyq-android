@@ -1,12 +1,14 @@
 package com.niehusst.partyq.ui.spotifyLogin
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.niehusst.partyq.repository.SpotifyRepository
 import kotlinx.coroutines.launch
 
 class SpotifyLoginViewModel : ViewModel() {
+
+    private val _loading: MutableLiveData<Boolean> = MutableLiveData(false)
+    val loading: LiveData<Boolean> = _loading
 
     /**
      * Delegate to SpotifyAuthenticationService, allowing later access to AppRemote connection
@@ -16,10 +18,12 @@ class SpotifyLoginViewModel : ViewModel() {
         onConnectCallback: (() -> Unit)? = null,
         onFailCallback: (() -> Unit)? = null
     ) {
-        // TODO: emit loading and success states
-        viewModelScope.launch {
-            SpotifyRepository
-                .authenticateWithSpotfiy(context, onConnectCallback, onFailCallback)
-        }
+        _loading.value = true
+        SpotifyRepository
+            .authenticateWithSpotfiy(context, onConnectCallback, onFailCallback)
+    }
+
+    fun stopLoading() {
+        _loading.value = false
     }
 }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.niehusst.partyq.PartyqApplication
 import com.niehusst.partyq.R
@@ -23,23 +24,31 @@ class SpotifyLoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = SpotifyLoginFragmentBinding.inflate(layoutInflater)
+        binding.loading = false
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.loading.observe(viewLifecycleOwner, Observer {
+            binding.loading = it
+        })
+        setClickListeners()
+    }
+
+    private fun setClickListeners() {
         binding.spotifyAuthButton.setOnClickListener {
             viewModel.connectToSpotify(requireContext(), {
                 // on success
-                // TODO: Add some loading wheel for wait time?
                 findNavController().navigate(R.id.partyActivity)
                 // end the MainActivity so user can't go back to pre-login
                 activity?.finish()
             }, {
                 // on failure
+                viewModel.stopLoading()
                 // TODO: insert some sort of error remediation. Troubleshooting instructions?
-                //  Requirements for party start?
+                //  reiterate Requirements for party start?
                 Toast.makeText(requireContext(), "Failed to connect to Spotify", Toast.LENGTH_LONG).show()
             })
         }
