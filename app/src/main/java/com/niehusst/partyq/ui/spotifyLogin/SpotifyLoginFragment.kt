@@ -15,10 +15,7 @@ import com.niehusst.partyq.databinding.SpotifyLoginFragmentBinding
 class SpotifyLoginFragment : Fragment() {
 
     private lateinit var binding: SpotifyLoginFragmentBinding
-    private val viewModel by viewModels<SpotifyLoginViewModel> {
-        SpotifyLoginViewModel.SpotifyLoginViewModelFactory(
-            (requireContext().applicationContext as PartyqApplication).spotifyAuthRepository)
-    }
+    private val viewModel by viewModels<SpotifyLoginViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

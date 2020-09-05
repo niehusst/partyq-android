@@ -14,15 +14,13 @@ class PartyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityPartyBinding.inflate(layoutInflater)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_party)
         setupBottomNavBinding()
         startConnectionService()
         startSpotifyPlayerService()
 
         // set search as first active tab
         binding.bottomNav.selectedItemId = R.id.searchFragment
-
-        setContentView(binding.root)
     }
 
     private fun setupBottomNavBinding() {
@@ -32,6 +30,7 @@ class PartyActivity : AppCompatActivity() {
                 R.id.queueFragment,
                 R.id.nowPlayingFragment -> {
                     true
+                    // TODO: implement fragments
 //                    NavigationUI
 //                        .onNavDestinationSelected(item, party_nav_host_fragment.findNavController())
                 }
