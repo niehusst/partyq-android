@@ -22,7 +22,9 @@ class PartyActivity : AppCompatActivity() {
         // set search as first active tab
         binding.bottomNav.selectedItemId = R.id.searchFragment
     }
-
+//TODO: launch partycode dialog fragment onStart if hasnt been launched before
+// (save the party code into SharedPrefs to tell if this specific party has had the dialog launched yet
+//  (if no saved code or code doesnt match curr code, then launch frag))
     private fun setupBottomNavBinding() {
         binding.bottomNav.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {

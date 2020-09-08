@@ -34,4 +34,6 @@
   <color name="black">#000000</color>
   <color name="white">#FFFFFF</color>
   <color name="spotifyGreen">#1db945</color>
+
+  <color name="textHintColor">#757575</color>
 </resources>

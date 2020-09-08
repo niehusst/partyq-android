@@ -21,5 +21,7 @@
     <string name="search">Search</string>
     <string name="now_playing">Now Playing</string>
     <string name="queue">Queue</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
+    <string name="search_songs">Search songs</string>
+    <string name="search_for_songs">Search for songs</string>
 </resources>
