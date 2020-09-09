@@ -1,6 +1,9 @@
 package com.niehusst.partyq.ui.spotifyLogin
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +14,8 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SpotifyLoginFragmentBinding
+import com.spotify.sdk.android.authentication.AuthenticationClient
+import com.spotify.sdk.android.authentication.AuthenticationResponse
 
 class SpotifyLoginFragment : Fragment() {
 
@@ -38,22 +43,37 @@ class SpotifyLoginFragment : Fragment() {
 
     private fun setClickListeners() {
         binding.spotifyAuthButton.setOnClickListener {
-            viewModel.connectToSpotify(requireContext(), {
+            viewModel.connectToSpotify(activity as Activity)
+        }
+
+        binding.infoButton.setOnClickListener {
+            findNavController().navigate(R.id.aboutFragment)
+        }
+    }
+
+    fun onAuthResult(resultCode: Int, intent: Intent?) {
+        val response = AuthenticationClient.getResponse(resultCode, intent)
+
+        // TODO: save auth key somewhere
+        when(response.type) {
+            AuthenticationResponse.Type.TOKEN -> {
                 // on success
                 findNavController().navigate(R.id.partyActivity)
                 // end the MainActivity so user can't go back to pre-login
                 activity?.finish()
-            }, {
+            }
+            AuthenticationResponse.Type.ERROR -> {
                 // on failure
                 viewModel.stopLoading()
                 // TODO: insert some sort of error remediation. Troubleshooting instructions?
                 //  reiterate Requirements for party start?
                 Toast.makeText(requireContext(), "Failed to connect to Spotify", Toast.LENGTH_LONG).show()
-            })
-        }
-
-        binding.infoButton.setOnClickListener {
-            findNavController().navigate(R.id.aboutFragment)
+            }
+            else -> {
+                // auth flow was likely cancelled before completion
+                viewModel.stopLoading()
+                Toast.makeText(requireContext(), "Authentication cancelled", Toast.LENGTH_LONG).show()
+            }
         }
     }
 }

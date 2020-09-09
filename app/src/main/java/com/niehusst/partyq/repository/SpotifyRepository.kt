@@ -1,19 +1,24 @@
 package com.niehusst.partyq.repository
 
+import android.app.Activity
 import android.content.Context
 import com.niehusst.partyq.services.KeyFetchService
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import timber.log.Timber
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationRequest;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 object SpotifyRepository {
 
     // set from the Spotify developer dashboard
-    private val clientId =
-        KeyFetchService.getSpotifyKey()
+    private val CLIENT_ID = KeyFetchService.getSpotifyKey()
     // unused deeplink URI. Nevertheless required for Spotify auth
-    private val redirectUri = "com.niehusst.partyq://callback"
+    private const val REDIRECT_URI = "com.niehusst.partyq://callback"
+    // can be any int. Simply for verifying response from API
+    const val REQUEST_CODE = 42069
 
     private lateinit var spotifyAppRemote: SpotifyAppRemote
 
@@ -35,28 +40,32 @@ object SpotifyRepository {
      * @param onConnectCallback - lambda to be called on connection success (optional)
      * @param onFailCallback - lambda to be called on connection failure (optional)
      */
-    fun authenticateWithSpotfiy(
-        context: Context?,
-        onConnectCallback: (() -> Unit)?,
-        onFailCallback: (() -> Unit)?
-    ) {
-        val connectionParams = ConnectionParams.Builder(clientId)
-            .setRedirectUri(redirectUri)
-            .showAuthView(true)
+    fun authenticateWithSpotfiy(handlerActivity: Activity) {
+//        val connectionParams = ConnectionParams.Builder(clientId)
+//            .setRedirectUri(redirectUri)
+//            .showAuthView(true)
+//            .build()
+//
+//        SpotifyAppRemote.connect(context!!, connectionParams, object : Connector.ConnectionListener {
+//            override fun onConnected(appRemote: SpotifyAppRemote) {
+//                spotifyAppRemote = appRemote
+//                Timber.d("Connected to Spotify!")
+//                onConnectCallback?.invoke()
+//            }
+//
+//            override fun onFailure(throwable: Throwable) {
+//                Timber.e("Failed to connect to Spotify:\n $throwable")
+//                // Something went wrong when attempting to connect
+//                onFailCallback?.invoke()
+//            }
+//        })
+        val request = AuthenticationRequest.Builder(
+            CLIENT_ID,
+            AuthenticationResponse.Type.TOKEN,
+            REDIRECT_URI)
+            .setScopes(arrayOf("streaming")) // privileges we want access to
             .build()
 
-        SpotifyAppRemote.connect(context!!, connectionParams, object : Connector.ConnectionListener {
-            override fun onConnected(appRemote: SpotifyAppRemote) {
-                spotifyAppRemote = appRemote
-                Timber.d("Connected to Spotify!")
-                onConnectCallback?.invoke()
-            }
-
-            override fun onFailure(throwable: Throwable) {
-                Timber.e("Failed to connect to Spotify:\n $throwable")
-                // Something went wrong when attempting to connect
-                onFailCallback?.invoke()
-            }
-        })
+        AuthenticationClient.openLoginActivity(handlerActivity, REQUEST_CODE, request)
     }
 }

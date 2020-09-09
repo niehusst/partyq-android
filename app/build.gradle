@@ -61,6 +61,7 @@ dependencies {
     implementation "androidx.annotation:annotation:$androidXAnnotations"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     implementation "com.jakewharton.timber:timber:$timberVersion"
+    implementation 'com.spotify.android:auth:1.1.0'
 
     // Architecture deps
     implementation "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
