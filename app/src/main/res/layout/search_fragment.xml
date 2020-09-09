@@ -11,7 +11,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/backgroundColor">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
@@ -25,7 +26,10 @@
                 android:id="@+id/search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:queryHint="@string/search_songs" />
+                android:layout_margin="@dimen/mediumPadding"
+                android:queryHint="@string/search_songs"
+                android:background="@drawable/shape_rounded"
+                />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -37,6 +41,7 @@
             app:layout_constraintTop_toBottomOf="@id/app_bar"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:listitem="@layout/search_result_item"
+            tools:visibility="visible"
             isGone="@{!isResults}"/>
 
         <TextView
@@ -44,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/textHuge"
-            android:textColor="@color/textHintColor"
+            android:textColor="@color/onBackgroundColorLight"
             android:text="@string/search_for_songs"
             android:textAlignment="center"
             app:layout_constraintStart_toStartOf="parent"
