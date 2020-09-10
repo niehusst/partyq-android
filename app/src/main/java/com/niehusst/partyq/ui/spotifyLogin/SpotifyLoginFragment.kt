@@ -57,7 +57,9 @@ class SpotifyLoginFragment : Fragment() {
 
     /**
      * Handles the activity result from the Spotify-provided LoginActivity. If successful,
-     * saves the authentication token to be used for future API calls.
+     * saves the authentication token, create the code for the party, and sets the user
+     * as the host.
+     * Otherwise, the loading spinner is stopped and a Toast tells the user what's up.
      */
     fun onAuthResult(resultCode: Int, intent: Intent?) {
         val response = AuthenticationClient.getResponse(resultCode, intent)
@@ -72,8 +74,12 @@ class SpotifyLoginFragment : Fragment() {
                     response.expiresIn,
                     TimeUnit.SECONDS
                 )
-
-                UserTypeService.setSelfAsHost(requireContext(), )
+                // create the party code and set self as host
+                CommunicationService.createPartyCode(requireContext())
+                UserTypeService.setSelfAsHost(
+                    requireContext(),
+                    CommunicationService.getPartyCode(requireContext())!!
+                )
 
                 findNavController().navigate(R.id.partyActivity)
 

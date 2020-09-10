@@ -41,4 +41,8 @@ object CommunicationService {
     fun updateQueue() {
         // TODO: update queue
     }
+
+    fun disconnectFromParty() {
+        // TODO: send disconnect message to all connections, then disconnect from them
+    }
 }
