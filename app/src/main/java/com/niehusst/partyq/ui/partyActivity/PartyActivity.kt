@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.ActivityPartyBinding
+import com.niehusst.partyq.services.CommunicationService
 import timber.log.Timber
 
 class PartyActivity : AppCompatActivity() {
@@ -15,6 +16,7 @@ class PartyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_party)
+        initServicePrereqs()
         setupBottomNavBinding()
         startConnectionService()
         startSpotifyPlayerService()
@@ -42,6 +44,9 @@ class PartyActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun initServicePrereqs() {
     }
 
     private fun startConnectionService() {

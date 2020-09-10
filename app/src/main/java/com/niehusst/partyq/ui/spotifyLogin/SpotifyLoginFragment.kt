@@ -3,7 +3,6 @@ package com.niehusst.partyq.ui.spotifyLogin
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,13 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SpotifyLoginFragmentBinding
+import com.niehusst.partyq.services.CommunicationService
+import com.niehusst.partyq.services.TokenHandlerService
+import com.niehusst.partyq.services.UserTypeService
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationResponse
+import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 class SpotifyLoginFragment : Fragment() {
 
@@ -51,19 +55,34 @@ class SpotifyLoginFragment : Fragment() {
         }
     }
 
+    /**
+     * Handles the activity result from the Spotify-provided LoginActivity. If successful,
+     * saves the authentication token to be used for future API calls.
+     */
     fun onAuthResult(resultCode: Int, intent: Intent?) {
         val response = AuthenticationClient.getResponse(resultCode, intent)
 
-        // TODO: save auth key somewhere
         when(response.type) {
             AuthenticationResponse.Type.TOKEN -> {
                 // on success
+                // save the OAuth token
+                TokenHandlerService.setToken(
+                    requireContext(),
+                    response.accessToken,
+                    response.expiresIn,
+                    TimeUnit.SECONDS
+                )
+
+                UserTypeService.setSelfAsHost(requireContext(), )
+
                 findNavController().navigate(R.id.partyActivity)
-                // end the MainActivity so user can't go back to pre-login
+
+                // finally, end the MainActivity so user can't go back to pre-login
                 activity?.finish()
             }
             AuthenticationResponse.Type.ERROR -> {
                 // on failure
+                Timber.e("Auth for code ${response.code} error: ${response.error}")
                 viewModel.stopLoading()
                 // TODO: insert some sort of error remediation. Troubleshooting instructions?
                 //  reiterate Requirements for party start?
