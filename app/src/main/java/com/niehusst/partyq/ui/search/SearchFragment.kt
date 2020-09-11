@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.niehusst.partyq.databinding.SearchFragmentBinding
 
 class SearchFragment : Fragment() {
@@ -33,8 +34,14 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.searchResults.adapter = adapter
-
+        setObserver()
         setSearchListener()
+    }
+
+    private fun setObserver() {
+        viewModel.isResult.observe(viewLifecycleOwner, Observer {
+            binding.isResults = it
+        })
     }
 
     private fun setSearchListener() {
@@ -46,6 +53,7 @@ class SearchFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // send query to Spotify
                 // TODO: loading spinner
+                // TODO: close keyboard
                 viewModel.submitQuery(query)
                 return true
             }

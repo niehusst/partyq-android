@@ -3,6 +3,7 @@ package com.niehusst.partyq.services
 import android.content.Context
 import com.niehusst.partyq.SharedPrefNames.PARTY_CODE
 import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
+import com.niehusst.partyq.network.models.Item
 import kotlin.random.Random
 
 object CommunicationService {
@@ -11,7 +12,7 @@ object CommunicationService {
 
     fun createPartyCode(context: Context) {
         val r = Random(System.nanoTime())
-        code = "${randDigit(r)}${randDigit(r)}${randDigit(r)}${randDigit(r)}" //TODO this should actually be based off of the network connection code from connection api
+        code = "${randDigit(r)}${randDigit(r)}${randDigit(r)}${randDigit(r)}"
 
         // save the code into shared prefs
         val sharedPrefs = context.applicationContext.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
@@ -20,7 +21,7 @@ object CommunicationService {
         editor.apply()
     }
 
-    fun randDigit(r: Random) = r.nextInt(10)
+    private fun randDigit(r: Random) = r.nextInt(10)
 
     fun getPartyCode(context: Context): String? { //TODO: should be nullable?
         if (code == null) {
@@ -38,7 +39,7 @@ object CommunicationService {
         // TODO: send/get search req
     }
 
-    fun updateQueue() {
+    fun updateQueue(item: Item) {
         // TODO: update queue
     }
 

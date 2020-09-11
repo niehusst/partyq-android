@@ -6,4 +6,5 @@ Retrofit2
 Spotify (API and sdks)
 Nearby Connections API
 Timber
+Glide
 
