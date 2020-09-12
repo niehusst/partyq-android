@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // from the launch activity, everyone starts as a guest
-        menuInflater.inflate(R.menu.toolbar_menu_guest, menu)
+        menuInflater.inflate(R.menu.toolbar_menu_pre_login, menu)
         return true
     }
 

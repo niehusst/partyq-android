@@ -11,58 +11,58 @@ import com.niehusst.partyq.services.CommunicationService
 class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
 
     var searchResults = mutableListOf<Item>(
-//        Item(
-//            Album(
-//                albumType = "",
-//                externalUrls = ExternalUrls(""),
-//                href = "",
-//                id = "",
-//                name = "bal",
-//                releaseDate = "",
-//                releaseDatePrecision = "",
-//                totalTracks = 2,
-//                type = "",
-//                images = listOf(
-//                    Image(
-//                        url = "https://i.scdn.co/image/8522fc78be4bf4e83fea8e67bb742e7d3dfe21b4",
-//                        width = 64,
-//                        height = 64
-//                    )
-//                ),
-//                uri = ""
-//            ),
-//            artists = listOf(
-//                Artist(
-//                    externalUrls = ExternalUrls(""),
-//                    href = "",
-//                    id = "",
-//                    name = "Smash mouth",
-//                    type = "",
-//                    uri = ""
-//                ),
-//                Artist(
-//                    externalUrls = ExternalUrls(""),
-//                    href = "",
-//                    id = "",
-//                    name = "poopy",
-//                    type = "",
-//                    uri = ""
-//                )
-//            ),
-//            discNumber = 0,
-//            durationMs = 0,
-//            explicit = false,
-//            externalIds = ExternalIds("a"),
-//            externalUrls = ExternalUrls(""),
-//            href = "",
-//            id = "aa",
-//            isLocal = false,
-//            name = "All Star",
-//            popularity = 0,
-//            trackNumber = 1,
-//            uri = "",
-//            type = ""
-//        )
+        Item(
+            Album(
+                albumType = "",
+                externalUrls = ExternalUrls(""),
+                href = "",
+                id = "",
+                name = "bal",
+                releaseDate = "",
+                releaseDatePrecision = "",
+                totalTracks = 2,
+                type = "",
+                images = listOf(
+                    Image(
+                        url = "https://i.scdn.co/image/8522fc78be4bf4e83fea8e67bb742e7d3dfe21b4",
+                        width = 64,
+                        height = 64
+                    )
+                ),
+                uri = ""
+            ),
+            artists = listOf(
+                Artist(
+                    externalUrls = ExternalUrls(""),
+                    href = "",
+                    id = "",
+                    name = "Smash mouth",
+                    type = "",
+                    uri = ""
+                ),
+                Artist(
+                    externalUrls = ExternalUrls(""),
+                    href = "",
+                    id = "",
+                    name = "poopy",
+                    type = "",
+                    uri = ""
+                )
+            ),
+            discNumber = 0,
+            durationMs = 0,
+            explicit = false,
+            externalIds = ExternalIds("a"),
+            externalUrls = ExternalUrls(""),
+            href = "",
+            id = "aa",
+            isLocal = false,
+            name = "All Star",
+            popularity = 0,
+            trackNumber = 1,
+            uri = "",
+            type = ""
+        )
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultViewHolder {

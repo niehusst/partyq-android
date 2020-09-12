@@ -5,7 +5,7 @@
     <string name="partyq_logo">Party queue logo</string>
     <string name="about">About</string>
     <string name="legal">Legal</string>
-    <string name="end_party">End Party</string>
+    <string name="leave_party">Leave Party</string>
     <string name="party_code">Party Code</string>
 
     <!-- TODO: fill in -->
@@ -17,7 +17,7 @@
     <string name="authenticate_with_spotify">Authenticate with Spotify</string>
     <string name="info">INFO</string>
     <string name="why_is_this">Why is this?</string>
-<!--   TODO: no longer requires spotify app to be on the same device? but how does play music then..? -->
+<!--   TODO: new auth no longer requires spotify app to be on the same device? but how does play music then..? -->
     <string name="info_content">Starting a party requires you have a Spotify premium account and that you have the Spotify mobile app downloaded on this device.</string>
     <string name="search">Search</string>
     <string name="now_playing">Now Playing</string>

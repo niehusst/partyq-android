@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 
 class SearchFragmentViewModel : ViewModel() {
 
+    // TODO: implement an enum to include loading value here? or will retrofit handle that some way
     private val _isResult = MutableLiveData(false)
     val isResult: LiveData<Boolean> = _isResult
 

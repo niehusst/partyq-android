@@ -3,16 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/party_code_item"
-        android:title="@string/party_code"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/end_party_item"
-        android:title="@string/end_party"
-        app:showAsAction="never"/>
-
-    <item
         android:id="@+id/aboutFragment"
         android:title="@string/about"
         app:showAsAction="never"/>
@@ -22,4 +12,13 @@
         android:title="@string/legal"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/party_code_item"
+        android:title="@string/party_code"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/leave_party_item"
+        android:title="@string/leave_party"
+        app:showAsAction="never"/>
 </menu>

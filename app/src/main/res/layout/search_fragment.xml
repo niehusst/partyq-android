@@ -31,16 +31,32 @@
 <!--                />&lt;!&ndash;                android:background="@drawable/shape_rounded"&ndash;&gt;-->
 <!--        </com.google.android.material.appbar.AppBarLayout>-->
 
+        <EditText
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolBarHeight"
+            android:layout_margin="@dimen/mediumPadding"
+            android:background="@drawable/shape_rounded"
+            android:drawableStart="@drawable/ic_baseline_search_24"
+            android:drawablePadding="@dimen/smallPadding"
+            android:hint="@string/search_songs"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_results"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="@dimen/mediumPadding"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_bar"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:listitem="@layout/search_result_item"
-            tools:visibility="visible"
             isGone="@{!isResults}"/>
 
         <TextView
@@ -53,7 +69,7 @@
             android:textAlignment="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_bar"
             app:layout_constraintBottom_toBottomOf="parent"
             isGone="@{isResults}"/>
 
