@@ -16,4 +16,14 @@
         android:name="com.niehusst.partyq.ui.search.SearchFragment"
         android:label="SearchFragment"
         tools:layout="@layout/search_fragment"/>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.niehusst.partyq.ui.about.AboutFragment"
+        android:label="AboutFragment"
+        tools:layout="@layout/about_fragment"/>
+    <fragment
+        android:id="@+id/legalFragment"
+        android:name="com.niehusst.partyq.ui.legal.LegalFragment"
+        android:label="LegalFragment"
+        tools:layout="@layout/legal_fragment"/>
 </navigation>
