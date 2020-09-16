@@ -11,6 +11,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.ActivityPartyBinding
+import com.niehusst.partyq.repository.SpotifyRepository
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
@@ -96,7 +97,8 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun startSpotifyPlayerService() {
-        // TODO:
+        // TODO: ? need any more than this? if music playing requires more setup, do that here
+        SpotifyRepository.start(this)
     }
 
     private fun launchPartyCodeDialog() {

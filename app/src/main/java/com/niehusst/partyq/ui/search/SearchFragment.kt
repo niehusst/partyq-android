@@ -46,19 +46,18 @@ class SearchFragment : Fragment() {
     }
 
     private fun setSearchListener() {
-        binding.searchBar.setOnEditorActionListener { v, actionId, event ->
+        binding.searchBar.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 // send query to Spotify
                 // TODO: start loading spinner
                 hideKeyboardFrom(v)
-                viewModel.submitQuery(v.text.toString())
-                Toast.makeText(requireContext(), "Entered serach ${v.text.toString()}", Toast.LENGTH_SHORT).show()
+                viewModel.submitQuery(v.text.toString(), requireContext())
             }
             return@setOnEditorActionListener true
         }
     }
 
-    fun hideKeyboardFrom(view: View) {
+    private fun hideKeyboardFrom(view: View) {
         val imm: InputMethodManager =
             requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)

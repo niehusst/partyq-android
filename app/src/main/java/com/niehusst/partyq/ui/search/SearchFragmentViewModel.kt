@@ -1,23 +1,35 @@
 package com.niehusst.partyq.ui.search
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.content.Context
+import androidx.lifecycle.*
+import com.niehusst.partyq.network.Resource
+import com.niehusst.partyq.network.models.SearchResult
+import com.niehusst.partyq.repository.SpotifyRepository
+import kotlinx.coroutines.launch
 
 class SearchFragmentViewModel : ViewModel() {
 
-    // TODO: implement an enum to include loading value here? or will retrofit handle that some way
     private val _isResult = MutableLiveData(false)
     val isResult: LiveData<Boolean> = _isResult
 
-    fun submitQuery(query: String?) {
-        query ?: return
+    private val _result = MutableLiveData<Resource<SearchResult>>()
+    val result: LiveData<Resource<SearchResult>> = _result
 
-        // TODO: call on CommunicationService
-        //if(results.size > 0) {
-        _isResult.value = true
-        //} else {
-        //    _isResult.value = false
-        //}
+    fun submitQuery(query: String?, context: Context) {
+        query ?: return //TODO: clear adapter?
+
+        viewModelScope.launch {
+            val res = SpotifyRepository.searchSongs(query, context)
+            // fucking map or switchmap or soemthign to put res into _result???
+            _result.switchMap { _ -> res }
+
+            //if(results.size > 0) {
+            _isResult.value = true
+            //} else {
+            //    _isResult.value = false
+            //}
+            // TODO: update the adapter from the result livedata?
+            // TODO: display errors in fragment somehow. (toast? put as bg text? snackbar?)
+        }
     }
 }

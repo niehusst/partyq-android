@@ -1,5 +1,6 @@
 package com.niehusst.partyq.network
 
+import com.niehusst.partyq.network.models.SearchResult
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -11,5 +12,5 @@ interface SpotifyApiService {
      * @see <a href="https://developer.spotify.com/web-api/search-item/">Search for an Item</a>
      */
     @GET("/search?type=track")
-    fun searchTracks(@Query("q") q: String)
+    suspend fun searchTracks(@Query("q") q: String): SearchResult
 }
