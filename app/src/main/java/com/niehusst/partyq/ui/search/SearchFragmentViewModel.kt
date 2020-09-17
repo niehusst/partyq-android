@@ -13,8 +13,6 @@ class SearchFragmentViewModel : ViewModel() {
     private val _status = MutableLiveData<Status?>(null)
     val status: LiveData<Status?> = _status
 
-    val loading: LiveData<Boolean> = _status.map { it == Status.LOADING }
-
     private val _isResult = MutableLiveData(false)
     val isResult: LiveData<Boolean> = _isResult
 
