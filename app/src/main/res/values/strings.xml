@@ -23,7 +23,10 @@
     <string name="now_playing">Now Playing</string>
     <string name="queue">Queue</string>
     <string name="loading">Loading…</string>
+
     <string name="search_songs">Search songs</string>
     <string name="search_for_songs">Search for songs</string>
     <string name="add_song_to_queue">Add song to queue</string>
+    <string name="no_results">No Results</string>
+    <string name="error_face">Error :(</string>
 </resources>

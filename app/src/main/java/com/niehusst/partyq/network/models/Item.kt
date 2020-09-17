@@ -18,7 +18,7 @@ data class Item(
     @Json(name = "external_ids")
     val externalIds: ExternalIds,
     @Json(name = "external_urls")
-    val externalUrls: ExternalUrls,
+    val externalUrls: ExternalUrls, // TODO: link to Spotify legally required to show while song play
     @Json(name = "href")
     val href: String,
     @Json(name = "id")

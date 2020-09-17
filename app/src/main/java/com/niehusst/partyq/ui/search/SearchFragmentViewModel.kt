@@ -1,10 +1,7 @@
 package com.niehusst.partyq.ui.search
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.niehusst.partyq.network.Status
 import com.niehusst.partyq.network.models.Item
 import com.niehusst.partyq.repository.SpotifyRepository
@@ -15,6 +12,8 @@ class SearchFragmentViewModel : ViewModel() {
 
     private val _status = MutableLiveData<Status?>(null)
     val status: LiveData<Status?> = _status
+
+    val loading: LiveData<Boolean> = _status.map { it == Status.LOADING }
 
     private val _isResult = MutableLiveData(false)
     val isResult: LiveData<Boolean> = _isResult
@@ -33,7 +32,9 @@ class SearchFragmentViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val res = SpotifyRepository.searchSongs(query, context)
             _status.postValue(res.status)
-            val songs = res.data?.tracks?.items ?: listOf()
+            // get just the track items. Filter out duplicate URIs
+            var songs = res.data?.tracks?.items ?: listOf()
+            songs = songs.distinctBy { it.uri }
             _result.postValue(songs)
             _isResult.postValue(songs.isNotEmpty())
         }

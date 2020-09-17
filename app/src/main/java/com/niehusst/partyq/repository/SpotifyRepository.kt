@@ -1,18 +1,12 @@
 package com.niehusst.partyq.repository
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.MutableLiveData
 import com.niehusst.partyq.network.Resource
 import com.niehusst.partyq.network.SpotifyApi
 import com.niehusst.partyq.network.models.SearchResult
-import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.services.TokenHandlerService
 import com.niehusst.partyq.services.UserTypeService
-import kotlinx.coroutines.Dispatchers
 import timber.log.Timber
-import java.lang.Exception
 
 object SpotifyRepository {
 

@@ -6,13 +6,11 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.repository.SpotifyRepository
-import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
 class PartyActivity : AppCompatActivity() {

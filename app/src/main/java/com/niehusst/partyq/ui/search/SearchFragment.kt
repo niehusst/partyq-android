@@ -1,18 +1,16 @@
 package com.niehusst.partyq.ui.search
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SearchFragmentBinding
 import com.niehusst.partyq.network.Status
 
@@ -30,9 +28,9 @@ class SearchFragment : Fragment() {
     ): View? {
         binding = SearchFragmentBinding.inflate(layoutInflater)
         binding.isResults = false
+        binding.loading = false
         return binding.root
     }
-    //TODO: use DiffUtil/DiffAdapter eventually?? is that faster?
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,30 +45,29 @@ class SearchFragment : Fragment() {
         })
         viewModel.result.observe(viewLifecycleOwner, Observer {
             adapter.searchResults = it
-            Log.e("BIGGYCHEESE", "$it")
             adapter.notifyDataSetChanged()
         })
         viewModel.status.observe(viewLifecycleOwner, Observer {
             when(it) {
                 Status.LOADING -> {
-                    // TODO: trigger spinner
-                    Toast.makeText(requireContext(), "loading", Toast.LENGTH_SHORT).show()
+                    binding.loading = true
                 }
                 Status.ERROR -> {
-                    // TODO: trigger snackbar or something?
-                    Toast.makeText(requireContext(), "errrrr", Toast.LENGTH_SHORT).show()
+                    // TODO: trigger snackbar or something w/ more detail?
+                    binding.loading = false
+                    binding.noResultsText.text = context?.resources?.getString(R.string.error_face)
                 }
                 Status.SUCCESS -> {
-                    // TODO: untrigger loading stuff. Set text "No results"
-                    Toast.makeText(requireContext(), "RESULT!!!!", Toast.LENGTH_SHORT).show()
+                    binding.loading = false
+                    binding.noResultsText.text = context?.resources?.getString(R.string.no_results)
                 }
                 else -> {
-                    // TODO: show "enter search" text
-                    Toast.makeText(requireContext(), "Entered nothing", Toast.LENGTH_SHORT).show()
+                    binding.noResultsText.text = context?.resources?.getString(R.string.search_for_songs)
                 }
             }
         })
     }
+    // TODO: add paging ability
 
     private fun setSearchListener() {
         binding.searchBar.setOnEditorActionListener { v, actionId, _ ->

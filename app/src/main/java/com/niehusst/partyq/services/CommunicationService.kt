@@ -23,7 +23,7 @@ object CommunicationService {
 
     private fun randDigit(r: Random) = r.nextInt(10)
 
-    fun getPartyCode(context: Context): String? { //TODO: should be nullable?
+    fun getPartyCode(context: Context): String? {
         if (code == null) {
             val sharedPrefs = context.applicationContext.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
             code = sharedPrefs.getString(PARTY_CODE, null)

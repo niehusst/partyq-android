@@ -39,6 +39,7 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
                 .into(binding.thumbnail)
 
             binding.root.setOnClickListener {
+                // TODO: add to queue
                 CommunicationService.updateQueue(item)
             }
         }
