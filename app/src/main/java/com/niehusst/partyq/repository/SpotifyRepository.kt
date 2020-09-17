@@ -11,6 +11,7 @@ import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.services.TokenHandlerService
 import com.niehusst.partyq.services.UserTypeService
 import kotlinx.coroutines.Dispatchers
+import timber.log.Timber
 import java.lang.Exception
 
 object SpotifyRepository {
@@ -35,23 +36,23 @@ object SpotifyRepository {
         // TODO: play song (can this be done w/o appremote?)
     }
 
-    suspend fun searchSongs(query: String, context: Context): LiveData<Resource<SearchResult>> {
-        val liveData = MutableLiveData<Resource<SearchResult>>(Resource.loading(null))
-
-        if (UserTypeService.isHost(context)) {
-
+    /**
+     * If the user is the host, make an API call to Spotify. Otherwise, send the request to the
+     * host to execute. The management of loading state is left to the calling ViewModel.
+     */
+    suspend fun searchSongs(query: String, context: Context): Resource<SearchResult> {
+        return if (UserTypeService.isHost(context)) {
             try {
-                val result = api?.endPoints?.searchTracks(query) ?: throw Exception()
-                liveData.value = Resource.success(result)
+                val result = api?.endPoints?.searchTracks(query, "track") ?: throw Exception("Uninitialized api")
+                Resource.success(result)
             } catch (err: Throwable) {
-                liveData.value = Resource.error(null, "Network error")
+                Timber.e(err)
+                Resource.error(null, "Network error")
             }
         } else {
 //            CommunicationService.sendSearchRequest(query)
-            liveData.value = Resource.error(null, "not yet implemented")
+            Resource.error(null, "not yet implemented")
         }
-
-        return liveData
     }
 
 //    private fun connected() {

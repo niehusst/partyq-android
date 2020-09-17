@@ -10,7 +10,7 @@ import com.niehusst.partyq.services.CommunicationService
 
 class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
 
-    var searchResults = mutableListOf<Item>()
+    var searchResults = listOf<Item>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

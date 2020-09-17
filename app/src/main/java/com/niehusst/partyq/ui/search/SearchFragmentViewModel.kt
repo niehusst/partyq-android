@@ -1,35 +1,41 @@
 package com.niehusst.partyq.ui.search
 
 import android.content.Context
-import androidx.lifecycle.*
-import com.niehusst.partyq.network.Resource
-import com.niehusst.partyq.network.models.SearchResult
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.niehusst.partyq.network.Status
+import com.niehusst.partyq.network.models.Item
 import com.niehusst.partyq.repository.SpotifyRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchFragmentViewModel : ViewModel() {
 
+    private val _status = MutableLiveData<Status?>(null)
+    val status: LiveData<Status?> = _status
+
     private val _isResult = MutableLiveData(false)
     val isResult: LiveData<Boolean> = _isResult
 
-    private val _result = MutableLiveData<Resource<SearchResult>>()
-    val result: LiveData<Resource<SearchResult>> = _result
+    private val _result = MutableLiveData(listOf<Item>())
+    val result: LiveData<List<Item>> = _result
 
     fun submitQuery(query: String?, context: Context) {
-        query ?: return //TODO: clear adapter?
+        if (query.isNullOrEmpty()) {
+            _isResult.value = false
+            _result.value = listOf()
+            return
+        }
 
-        viewModelScope.launch {
+        _status.value = Status.LOADING
+        viewModelScope.launch(Dispatchers.IO) {
             val res = SpotifyRepository.searchSongs(query, context)
-            // fucking map or switchmap or soemthign to put res into _result???
-            _result.switchMap { _ -> res }
-
-            //if(results.size > 0) {
-            _isResult.value = true
-            //} else {
-            //    _isResult.value = false
-            //}
-            // TODO: update the adapter from the result livedata?
-            // TODO: display errors in fragment somehow. (toast? put as bg text? snackbar?)
+            _status.postValue(res.status)
+            val songs = res.data?.tracks?.items ?: listOf()
+            _result.postValue(songs)
+            _isResult.postValue(songs.isNotEmpty())
         }
     }
 }

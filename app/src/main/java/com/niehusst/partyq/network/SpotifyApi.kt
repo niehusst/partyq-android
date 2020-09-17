@@ -8,7 +8,7 @@ class SpotifyApi(
     private val accessToken: String
 ) {
 
-    private val SPOTIFY_API_BASE_URL = "https://api.spotify.com/v1"
+    private val SPOTIFY_API_BASE_URL = "https://api.spotify.com/"
     var endPoints: SpotifyApiService
 
     init {

@@ -32,6 +32,7 @@ class PartyActivity : AppCompatActivity() {
         // set search as first active tab
         binding.bottomNav.selectedItemId = R.id.searchFragment
     }
+    // TODO: display errors in fragment somehow. (toast? put as bg text? snackbar?)
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // from the launch activity, everyone starts as a guest
