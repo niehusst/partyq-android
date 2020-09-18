@@ -70,6 +70,9 @@ class PartyActivity : AppCompatActivity() {
         val prefs = this.applicationContext.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
         if (prefs.getBoolean(PARTY_FIRST_START, false)) {
             launchPartyCodeDialog()
+            prefs.edit()
+                .putBoolean(PARTY_FIRST_START, false)
+                .apply()
         }
     }
 
