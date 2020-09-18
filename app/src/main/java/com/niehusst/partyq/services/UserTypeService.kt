@@ -19,7 +19,7 @@ object UserTypeService {
 
     /**
      * Determine if the user is the host of the current party. Use shared prefs to persist
-     * across app closure.
+     * across process death.
      */
     fun isHost(context: Context): Boolean {
         if (userIsHost == null) {

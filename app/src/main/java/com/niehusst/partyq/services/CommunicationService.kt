@@ -2,6 +2,7 @@ package com.niehusst.partyq.services
 
 import android.content.Context
 import com.niehusst.partyq.SharedPrefNames.PARTY_CODE
+import com.niehusst.partyq.SharedPrefNames.PARTY_FIRST_START
 import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.network.models.Item
 import kotlin.random.Random
@@ -15,13 +16,18 @@ object CommunicationService {
         code = "${randDigit(r)}${randDigit(r)}${randDigit(r)}${randDigit(r)}"
 
         // save the code into shared prefs
-        val sharedPrefs = context.applicationContext.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
-        val editor = sharedPrefs.edit()
-        editor.putString(PARTY_CODE, code)
-        editor.apply()
+        setPartyCode(code!!, context)
     }
 
     private fun randDigit(r: Random) = r.nextInt(10)
+
+    fun setPartyCode(partyCode: String, context: Context) {
+        val sharedPrefs = context.applicationContext.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
+        sharedPrefs.edit()
+            .putString(PARTY_CODE, partyCode)
+            .putBoolean(PARTY_FIRST_START, true) // mark the party as just started
+            .apply()
+    }
 
     fun getPartyCode(context: Context): String? {
         if (code == null) {

@@ -6,4 +6,5 @@ object SharedPrefNames {
     const val EXPIRES_AT = "expires_at"
     const val PARTY_CODE = "party_code"
     const val IS_HOST = "is_host"
+    const val PARTY_FIRST_START = "party_first_start"
 }

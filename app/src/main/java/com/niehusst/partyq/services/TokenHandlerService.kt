@@ -18,8 +18,7 @@ object TokenHandlerService {
 
     fun getToken(context: Context): String {
         if (token == null) {
-            val appContext = context.applicationContext
-            val sharedPref = getSharedPreferences(appContext)
+            val sharedPref = getSharedPreferences(context.applicationContext)
 
             token = sharedPref.getString(ACCESS_TOKEN, null)
             expiresAt = sharedPref.getLong(EXPIRES_AT, 0L)

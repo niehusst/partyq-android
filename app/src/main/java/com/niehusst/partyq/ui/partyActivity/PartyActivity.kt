@@ -1,16 +1,21 @@
 package com.niehusst.partyq.ui.partyActivity
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.niehusst.partyq.R
+import com.niehusst.partyq.SharedPrefNames.PARTY_FIRST_START
+import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.repository.SpotifyRepository
+import com.niehusst.partyq.services.CommunicationService
 import timber.log.Timber
 
 class PartyActivity : AppCompatActivity() {
@@ -33,7 +38,6 @@ class PartyActivity : AppCompatActivity() {
     // TODO: display errors in fragment somehow. (toast? put as bg text? snackbar?)
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        // from the launch activity, everyone starts as a guest
         menuInflater.inflate(R.menu.toolbar_menu_loggedin, menu)
         return true
     }
@@ -61,9 +65,14 @@ class PartyActivity : AppCompatActivity() {
         return navController.navigateUp()
     }
 
-//TODO: launch partycode dialog fragment onStart if hasnt been launched before
-// (save the party code into SharedPrefs to tell if this specific party has had the dialog launched yet
-//  (if no saved code or code doesnt match curr code, then launch frag))
+    override fun onStart() {
+        super.onStart()
+        val prefs = this.applicationContext.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
+        if (prefs.getBoolean(PARTY_FIRST_START, false)) {
+            launchPartyCodeDialog()
+        }
+    }
+
     private fun setupBottomNavBinding() {
         binding.bottomNav.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
@@ -102,6 +111,7 @@ class PartyActivity : AppCompatActivity() {
 
     private fun launchPartyCodeDialog() {
         // TODO: impl party code dialog
+        Toast.makeText(this, "Launch code dialog", Toast.LENGTH_SHORT).show()
     }
 
     private fun leaveParty() {

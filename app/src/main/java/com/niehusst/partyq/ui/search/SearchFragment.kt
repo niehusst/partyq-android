@@ -49,9 +49,7 @@ class SearchFragment : Fragment() {
         })
         viewModel.status.observe(viewLifecycleOwner, Observer {
             when(it) {
-                Status.LOADING -> {
-                    binding.loading = true
-                }
+                Status.LOADING -> binding.loading = true
                 Status.ERROR -> {
                     // TODO: trigger snackbar or something w/ more detail?
                     binding.loading = false
@@ -61,9 +59,7 @@ class SearchFragment : Fragment() {
                     binding.loading = false
                     binding.noResultsText.text = context?.resources?.getString(R.string.no_results)
                 }
-                else -> {
-                    binding.noResultsText.text = context?.resources?.getString(R.string.search_for_songs)
-                }
+                else -> binding.noResultsText.text = context?.resources?.getString(R.string.search_for_songs)
             }
         })
     }
