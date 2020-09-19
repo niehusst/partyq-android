@@ -1,62 +1,71 @@
 package com.niehusst.partyq.repository
 
 import android.content.Context
-import com.niehusst.partyq.services.KeyFetchService
-import com.spotify.android.appremote.api.ConnectionParams
-import com.spotify.android.appremote.api.Connector
-import com.spotify.android.appremote.api.SpotifyAppRemote
+import com.niehusst.partyq.network.Resource
+import com.niehusst.partyq.network.SpotifyApi
+import com.niehusst.partyq.network.models.SearchResult
+import com.niehusst.partyq.services.TokenHandlerService
+import com.niehusst.partyq.services.UserTypeService
 import timber.log.Timber
 
 object SpotifyRepository {
 
-    // set from the Spotify developer dashboard
-    private val clientId =
-        KeyFetchService.getSpotifyKey()
-    // unused deeplink URI. Nevertheless required for Spotify auth
-    private val redirectUri = "com.niehusst.partyq://callback"
+    // TODO: do i need some way to get this back on process death recreation?
+    //  (this may already be handled since onCreate in PartyActivity is called again)
+    private var api: SpotifyApi? = null
 
-    private lateinit var spotifyAppRemote: SpotifyAppRemote
+    /**
+     * This must be called to initialize the API endpoint access.
+     *
+     * Precondition:
+     *      requires OAuth token is set before this method is called.
+     */
+    fun start(ctx: Context) {
+        if (UserTypeService.isHost(ctx)) {
+            api = SpotifyApi(TokenHandlerService.getToken(ctx))
+        }
+    }
 
-    fun getSpotifyAppRemote(): SpotifyAppRemote {
-        return spotifyAppRemote
+    fun playSong() {
+        // TODO: play song (can this be done w/o appremote?)
     }
 
     /**
-     * Send a request to the Spotify app (must be downloaded on same device as partyq is
-     * being run on) to connect. You must also have authenticated IN the Spotify app
-     * at sometime before (w/ the last 30 days?) this method is called for it to succeed.
-     * If it is the first time for the calling device to authenticate with Spotify, Spotify
-     * will throw up a confirmation screen that you want partyq to have access to your account
-     * data.
-     * This function is run for the side-effect of initializing {spotifyAppRemote}, which
-     * handles all communication with the Spotify app.
-     *
-     * @param context - a valid Android context
-     * @param onConnectCallback - lambda to be called on connection success (optional)
-     * @param onFailCallback - lambda to be called on connection failure (optional)
+     * If the user is the host, make an API call to Spotify. Otherwise, send the request to the
+     * host to execute. The management of loading state is left to the calling ViewModel.
      */
-    fun authenticateWithSpotfiy(
-        context: Context?,
-        onConnectCallback: (() -> Unit)?,
-        onFailCallback: (() -> Unit)?
-    ) {
-        val connectionParams = ConnectionParams.Builder(clientId)
-            .setRedirectUri(redirectUri)
-            .showAuthView(true)
-            .build()
-
-        SpotifyAppRemote.connect(context!!, connectionParams, object : Connector.ConnectionListener {
-            override fun onConnected(appRemote: SpotifyAppRemote) {
-                spotifyAppRemote = appRemote
-                Timber.d("Connected to Spotify!")
-                onConnectCallback?.invoke()
+    suspend fun searchSongs(query: String, context: Context): Resource<SearchResult> {
+        return if (UserTypeService.isHost(context)) {
+            try {
+                val result = api?.endPoints?.searchTracks(query, "track") ?: throw Exception("Uninitialized api")
+                Resource.success(result)
+            } catch (err: Throwable) {
+                Timber.e(err)
+                Resource.error(null, "Network error")
             }
-
-            override fun onFailure(throwable: Throwable) {
-                Timber.e("Failed to connect to Spotify:\n $throwable")
-                // Something went wrong when attempting to connect
-                onFailCallback?.invoke()
-            }
-        })
+        } else {
+//            CommunicationService.sendSearchRequest(query)
+            Resource.error(null, "not yet implemented")
+        }
     }
+
+//    private fun connected() {
+//        // Play a playlist
+//        spotifyAppRemote?.playerApi?.play("spotify:playlist:37i9dQZF1DX2sUQwD7tbmL")
+//
+//        // Subscribe to PlayerState
+//        spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback {
+//            val track: Track = it.track
+//            Timber.d( "${track.name} by ${track.artist.name}")
+//        }
+//    }
+//
+//    override fun onStop() {
+//        super.onStop()
+//        // this doesn't actually stop SPOTIFY from running an playing music
+//        spotifyAppRemote?.let {
+//            SpotifyAppRemote.disconnect(it)
+//        }
+//    }
+
 }

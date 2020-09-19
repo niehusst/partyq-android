@@ -18,4 +18,8 @@
     <dimen name="toolBarHeight">56dp</dimen>
 
     <dimen name="iconWH">32dp</dimen>
+    <dimen name="thumbnailWH">48dp</dimen>
+
+    <dimen name="dividerSmall">1dp</dimen>
+    <dimen name="dividerMedium">2dp</dimen>
 </resources>

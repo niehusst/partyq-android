@@ -1,8 +1,8 @@
 package com.niehusst.partyq.ui.spotifyLogin
 
-import android.content.Context
+import android.app.Activity
 import androidx.lifecycle.*
-import com.niehusst.partyq.repository.SpotifyRepository
+import com.niehusst.partyq.services.SpotifyAuthenticator
 
 class SpotifyLoginViewModel : ViewModel() {
 
@@ -12,14 +12,10 @@ class SpotifyLoginViewModel : ViewModel() {
     /**
      * Delegate to SpotifyAuthenticationService, allowing later access to AppRemote connection
      */
-    fun connectToSpotify(
-        context: Context?,
-        onConnectCallback: (() -> Unit)? = null,
-        onFailCallback: (() -> Unit)? = null
-    ) {
+    fun connectToSpotify(handlerActivity: Activity) {
         _loading.value = true
-        SpotifyRepository
-            .authenticateWithSpotfiy(context, onConnectCallback, onFailCallback)
+        SpotifyAuthenticator
+            .authenticateWithSpotfiy(handlerActivity)
     }
 
     fun stopLoading() {

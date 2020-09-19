@@ -8,11 +8,16 @@
         android:orientation="vertical"
         tools:context=".ui.partyActivity.PartyActivity">
 
+        <include
+            android:id="@+id/toolbar_include"
+            layout="@layout/tool_bar"/>
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/party_nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="?actionBarSize"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

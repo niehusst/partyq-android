@@ -1,14 +1,17 @@
 package com.niehusst.partyq.ui.mainActivity
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.niehusst.partyq.R
+import com.niehusst.partyq.services.SpotifyAuthenticator
+import com.niehusst.partyq.ui.spotifyLogin.SpotifyLoginFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
@@ -33,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // from the launch activity, everyone starts as a guest
-        menuInflater.inflate(R.menu.toolbar_menu_guest, menu)
+        menuInflater.inflate(R.menu.toolbar_menu_pre_login, menu)
         return true
     }
 
@@ -51,22 +54,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    private fun connected() {
-//        // Play a playlist
-//        spotifyAppRemote?.playerApi?.play("spotify:playlist:37i9dQZF1DX2sUQwD7tbmL")
-//
-//        // Subscribe to PlayerState
-//        spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback {
-//            val track: Track = it.track
-//            Timber.d( "${track.name} by ${track.artist.name}")
-//        }
-//    }
-//
-//    override fun onStop() {
-//        super.onStop()
-//        // this doesn't actually stop SPOTIFY from running an playing music
-//        spotifyAppRemote?.let {
-//            SpotifyAppRemote.disconnect(it)
-//        }
-//    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == SpotifyAuthenticator.REQUEST_CODE) {
+            // let the visible instance of SpotifyLoginFragment handle the rest of auth req
+            val fragment = supportFragmentManager.fragments.firstOrNull()
+                ?.childFragmentManager?.fragments?.firstOrNull { it.isVisible }
+            (fragment as? SpotifyLoginFragment)?.onAuthResult(resultCode, data)
+        }
+    }
 }
