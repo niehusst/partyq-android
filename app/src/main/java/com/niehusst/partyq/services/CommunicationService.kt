@@ -22,6 +22,8 @@ object CommunicationService {
     private fun randDigit(r: Random) = r.nextInt(10)
 
     fun setPartyCode(partyCode: String, context: Context) {
+        code = partyCode
+
         val sharedPrefs = context.applicationContext.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
         sharedPrefs.edit()
             .putString(PARTY_CODE, partyCode)
