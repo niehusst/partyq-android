@@ -1,6 +1,7 @@
 package com.niehusst.partyq.ui.partyActivity
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -61,6 +62,17 @@ class PartyActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp()
+    }
+
+    override fun onBackPressed() {
+        // attempt standard nav up (returns false when no fragments to pop off backstack)
+        if (!navController.navigateUp()) {
+            // just minimize the app instead of finishing this activity
+            val home = Intent(Intent.ACTION_MAIN)
+            home.addCategory(Intent.CATEGORY_HOME)
+            home.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(home)
+        }
     }
 
     override fun onStart() {
