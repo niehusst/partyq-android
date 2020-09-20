@@ -31,10 +31,4 @@ class PartyCodeFragment : DialogFragment() {
             this.dismiss()
         }
     }
-
-    companion object {
-        fun newInstance(): PartyCodeFragment {
-            return PartyCodeFragment()
-        }
-    }
 }
