@@ -17,7 +17,6 @@ import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.repository.SpotifyRepository
 import timber.log.Timber
 
-
 class PartyActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPartyBinding
