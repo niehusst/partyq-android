@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.niehusst.partyq.databinding.SearchResultItemBinding
 import com.niehusst.partyq.network.models.*
-import com.niehusst.partyq.services.CommunicationService
+import com.niehusst.partyq.services.PartyCodeHandler
 
 class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
 
@@ -40,7 +40,6 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
 
             binding.root.setOnClickListener {
                 // TODO: add to queue
-                CommunicationService.updateQueue(item)
             }
         }
 

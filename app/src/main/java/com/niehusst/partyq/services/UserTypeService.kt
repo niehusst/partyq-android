@@ -25,7 +25,7 @@ object UserTypeService {
         if (userIsHost == null) {
             val prefs = context.applicationContext.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
             val hostCode = prefs.getString(IS_HOST, null)
-            userIsHost = hostCode == CommunicationService.getPartyCode(context)
+            userIsHost = hostCode == PartyCodeHandler.getPartyCode(context)
         }
 
         return userIsHost!!
