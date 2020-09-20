@@ -1,32 +1,44 @@
 <resources>
     <string name="app_name">partyq</string>
+    <!-- PartyConnect -->
     <string name="join_party">Join Party</string>
     <string name="start_party">Start Party</string>
     <string name="partyq_logo">Party queue logo</string>
+
+    <!-- Menu options -->
     <string name="about">About</string>
     <string name="legal">Legal</string>
     <string name="leave_party">Leave Party</string>
     <string name="party_code">Party Code</string>
 
-    <!-- TODO: fill in -->
+    <!-- About and Legal TODO: fill in -->
     <string name="about_title">About partyq</string>
     <string name="about_content">content</string>
     <string name="legal_title">Legal Information</string>
     <string name="legal_content">content</string>
 
+    <!-- SpotifyLogin -->
     <string name="authenticate_with_spotify">Authenticate with Spotify</string>
     <string name="info">INFO</string>
     <string name="why_is_this">Why is this?</string>
 <!--   TODO: new auth no longer requires spotify app to be on the same device? but how does play music then..? -->
     <string name="info_content">Starting a party requires you have a Spotify premium account and that you have the Spotify mobile app downloaded on this device.</string>
+
+    <!-- PartyActivity + misc -->
     <string name="search">Search</string>
     <string name="now_playing">Now Playing</string>
     <string name="queue">Queue</string>
     <string name="loading">Loading…</string>
 
+    <!-- Search -->
     <string name="search_songs">Search songs</string>
     <string name="search_for_songs">Search for songs</string>
     <string name="add_song_to_queue">Add song to queue</string>
     <string name="no_results">No Results</string>
     <string name="error_face">Error :(</string>
+
+    <!-- PartyCode -->
+    <string name="close_popup">Close popup</string>
+    <string name="your_party_code">Your Party Code</string>
+    <string name="party_code_details">Share this code with friends so that they can join the party! This code can be accessed again at any time from the drop-down menu.</string>
 </resources>

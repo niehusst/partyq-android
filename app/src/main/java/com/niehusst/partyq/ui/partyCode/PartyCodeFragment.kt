@@ -1,16 +1,14 @@
 package com.niehusst.partyq.ui.partyCode
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.niehusst.partyq.R
+import androidx.fragment.app.DialogFragment
 import com.niehusst.partyq.databinding.PartyCodeFragmentBinding
-import com.niehusst.partyq.databinding.PartyConnectFragmentBinding
-import timber.log.Timber
-// TODO: convert to dialog fragment
-class PartyCodeFragment : Fragment() {
+import com.niehusst.partyq.services.CommunicationService
+
+class PartyCodeFragment : DialogFragment() {
 
     private lateinit var binding: PartyCodeFragmentBinding
 
@@ -20,5 +18,17 @@ class PartyCodeFragment : Fragment() {
     ): View? {
         binding = PartyCodeFragmentBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.code = CommunicationService.getPartyCode(requireContext())
+        setupClickListeners()
+    }
+
+    private fun setupClickListeners() {
+        binding.closeButton.setOnClickListener {
+            this.dismiss()
+        }
     }
 }

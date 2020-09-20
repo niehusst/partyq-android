@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
@@ -15,7 +14,6 @@ import com.niehusst.partyq.SharedPrefNames.PARTY_FIRST_START
 import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.repository.SpotifyRepository
-import com.niehusst.partyq.services.CommunicationService
 import timber.log.Timber
 
 class PartyActivity : AppCompatActivity() {
@@ -113,8 +111,7 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun launchPartyCodeDialog() {
-        // TODO: impl party code dialog
-        Toast.makeText(this, "Launch code dialog", Toast.LENGTH_SHORT).show()
+        navController.navigate(R.id.partyCodeFragment)
     }
 
     private fun leaveParty() {
