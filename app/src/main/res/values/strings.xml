@@ -41,4 +41,8 @@
     <string name="close_popup">Close popup</string>
     <string name="your_party_code">Your Party Code</string>
     <string name="party_code_details">Share this code with friends so that they can join the party! This code can be accessed again at any time from the drop-down menu.</string>
+
+    <!-- Queue -->
+    <string name="currently_playing">Currently Playing:</string>
+    <string name="no_songs_in_the_queue">No Songs in the Queue</string>
 </resources>

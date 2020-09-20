@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.niehusst.partyq.databinding.PartyCodeFragmentBinding
-import com.niehusst.partyq.services.CommunicationService
+import com.niehusst.partyq.services.PartyCodeHandler
 
 class PartyCodeFragment : DialogFragment() {
 
@@ -22,7 +22,7 @@ class PartyCodeFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.code = CommunicationService.getPartyCode(requireContext())
+        binding.code = PartyCodeHandler.getPartyCode(requireContext())
         setupClickListeners()
     }
 

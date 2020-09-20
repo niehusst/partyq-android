@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorSurface">
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="@dimen/thumbnailWH"
+            android:layout_height="@dimen/thumbnailWH"
+            android:layout_marginStart="@dimen/largePadding"
+            android:scaleType="fitCenter"
+            android:background="@color/backgroundColor"
+            android:importantForAccessibility="no"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/song_title"
+            app:layout_constraintBottom_toBottomOf="@id/artist_name" />
+
+        <TextView
+            android:id="@+id/song_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/largePadding"
+            android:layout_marginEnd="@dimen/largePadding"
+            android:layout_marginTop="@dimen/largePadding"
+            android:textColor="@color/onColorSurface"
+            android:textSize="@dimen/textLarge"
+            app:layout_constraintBottom_toTopOf="@id/artist_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/thumbnail"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/artist_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/largePadding"
+            android:layout_marginEnd="@dimen/largePadding"
+            android:layout_marginBottom="@dimen/largePadding"
+            android:textColor="@color/textHintColor"
+            android:textSize="@dimen/textSmall"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/thumbnail"
+            app:layout_constraintTop_toBottomOf="@id/song_title"
+            tools:text="Artist name" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dividerSmall"
+            android:background="@color/dividerColor"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -21,5 +21,6 @@
     <dimen name="thumbnailWH">48dp</dimen>
 
     <dimen name="dividerSmall">1dp</dimen>
-    <dimen name="dividerMedium">2dp</dimen>
+    <dimen name="dividerMedium">4dp</dimen>
+    <dimen name="dividerLarge">8dp</dimen>
 </resources>

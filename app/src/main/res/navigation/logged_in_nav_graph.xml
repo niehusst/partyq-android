@@ -26,4 +26,9 @@
         android:name="com.niehusst.partyq.ui.partyCode.PartyCodeFragment"
         android:label="PartyCodeFragment"
         tools:layout="@layout/party_code_fragment"/>
+    <fragment
+        android:id="@+id/queueFragment"
+        android:name="com.niehusst.partyq.ui.queue.QueueFragment"
+        android:label="QueueFragment"
+        tools:layout="@layout/queue_fragment"/>
 </navigation>

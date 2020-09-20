@@ -13,7 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SpotifyLoginFragmentBinding
-import com.niehusst.partyq.services.CommunicationService
+import com.niehusst.partyq.services.PartyCodeHandler
 import com.niehusst.partyq.services.TokenHandlerService
 import com.niehusst.partyq.services.UserTypeService
 import com.spotify.sdk.android.authentication.AuthenticationClient
@@ -75,10 +75,10 @@ class SpotifyLoginFragment : Fragment() {
                     TimeUnit.SECONDS
                 )
                 // create the party code and set self as host
-                CommunicationService.createPartyCode(requireContext())
+                PartyCodeHandler.createPartyCode(requireContext())
                 UserTypeService.setSelfAsHost(
                     requireContext(),
-                    CommunicationService.getPartyCode(requireContext())!!
+                    PartyCodeHandler.getPartyCode(requireContext())!!
                 )
 
                 findNavController().navigate(R.id.partyActivity)

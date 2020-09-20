@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.niehusst.partyq.R
@@ -15,6 +16,7 @@ import com.niehusst.partyq.SharedPrefNames.PARTY_FIRST_START
 import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.repository.SpotifyRepository
+import kotlinx.android.synthetic.main.activity_party.*
 import timber.log.Timber
 
 class PartyActivity : AppCompatActivity() {
@@ -90,13 +92,11 @@ class PartyActivity : AppCompatActivity() {
         binding.bottomNav.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.searchFragment,
-                R.id.queueFragment,
-                R.id.nowPlayingFragment -> {
-                    true
-                    // TODO: implement fragments
-//                    NavigationUI
-//                        .onNavDestinationSelected(item, party_nav_host_fragment.findNavController())
+                R.id.queueFragment -> {
+                    NavigationUI
+                        .onNavDestinationSelected(item, navController)
                 }
+                R.id.nowPlayingFragment -> true
                 else -> {
                     Timber.e("Bottom Nav selection ${item.title} not recognized")
                     false
