@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -8,45 +10,20 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/about_fragment_title"
-            android:layout_width="wrap_content"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{code}"
             android:layout_marginStart="@dimen/marginSpace"
             android:layout_marginTop="@dimen/marginSpace"
-            style="@style/TextAppearance.AppCompat.Title"
+            android:text="@string/your_party_code"
+            app:layout_constraintEnd_toStartOf="@+id/close_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="@dimen/marginSpace"
-            android:layout_marginStart="@dimen/mediumPadding"
-            android:layout_marginEnd="@dimen/mediumPadding"
-            android:background="@color/dividerColor"
-            app:layout_constraintTop_toBottomOf="@id/about_fragment_title"
-            />
-
-        <TextView
-            android:id="@+id/about_fragment_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/about_content"
-            android:layout_marginStart="@dimen/marginSpace"
-            android:layout_marginTop="@dimen/marginSpace"
-            android:layout_marginEnd="@dimen/marginSpace"
-            style="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <ImageButton
             android:id="@+id/close_button"
@@ -58,5 +35,44 @@
             android:src="@drawable/ic_baseline_close_24"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="@dimen/marginSpace"
+            android:layout_marginStart="@dimen/mediumPadding"
+            android:layout_marginEnd="@dimen/mediumPadding"
+            android:background="@color/dividerColor"
+            android:importantForAccessibility="no"
+            app:layout_constraintTop_toBottomOf="@id/about_fragment_title" />
+
+        <TextView
+            android:id="@+id/code_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mediumPadding"
+            android:padding="@dimen/mediumPadding"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/textMassive"
+            android:background="@color/backgroundColor"
+            android:textColor="@color/onBackgroundColor"
+            android:text="@{code}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            tools:text="1234"/>
+
+        <TextView
+            android:id="@+id/about_fragment_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/party_code_details"
+            android:layout_margin="@dimen/largePadding"
+            style="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/code_text"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
