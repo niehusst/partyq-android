@@ -114,7 +114,7 @@ class PartyActivity : AppCompatActivity() {
 
     private fun launchPartyCodeDialog() {
         // TODO: impl party code dialog
-        Toast.makeText(this, "Launch code dialog", Toast.LENGTH_SHORT).show()
+        navController.navigate(R.id.partyCodeFragment)
     }
 
     private fun leaveParty() {
