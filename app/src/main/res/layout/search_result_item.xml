@@ -7,7 +7,6 @@
         android:layout_height="wrap_content"
         android:background="@color/colorSurface">
 
-    <!--  TODO: change to scale ratio 1:1 && layoutWH 0dp? how big of image does spotify send? -->
         <ImageView
             android:id="@+id/thumbnail"
             android:layout_width="@dimen/thumbnailWH"
