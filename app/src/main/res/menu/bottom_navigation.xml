@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/searchFragment"
+        android:id="@+id/search_nav_graph"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_search_24"
         android:title="@string/search"/>
     <item
-        android:id="@+id/nowPlayingFragment"
+        android:id="@+id/now_playing_nav_graph"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_play_arrow_24"
         android:title="@string/now_playing"/>
     <item
-        android:id="@+id/queueFragment"
+        android:id="@+id/queue_nav_graph"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_queue_music_24"
         android:title="@string/queue"/>
