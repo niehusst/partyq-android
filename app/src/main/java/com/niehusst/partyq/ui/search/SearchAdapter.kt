@@ -2,11 +2,15 @@ package com.niehusst.partyq.ui.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
+import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SearchResultItemBinding
 import com.niehusst.partyq.network.models.*
 import com.niehusst.partyq.services.QueueService
+import kotlinx.android.synthetic.main.activity_party.view.*
 
 class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
 
@@ -39,8 +43,35 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
                 .into(binding.thumbnail)
 
             binding.root.setOnClickListener {
-                QueueService.enqueueSong(item)
+                // give more visual confirmation that song was added to queue
+                if (QueueService.enqueueSong(item)) {
+                    showSuccess()
+                } else {
+                    showError()
+                }
             }
+        }
+
+        private fun showSuccess() {
+            val snackPopup = Snackbar.make(
+                binding.root,
+                R.string.song_added_to_queue,
+                Snackbar.LENGTH_SHORT
+            )
+            snackPopup.view.setBackgroundColor(binding.root.context.getColor(R.color.colorSuccess))
+            snackPopup.setTextColor(binding.root.context.getColor(R.color.onColorSuccess))
+            snackPopup.show()
+        }
+
+        private fun showError() {
+            val snackPopup = Snackbar.make(
+                binding.root,
+                R.string.error_adding_song_to_queue,
+                Snackbar.LENGTH_SHORT
+            )
+            snackPopup.view.setBackgroundColor(binding.root.context.getColor(R.color.colorError))
+            snackPopup.setTextColor(binding.root.context.getColor(R.color.onColorError))
+            snackPopup.show()
         }
 
         private fun artistsToPrettyString(artists: List<Artist>?): String {

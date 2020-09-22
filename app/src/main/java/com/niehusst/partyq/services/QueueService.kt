@@ -10,10 +10,11 @@ object QueueService {
     val dataChangedTrigger = MutableLiveData<Any?>(null)
     private var songQueue: Queue<Item> = LinkedList()
 
-    fun enqueueSong(item: Item) {
+    fun enqueueSong(item: Item): Boolean {
+        // TODO: send update to comms. if doesnt fail, add to local queue as well. Unless host; then always add to local q
         songQueue.add(item)
-        // TODO: send update to comms
         notifyDataChange()
+        return true // TODO: return status of comms req
     }
 
     fun dequeueSong(context: Context): Item? {
