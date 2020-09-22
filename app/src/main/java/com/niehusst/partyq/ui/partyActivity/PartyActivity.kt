@@ -14,7 +14,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.niehusst.partyq.R
 import com.niehusst.partyq.SharedPrefNames.PARTY_FIRST_START
 import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
@@ -33,6 +32,7 @@ class PartyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_party)
+        setSupportActionBar(findViewById(R.id.toolbar))
         startConnectionService()
         startSpotifyPlayerService()
         if (savedInstanceState == null) {
@@ -133,7 +133,7 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun launchPartyCodeDialog() {
-//        currNavController?.value?.navigate(R.id.partyCodeFragment)
+        currNavController?.value?.navigate(R.id.partyCodeFragment)
     }
 
     private fun leaveParty() {
