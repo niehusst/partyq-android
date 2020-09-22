@@ -19,6 +19,7 @@
 
     <dimen name="iconWH">32dp</dimen>
     <dimen name="thumbnailWH">48dp</dimen>
+    <dimen name="largeThumbnailWH">64dp</dimen>
 
     <dimen name="dividerSmall">1dp</dimen>
     <dimen name="dividerMedium">4dp</dimen>

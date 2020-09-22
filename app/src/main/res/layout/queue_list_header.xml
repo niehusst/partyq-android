@@ -9,11 +9,10 @@
 
         <ImageView
             android:id="@+id/thumbnail"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/largeThumbnailWH"
+            android:layout_height="@dimen/largeThumbnailWH"
             android:layout_marginStart="@dimen/largePadding"
             android:scaleType="fitCenter"
-            app:layout_constraintDimensionRatio="1:1"
             android:background="@color/backgroundColor"
             android:importantForAccessibility="no"
             app:layout_constraintStart_toStartOf="parent"

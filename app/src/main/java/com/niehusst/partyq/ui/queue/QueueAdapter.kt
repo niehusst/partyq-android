@@ -8,15 +8,24 @@ import com.niehusst.partyq.databinding.QueueListHeaderBinding
 import com.niehusst.partyq.databinding.QueueListItemBinding
 import com.niehusst.partyq.network.models.Artist
 import com.niehusst.partyq.network.models.Item
+import com.niehusst.partyq.services.QueueService
 
 class QueueAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     // Copy of the same data in QueueService. Duplicated for stability during binding
-    var queueCopy = listOf<Item>()
+    var queueCopy = QueueService.getQueueItems()
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == 0) {
+            TYPE_HEADER
+        } else {
+            TYPE_ITEM
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return if (viewType == 0) {
+        return if (viewType == TYPE_HEADER) {
             QueueHeaderViewHolder(
                 QueueListHeaderBinding.inflate(layoutInflater, parent, false)
             )
@@ -78,5 +87,10 @@ class QueueAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 .fitCenter()
                 .into(binding.thumbnail)
         }
+    }
+
+    companion object {
+        const val TYPE_HEADER = 0
+        const val TYPE_ITEM = 1
     }
 }
