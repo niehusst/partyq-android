@@ -3,7 +3,8 @@ package com.niehusst.partyq.services
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.niehusst.partyq.network.models.Item
-import java.util.*
+import java.util.Queue
+import java.util.LinkedList
 
 object QueueService {
 

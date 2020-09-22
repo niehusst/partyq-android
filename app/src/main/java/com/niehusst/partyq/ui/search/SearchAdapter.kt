@@ -2,15 +2,14 @@ package com.niehusst.partyq.ui.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SearchResultItemBinding
-import com.niehusst.partyq.network.models.*
+import com.niehusst.partyq.network.models.Artist
+import com.niehusst.partyq.network.models.Item
 import com.niehusst.partyq.services.QueueService
-import kotlinx.android.synthetic.main.activity_party.view.*
 
 class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
 
