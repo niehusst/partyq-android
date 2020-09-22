@@ -9,15 +9,29 @@
 
         <ImageView
             android:id="@+id/thumbnail"
-            android:layout_width="@dimen/thumbnailWH"
-            android:layout_height="@dimen/thumbnailWH"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginStart="@dimen/largePadding"
             android:scaleType="fitCenter"
+            app:layout_constraintDimensionRatio="1:1"
             android:background="@color/backgroundColor"
             android:importantForAccessibility="no"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/song_title"
+            app:layout_constraintTop_toTopOf="@id/currently_playing_text"
             app:layout_constraintBottom_toBottomOf="@id/artist_name" />
+
+        <TextView
+            android:id="@+id/currently_playing_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/largePadding"
+            android:layout_marginEnd="@dimen/largePadding"
+            android:layout_marginTop="@dimen/largePadding"
+            android:text="@string/currently_playing"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/thumbnail"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/song_title"/>
 
         <TextView
             android:id="@+id/song_title"
@@ -25,13 +39,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/largePadding"
             android:layout_marginEnd="@dimen/largePadding"
-            android:layout_marginTop="@dimen/largePadding"
             android:textColor="@color/onColorSurface"
             android:textSize="@dimen/textLarge"
             app:layout_constraintBottom_toTopOf="@id/artist_name"
-            app:layout_constraintEnd_toStartOf="@+id/appCompatImageView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/thumbnail"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/currently_playing_text"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Title" />
 
@@ -44,26 +57,16 @@
             android:layout_marginBottom="@dimen/largePadding"
             android:textColor="@color/textHintColor"
             android:textSize="@dimen/textSmall"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/appCompatImageView"
+            app:layout_constraintBottom_toTopOf="@id/divider"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/thumbnail"
             app:layout_constraintTop_toBottomOf="@id/song_title"
             tools:text="Artist name" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/appCompatImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/marginSpace"
-            android:contentDescription="@string/add_song_to_queue"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_baseline_add_24" />
-
         <View
+            android:id="@+id/divider"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dividerSmall"
+            android:layout_height="@dimen/dividerLarge"
             android:background="@color/dividerColor"
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>

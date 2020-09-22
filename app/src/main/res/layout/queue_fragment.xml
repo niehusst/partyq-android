@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="queueEmpty"
+            type="Boolean" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundColor">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/song_queue"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/queue_list_item"
+            isGone="@{queueEmpty}"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/no_songs_in_the_queue"
+            android:textColor="@color/onBackgroundColorLight"
+            android:gravity="center"
+            android:textSize="@dimen/textLarge"
+            isGone="@{!queueEmpty}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

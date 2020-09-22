@@ -7,34 +7,45 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.niehusst.partyq.R
 import com.niehusst.partyq.SharedPrefNames.PARTY_FIRST_START
 import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.databinding.ActivityPartyBinding
+import com.niehusst.partyq.extensions.setupWithNavController
 import com.niehusst.partyq.repository.SpotifyRepository
 import timber.log.Timber
 
 class PartyActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPartyBinding
-    private lateinit var navController: NavController
+    private var currNavController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_party)
-        setupActionBar()
-        setupBottomNavBinding()
+        setSupportActionBar(findViewById(R.id.toolbar))
         startConnectionService()
         startSpotifyPlayerService()
+        if (savedInstanceState == null) {
+            setupBottomNavBinding()
+        } // else wait for onRestoreInstanceState
 
         // set search as first active tab
         binding.bottomNav.selectedItemId = R.id.searchFragment
     }
     // TODO: display errors in fragment somehow. (toast? put as bg text? snackbar?)
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // now that bottom nav has restored its state, we can set it up
+        setupBottomNavBinding()
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu_loggedin, menu)
@@ -52,7 +63,7 @@ class PartyActivity : AppCompatActivity() {
                 true
             }
             R.id.aboutFragment,
-            R.id.legalFragment -> NavigationUI.onNavDestinationSelected(item, navController)
+            R.id.legalFragment -> NavigationUI.onNavDestinationSelected(item, currNavController?.value!!)
             else -> {
                 Timber.e("Menu item not found")
                 false
@@ -61,12 +72,12 @@ class PartyActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp()
+        return currNavController?.value?.navigateUp() ?: false
     }
 
     override fun onBackPressed() {
         // attempt standard nav up (returns false when no fragments to pop off backstack)
-        if (!navController.navigateUp()) {
+        if (currNavController?.value?.navigateUp() != true) {
             // just minimize the app instead of finishing this activity
             val home = Intent(Intent.ACTION_MAIN)
             home.addCategory(Intent.CATEGORY_HOME)
@@ -87,29 +98,25 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavBinding() {
-        binding.bottomNav.setOnNavigationItemSelectedListener { item ->
-            when(item.itemId) {
-                R.id.searchFragment,
-                R.id.queueFragment,
-                R.id.nowPlayingFragment -> {
-                    true
-                    // TODO: implement fragments
-//                    NavigationUI
-//                        .onNavDestinationSelected(item, party_nav_host_fragment.findNavController())
-                }
-                else -> {
-                    Timber.e("Bottom Nav selection ${item.title} not recognized")
-                    false
-                }
-            }
-        }
-    }
+        val navGraphIds = listOf(
+            R.navigation.search_nav_graph,
+            R.navigation.now_playing_nav_graph,
+            R.navigation.queue_nav_graph
+        )
 
-    private fun setupActionBar() {
-        setSupportActionBar(findViewById(R.id.toolbar))
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.party_nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
-        NavigationUI.setupActionBarWithNavController(this, navController)
+        // Setup the bottom navigation view with a list of navigation graphs
+        val controller = binding.bottomNav.setupWithNavController(
+            navGraphIds = navGraphIds,
+            fragmentManager = supportFragmentManager,
+            containerId = R.id.party_nav_host_fragment,
+            intent = intent
+        )
+
+        // Whenever the selected controller changes, setup the action bar.
+        controller.observe(this, Observer { navController ->
+            setupActionBarWithNavController(this, navController)
+        })
+        currNavController = controller
     }
 
     private fun startConnectionService() {
@@ -123,7 +130,7 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun launchPartyCodeDialog() {
-        navController.navigate(R.id.partyCodeFragment)
+        currNavController?.value?.navigate(R.id.partyCodeFragment)
     }
 
     private fun leaveParty() {
