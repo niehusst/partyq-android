@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.niehusst.partyq.databinding.SearchResultItemBinding
 import com.niehusst.partyq.network.models.*
+import com.niehusst.partyq.services.QueueService
 
 class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
 
@@ -38,7 +39,7 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
                 .into(binding.thumbnail)
 
             binding.root.setOnClickListener {
-                // TODO: add to queue
+                QueueService.enqueueSong(item)
             }
         }
 
