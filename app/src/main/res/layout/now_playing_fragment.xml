@@ -26,14 +26,16 @@
             android:id="@+id/spotify_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/mediumPadding"
+            android:layout_marginBottom="@dimen/mediumPadding"
+            android:text="@{String.format(@string/see_song_on_spotify_at_link, songLink)}"
             android:textColor="@color/onBackgroundColorLight"
-            android:text="@{`See song on Spotify at: ` + songLink}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textIsSelectable="true"
             app:layout_constraintBottom_toTopOf="@id/album_image"
-            tools:text="See song on Spotify at: "/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="See song on Spotify at: " />
 
         <ImageView
             android:id="@+id/album_image"
@@ -41,13 +43,14 @@
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/largePadding"
             android:layout_marginEnd="@dimen/largePadding"
-            android:src="@color/backgroundColor"
+            android:layout_marginBottom="@dimen/mediumPadding"
             android:importantForAccessibility="no"
+            android:src="@color/backgroundColor"
+            app:layout_constraintBottom_toTopOf="@id/song_title"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintTop_toBottomOf="@id/spotify_link"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/song_title"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spotify_link" />
 
         <TextView
             android:id="@+id/song_title"
@@ -56,21 +59,22 @@
             android:layout_height="wrap_content"
             android:text="@{songName}"
             android:textSize="@dimen/textLarge"
+            app:layout_constraintBottom_toTopOf="@id/song_artists"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/album_image"
-            app:layout_constraintBottom_toTopOf="@id/song_artists"
             tools:text="Title" />
 
         <TextView
             android:id="@+id/song_artists"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/largePadding"
             android:text="@{songArtist}"
+            app:layout_constraintBottom_toTopOf="@id/play_toggle_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/song_title"
-            app:layout_constraintBottom_toTopOf="@id/play_toggle_button"
             tools:text="Artist" />
 
         <!-- song progress here?? -->
@@ -80,10 +84,10 @@
             android:layout_width="@dimen/largeThumbnailWH"
             android:layout_height="@dimen/largeThumbnailWH"
             android:src="@drawable/ic_baseline_play_arrow_24"
+            app:layout_constraintBottom_toTopOf="@id/skip_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/song_artists"
-            app:layout_constraintBottom_toTopOf="@id/skip_button"
             isGone="@{!isHost}"/>
 
         <com.google.android.material.button.MaterialButton
@@ -91,14 +95,15 @@
             style="@style/PartyqButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mediumPadding"
             android:text="@string/skip_song"
             app:icon="@drawable/ic_baseline_skip_next_24"
             app:iconGravity="end"
             app:iconTint="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/album_image"
             app:layout_constraintStart_toStartOf="@id/album_image"
-            app:layout_constraintTop_toBottomOf="@id/play_toggle_button"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/play_toggle_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

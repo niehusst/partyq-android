@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.niehusst.partyq.databinding.NowPlayingFragmentBinding
@@ -15,7 +16,7 @@ import com.niehusst.partyq.services.UserTypeService
 class NowPlayingFragment : Fragment() {
 
     private lateinit var binding: NowPlayingFragmentBinding
-    private var currItem: Item? = null
+    private val viewModel by viewModels<NowPlayingViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,14 +30,12 @@ class NowPlayingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.isHost = UserTypeService.isHost(requireContext())
-        currItem = QueueService.peekQueue()
-        bindItem(currItem)
+        viewModel.currItem = QueueService.peekQueue()
+        bindItem(viewModel.currItem)
 
         QueueService.dataChangedTrigger.observe(viewLifecycleOwner, Observer {
-            val newHead = QueueService.peekQueue()
-            if (newHead != currItem) {
-                currItem = newHead
-                bindItem(currItem)
+            if (viewModel.isNewCurrItem()) {
+                bindItem(viewModel.currItem)
             }
         })
     }
@@ -45,22 +44,12 @@ class NowPlayingFragment : Fragment() {
         item?.also {
             binding.songName = it.name
             binding.songArtist = it.artistsAsPrettyString()
-            binding.songLink = getSpotifyLink(it)
+            binding.songLink = it.getSpotifyLink()
             // Get first image since it should be the largest (last is smallest)
             Glide.with(this)
                 .load(item.album.images?.firstOrNull()?.url)
                 .fitCenter()
                 .into(binding.albumImage)
         }
-    }
-
-    private fun getSpotifyLink(item: Item): String? {
-        return listOf(
-            item.externalUrls?.spotify,
-            item.album.externalUrls?.spotify,
-            item.artists?.firstOrNull()?.externalUrls?.spotify,
-            item.album.artists?.firstOrNull()?.externalUrls?.spotify,
-            item.href // last ditch effort to put out some spotify url
-        ).firstOrNull { it != null }
     }
 }

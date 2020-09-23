@@ -50,4 +50,14 @@ data class Item(
         }
         return nameList
     }
+
+    fun getSpotifyLink(): String {
+        return listOf(
+            externalUrls?.spotify,
+            album.externalUrls?.spotify,
+            artists?.firstOrNull()?.externalUrls?.spotify,
+            album.artists?.firstOrNull()?.externalUrls?.spotify,
+            href // last ditch effort to put out some spotify url
+        ).firstOrNull { it != null } ?: "N/A"
+    }
 }
