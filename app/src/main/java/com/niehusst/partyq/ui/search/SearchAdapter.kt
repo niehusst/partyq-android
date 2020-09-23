@@ -7,7 +7,6 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SearchResultItemBinding
-import com.niehusst.partyq.network.models.Artist
 import com.niehusst.partyq.network.models.Item
 import com.niehusst.partyq.services.QueueService
 
@@ -35,7 +34,7 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
 
         fun bind(item: Item) {
             binding.songTitle.text = item.name
-            binding.artistName.text = artistsToPrettyString(item.artists)
+            binding.artistName.text = item.artistsAsPrettyString()
             Glide.with(binding.root)
                 .load(item.album.images?.lastOrNull()?.url)
                 .fitCenter()
@@ -71,19 +70,6 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
             snackPopup.view.setBackgroundColor(binding.root.context.getColor(R.color.colorError))
             snackPopup.setTextColor(binding.root.context.getColor(R.color.onColorError))
             snackPopup.show()
-        }
-
-        private fun artistsToPrettyString(artists: List<Artist>?): String {
-            var nameList = ""
-            var i = 0
-            artists?.forEach { art ->
-                nameList += art.name
-                if (i < artists.size-1) {
-                    nameList += ", "
-                }
-                i++
-            }
-            return nameList
         }
     }
 }

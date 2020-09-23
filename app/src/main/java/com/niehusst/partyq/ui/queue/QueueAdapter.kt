@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.niehusst.partyq.databinding.QueueListHeaderBinding
 import com.niehusst.partyq.databinding.QueueListItemBinding
-import com.niehusst.partyq.network.models.Artist
 import com.niehusst.partyq.network.models.Item
 import com.niehusst.partyq.services.QueueService
 
@@ -46,29 +45,12 @@ class QueueAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    interface QueueViewHolder {
-        fun bind(item: Item)
-
-        fun artistsToPrettyString(artists: List<Artist>?): String {
-            var nameList = ""
-            var i = 0
-            artists?.forEach { art ->
-                nameList += art.name
-                if (i < artists.size-1) {
-                    nameList += ", "
-                }
-                i++
-            }
-            return nameList
-        }
-    }
-
     inner class QueueItemViewHolder(
         private val binding: QueueListItemBinding
-    ) : QueueViewHolder, RecyclerView.ViewHolder(binding.root) {
-        override fun bind(item: Item) {
+    ) : RecyclerView.ViewHolder(binding.root) {
+         fun bind(item: Item) {
             binding.songTitle.text = item.name
-            binding.artistName.text = artistsToPrettyString(item.artists)
+            binding.artistName.text = item.artistsAsPrettyString()
             Glide.with(binding.root)
                 .load(item.album.images?.lastOrNull()?.url)
                 .fitCenter()
@@ -78,10 +60,10 @@ class QueueAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class QueueHeaderViewHolder(
         private val binding: QueueListHeaderBinding
-    ) : QueueViewHolder, RecyclerView.ViewHolder(binding.root) {
-        override fun bind(item: Item) {
+    ) : RecyclerView.ViewHolder(binding.root) {
+         fun bind(item: Item) {
             binding.songTitle.text = item.name
-            binding.artistName.text = artistsToPrettyString(item.artists)
+            binding.artistName.text = item.artistsAsPrettyString()
             Glide.with(binding.root)
                 .load(item.album.images?.lastOrNull()?.url)
                 .fitCenter()

@@ -36,6 +36,10 @@ object QueueService {
         return songQueue.toList()
     }
 
+    fun peekQueue(): Item? {
+        return songQueue.peek()
+    }
+
     private fun notifyDataChange() {
         dataChangedTrigger.value = null
     }

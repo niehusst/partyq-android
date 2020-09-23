@@ -47,4 +47,5 @@
     <!-- Queue -->
     <string name="currently_playing">Currently Playing:</string>
     <string name="no_songs_in_the_queue">No Songs in the Queue</string>
+    <string name="skip_song">Skip Song</string>
 </resources>
