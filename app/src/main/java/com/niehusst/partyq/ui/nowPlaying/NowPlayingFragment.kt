@@ -45,12 +45,22 @@ class NowPlayingFragment : Fragment() {
         item?.also {
             binding.songName = it.name
             binding.songArtist = it.artistsAsPrettyString()
-            binding.songLink = it.externalUrls.spotify
+            binding.songLink = getSpotifyLink(it)
             // Get first image since it should be the largest (last is smallest)
             Glide.with(this)
                 .load(item.album.images?.firstOrNull()?.url)
                 .fitCenter()
                 .into(binding.albumImage)
         }
+    }
+
+    private fun getSpotifyLink(item: Item): String? {
+        return listOf(
+            item.externalUrls?.spotify,
+            item.album.externalUrls?.spotify,
+            item.artists?.firstOrNull()?.externalUrls?.spotify,
+            item.album.artists?.firstOrNull()?.externalUrls?.spotify,
+            item.href // last ditch effort to put out some spotify url
+        ).firstOrNull { it != null }
     }
 }
