@@ -20,7 +20,7 @@
             name="noSong"
             type="Boolean" />
     </data>
-<!--TODO: addno song layout-->
+    
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

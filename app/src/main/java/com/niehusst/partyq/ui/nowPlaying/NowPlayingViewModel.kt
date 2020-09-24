@@ -36,7 +36,7 @@ class NowPlayingViewModel : ViewModel() {
     fun voteSkipSong(context: Context) {
         if (hasVotedSkip) return
         hasVotedSkip = true
-        
+
         if (UserTypeService.isHost(context)) {
             // TODO: add a vote towards skip song to master skip count holder
             QueueService.dequeueSong(context) // TODO: delete/delegate
