@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.niehusst.partyq.R
+import com.niehusst.partyq.SpotifySharedInfo
 import com.niehusst.partyq.services.SpotifyAuthenticator
 import com.niehusst.partyq.ui.spotifyLogin.SpotifyLoginFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == SpotifyAuthenticator.REQUEST_CODE) {
+        if (requestCode == SpotifySharedInfo.REQUEST_CODE) {
             // let the visible instance of SpotifyLoginFragment handle the rest of auth req
             val fragment = supportFragmentManager.fragments.firstOrNull()
                 ?.childFragmentManager?.fragments?.firstOrNull { it.isVisible }
