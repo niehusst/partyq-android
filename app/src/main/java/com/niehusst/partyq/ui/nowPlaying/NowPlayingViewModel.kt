@@ -9,7 +9,7 @@ import com.niehusst.partyq.services.UserTypeService
 
 class NowPlayingViewModel : ViewModel() {
     var currItem: Item? = null
-    var hasVotedSkip = false // TODO: this must update on new song
+    var hasVotedSkip = false
 
     fun isNewCurrItem(): Boolean {
         val newHead = QueueService.peekQueue()
