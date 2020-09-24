@@ -15,6 +15,7 @@ class NowPlayingViewModel : ViewModel() {
         val newHead = QueueService.peekQueue()
         if (newHead != currItem) { // TODO: but what if the same song is twice in a row?
             currItem = newHead
+            hasVotedSkip = false
             return true
         }
         return false

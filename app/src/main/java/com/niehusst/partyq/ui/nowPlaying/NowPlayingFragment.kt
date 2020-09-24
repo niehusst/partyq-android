@@ -39,7 +39,6 @@ class NowPlayingFragment : Fragment() {
         QueueService.dataChangedTrigger.observe(viewLifecycleOwner, Observer {
             if (viewModel.isNewCurrItem()) {
                 bindItem(viewModel.currItem)
-                viewModel.hasVotedSkip = false
             }
         })
     }
