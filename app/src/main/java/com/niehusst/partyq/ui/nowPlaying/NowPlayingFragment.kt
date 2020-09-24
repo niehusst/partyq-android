@@ -61,22 +61,24 @@ class NowPlayingFragment : Fragment() {
         binding.playToggleButton.setOnClickListener {
             if (binding.playToggleButton.tag == "play") {
                 viewModel.playSong()
-                // update the layout
+                // update the layout w/ content for pausing the song
                 binding.playToggleButton.setImageDrawable(
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_pause_24)
                 )
                 binding.playToggleButton.tag = "pause"
-            } else { // pause
+                binding.playToggleButton.contentDescription = getString(R.string.pause_song)
+            } else { // tag == pause
                 viewModel.pauseSong()
-                // update the layout
+                // update the layout w/ content for playing the song
                 binding.playToggleButton.setImageDrawable(
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_play_arrow_24)
                 )
                 binding.playToggleButton.tag = "play"
+                binding.playToggleButton.contentDescription = getString(R.string.play_song)
             }
         }
         binding.skipButton.setOnClickListener {
-            viewModel.skipSong(requireContext())
+            viewModel.voteSkipSong(requireContext())
         }
     }
 }

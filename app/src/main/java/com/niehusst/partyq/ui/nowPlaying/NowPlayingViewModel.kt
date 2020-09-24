@@ -33,16 +33,16 @@ class NowPlayingViewModel : ViewModel() {
      * Submit a vote to skip the current song. For the song to be skipped, more than 50% of
      * party goers must vote to skip the same song while it is being played.
      */
-    fun skipSong(context: Context) {
+    fun voteSkipSong(context: Context) {
         if (hasVotedSkip) return
-
+        hasVotedSkip = true
+        
         if (UserTypeService.isHost(context)) {
             // TODO: add a vote towards skip song to master skip count holder
+            QueueService.dequeueSong(context) // TODO: delete/delegate
         } else {
             // TODO: send vote skip req through comms
         }
-        hasVotedSkip = true
         Toast.makeText(context, "Your vote to skip has been counted", Toast.LENGTH_SHORT).show()
-        QueueService.dequeueSong(context) // TODO: delete
     }
 }

@@ -18,13 +18,12 @@ object QueueService {
         return true // TODO: return status of comms req
     }
 
-    fun dequeueSong(context: Context): Item? {
-        val nextSong = songQueue.poll()
+    fun dequeueSong(context: Context) {
+        songQueue.poll()
         if (UserTypeService.isHost(context)) {
-            // TODO: send update to all guests via comms
+            // TODO: send update to all guests via comms (is this necessary? should a whole new copy of q be sent instead? is this a host only method?)
         }
         notifyDataChange()
-        return nextSong
     }
 
     fun replaceQueue(newQueue: List<Item>) {

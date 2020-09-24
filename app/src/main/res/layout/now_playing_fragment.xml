@@ -116,6 +116,7 @@
             android:layout_height="wrap_content"
             android:minWidth="256dp"
             android:layout_marginTop="@dimen/mediumPadding"
+            android:layout_marginBottom="@dimen/smallPadding"
             android:text="@string/skip_song"
             app:icon="@drawable/ic_baseline_skip_next_24"
             app:iconGravity="end"
