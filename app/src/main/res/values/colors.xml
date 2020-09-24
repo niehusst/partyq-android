@@ -21,6 +21,8 @@
   <color name="backgroundColor">#d1d1d1</color>
   <color name="onBackgroundColor">@color/black</color>
   <color name="onBackgroundColorLight">#595959</color>
+  <color name="darkBackgroundColor">#303030</color>
+  <color name="onDarkBackgroundColor">@color/white</color>
   <color name="dividerColor">#a1a1a1</color>
 
   <color name="colorSurface">@color/white</color>

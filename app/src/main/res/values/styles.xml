@@ -18,6 +18,9 @@
         <item name="android:minHeight">48dp</item>
         <item name="android:paddingTop">@dimen/largePadding</item>
         <item name="android:paddingBottom">@dimen/largePadding</item>
-<!--        <item name="android:backgroundTint">@color/secondaryColor</item>-->
+    </style>
+
+    <style name="PartyqButton.Style2" parent="PartyqButton">
+        <item name="android:backgroundTint">@color/secondaryLightColor</item>
     </style>
 </resources>
