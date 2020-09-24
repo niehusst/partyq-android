@@ -47,4 +47,11 @@
     <!-- Queue -->
     <string name="currently_playing">Currently Playing:</string>
     <string name="no_songs_in_the_queue">No Songs in the Queue</string>
+    
+    <!-- NowPlaying -->
+    <string name="skip_song">Skip Song</string>
+    <string name="see_song_on_spotify_at_link">See song on Spotify at:\n%s</string>
+    <string name="play_song">Play song</string>
+    <string name="pause_song">Pause song</string>
+    <string name="no_song_playing">No\nSong\nPlaying</string>
 </resources>

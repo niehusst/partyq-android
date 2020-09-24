@@ -18,7 +18,7 @@ data class Item(
     @Json(name = "external_ids")
     val externalIds: ExternalIds,
     @Json(name = "external_urls")
-    val externalUrls: ExternalUrls, // TODO: link to Spotify legally required to show while song play
+    val externalUrls: ExternalUrls?,
     @Json(name = "href")
     val href: String,
     @Json(name = "id")
@@ -37,4 +37,27 @@ data class Item(
     val type: String,
     @Json(name = "uri")
     val uri: String
-)
+) {
+    fun artistsAsPrettyString(): String {
+        var nameList = ""
+        var i = 0
+        artists?.forEach { art ->
+            nameList += art.name
+            if (i < artists.size-1) {
+                nameList += ", "
+            }
+            i++
+        }
+        return nameList
+    }
+
+    fun getSpotifyLink(): String {
+        return listOf(
+            externalUrls?.spotify,
+            album.externalUrls?.spotify,
+            artists?.firstOrNull()?.externalUrls?.spotify,
+            album.artists?.firstOrNull()?.externalUrls?.spotify,
+            href // last ditch effort to put out some spotify url
+        ).firstOrNull { it != null } ?: "N/A"
+    }
+}
