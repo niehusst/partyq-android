@@ -18,6 +18,8 @@ import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.extensions.setupWithNavController
 import com.niehusst.partyq.repository.SpotifyRepository
+import com.niehusst.partyq.services.KeyFetchService
+import com.niehusst.partyq.services.SpotifyPlayerService
 import timber.log.Timber
 
 class PartyActivity : AppCompatActivity() {
@@ -30,7 +32,7 @@ class PartyActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_party)
         setSupportActionBar(findViewById(R.id.toolbar))
-        startConnectionService()
+        startCommunicationService()
         startSpotifyPlayerService()
         if (savedInstanceState == null) {
             setupBottomNavBinding()
@@ -39,7 +41,6 @@ class PartyActivity : AppCompatActivity() {
         // set search as first active tab
         binding.bottomNav.selectedItemId = R.id.searchFragment
     }
-    // TODO: display errors in fragment somehow. (toast? put as bg text? snackbar?)
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
@@ -97,6 +98,12 @@ class PartyActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        // TODO: disconnect from spotify app remote ok? will we be unable to resume host abilities after onStart?
+        SpotifyPlayerService.disconnect()
+    }
+
     private fun setupBottomNavBinding() {
         val navGraphIds = listOf(
             R.navigation.search_nav_graph,
@@ -119,14 +126,14 @@ class PartyActivity : AppCompatActivity() {
         currNavController = controller
     }
 
-    private fun startConnectionService() {
+    private fun startCommunicationService() {
         // TODO: delegate host vs guest logic to the repo/service
         // TODO: should i worry about accidentally starting service multiple times? could happen on process death recovery?
     }
 
     private fun startSpotifyPlayerService() {
-        // TODO: ? need any more than this? if music playing requires more setup, do that here
         SpotifyRepository.start(this)
+        SpotifyPlayerService.start(this, KeyFetchService.getSpotifyKey())
     }
 
     private fun launchPartyCodeDialog() {

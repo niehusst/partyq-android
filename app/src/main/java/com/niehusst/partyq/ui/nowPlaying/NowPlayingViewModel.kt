@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.niehusst.partyq.network.models.Item
 import com.niehusst.partyq.services.QueueService
+import com.niehusst.partyq.services.SpotifyPlayerService
 import com.niehusst.partyq.services.UserTypeService
 
 class NowPlayingViewModel : ViewModel() {
@@ -22,11 +23,11 @@ class NowPlayingViewModel : ViewModel() {
     }
 
     fun playSong() {
-        // TODO: call spotify player service
+        SpotifyPlayerService.resumeSong()
     }
 
     fun pauseSong() {
-        // TODO: call spotfy player service
+        SpotifyPlayerService.pauseSong()
     }
 
     /**
@@ -44,5 +45,10 @@ class NowPlayingViewModel : ViewModel() {
             // TODO: send vote skip req through comms
         }
         Toast.makeText(context, "Your vote to skip has been counted", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onCleared() {
+        // TODO: is this a good spot to disconnect from spotify?? except that it never gets called bcus owner fragment never calls ondestroy probs bcus of bottomnav stuff
+        super.onCleared()
     }
 }

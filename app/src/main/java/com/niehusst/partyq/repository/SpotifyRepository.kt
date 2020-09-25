@@ -26,10 +26,6 @@ object SpotifyRepository {
         }
     }
 
-    fun playSong() {
-        // TODO: play song (can this be done w/o appremote?)
-    }
-
     /**
      * If the user is the host, make an API call to Spotify. Otherwise, send the request to the
      * host to execute. The management of loading state is left to the calling ViewModel.
@@ -44,28 +40,8 @@ object SpotifyRepository {
                 Resource.error(null, "Network error")
             }
         } else {
-//            CommunicationService.sendSearchRequest(query)
+//          TODO  CommunicationService.sendSearchRequest(query)
             Resource.error(null, "not yet implemented")
         }
     }
-
-//    private fun connected() {
-//        // Play a playlist
-//        spotifyAppRemote?.playerApi?.play("spotify:playlist:37i9dQZF1DX2sUQwD7tbmL")
-//
-//        // Subscribe to PlayerState
-//        spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback {
-//            val track: Track = it.track
-//            Timber.d( "${track.name} by ${track.artist.name}")
-//        }
-//    }
-//
-//    override fun onStop() {
-//        super.onStop()
-//        // this doesn't actually stop SPOTIFY from running an playing music
-//        spotifyAppRemote?.let {
-//            SpotifyAppRemote.disconnect(it)
-//        }
-//    }
-
 }
