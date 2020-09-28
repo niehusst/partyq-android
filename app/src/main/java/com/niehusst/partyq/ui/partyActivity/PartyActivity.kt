@@ -104,6 +104,10 @@ class PartyActivity : AppCompatActivity() {
         SpotifyPlayerService.disconnect()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
     private fun setupBottomNavBinding() {
         val navGraphIds = listOf(
             R.navigation.search_nav_graph,

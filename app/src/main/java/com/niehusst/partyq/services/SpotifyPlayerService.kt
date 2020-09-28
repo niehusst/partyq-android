@@ -1,6 +1,7 @@
 package com.niehusst.partyq.services
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.niehusst.partyq.SpotifySharedInfo
 import com.spotify.android.appremote.api.ConnectionParams
@@ -15,46 +16,87 @@ object SpotifyPlayerService {
 
     /**
      * This function must be called before any other method in this object in order to
-     * connect to the Spotify app and initialize `spotifyAppRemote`.
+     * connect to the Spotify app and initialize `spotifyAppRemote` for host type users.
+     * If the user is a guest, this method does nothing.
      */
     fun start(context: Context, clientId: String) {
-        // set auth to not show since we already authenticated to get a token
-        val connectionParams = ConnectionParams.Builder(clientId)
-            .setRedirectUri(SpotifySharedInfo.REDIRECT_URI)
-            .setAuthMethod(ConnectionParams.AuthMethod.NONE)
-            .showAuthView(false)
-            .build()
+        if (UserTypeService.isHost(context)) {
+            // set auth to not show since we already authenticated to get a token
+            val connectionParams = ConnectionParams.Builder(clientId)
+                .setRedirectUri(SpotifySharedInfo.REDIRECT_URI)
+                .showAuthView(false)
+                .build()
 
-        SpotifyAppRemote.connect(context, connectionParams, object : Connector.ConnectionListener {
-            override fun onConnected(appRemote: SpotifyAppRemote) {
-                Timber.d("Connected to Spotify!")
-                spotifyAppRemote = appRemote
-                startAutoPlay()
-            }
+            SpotifyAppRemote.connect( // TODO: test that this works even on devices that havent authed w/ appremote b4
+                context,
+                connectionParams,
+                object : Connector.ConnectionListener {
+                    override fun onConnected(appRemote: SpotifyAppRemote) {
+                        Timber.d("Connected to Spotify!")
+                        spotifyAppRemote = appRemote
+//                        startAutoPlay(context) // TODO: feels bad putting this context here. i fear it will be retained in mem too long, causing problems
+                        playSong("spotify:track:4sPmO7WMQUAf45kwMOtONw")// TODO: rm (this should play "Hello" but it doesnt rn...)
+                    }
 
-            override fun onFailure(throwable: Throwable) {
-                // Something went wrong when attempting to connect
-                Timber.e("Failed to connect to Spotify:\n $throwable")
-                Toast.makeText(context, "Couldn't connect to Spotify app", Toast.LENGTH_LONG).show()
-                // TODO: remediation of some sort (maybe they dont have the spotify app or something)
-            }
-        })
+                    override fun onFailure(error: Throwable) {
+                        // Something went wrong when attempting to connect
+                        Timber.e("Failed to connect to Spotify:\n $error")
+                        Toast.makeText(
+                            context,
+                            "Couldn't connect to Spotify app",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        // TODO: remediation of some sort (maybe they dont have the spotify app or something)
+                        /*
+                        if (error is NotLoggedInException || error is UserNotAuthorizedException) {
+                            // Show login button and trigger the login flow from auth library when clicked
+                        } else if (error is CouldNotFindSpotifyApp) {
+                            // Show button to download Spotify
+                        } else {}
+                         */
+                    }
+                }
+            )
+        } // else do nothing
     }
 
-    fun startAutoPlay() {
+    fun startAutoPlay(context: Context) {
         // Subscribe to PlayerState
         // TODO: how to start plyaing the first song??? hold local prev song = null? and compare track on evetn callback?
+        //  (currently mixing responsibilty in the queue service)
         spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback {
             val track: Track = it.track
             Timber.d("Playing ${track.name} by ${track.artist.name}")
             if (it.playbackPosition == track.duration) {
                 // TODO: play next song from queue
-                
+                QueueService.dequeueSong(context)
+                val nextSong = QueueService.peekQueue()
+                nextSong?.run {
+                    playSong(this.uri)
+                }
             }
         }
         // TODO: if this doesnt work, we can rely on the spotify queue and update our queue when track changes picked up by this subscirber
+        //  i think the spotify queue usage might be best, since we wont have to worry about handling autoplay while app in bg
+        //  (but what if user already has songs in their spotify queue when starting the app?)
     }
 
+    /* TODO calls should be made like this???
+    playerApi.getPlayerState()
+        .setResultCallback(playerState -> {
+            // have fun with playerState
+        })
+        .setErrorCallback(throwable -> {
+            // =(
+        });
+     */
+
+    /**
+     * Play the song specified by the given URI.
+     * This method requires the calling user to be the host AND be logged into the local Spotify
+     * app with a Spotify Premium account. Attempting to call this method when the user does not
+     * have a premium account results in a random song being played.
+     */
     fun playSong(songUri: String) {
         spotifyAppRemote?.playerApi?.play(songUri)
     }
@@ -81,4 +123,11 @@ object SpotifyPlayerService {
             SpotifyAppRemote.disconnect(it)
         }
     }
+
+//    fun userHasSpotifyPremium(): Boolean {
+//        // TODO fix this up
+//        spotifyAppRemote?.userApi?.capabilities?.setResultCallback {
+//            return it.canPlayOnDemand
+//        }
+//    }
 }

@@ -25,8 +25,8 @@ object SpotifyAuthenticator {
             CLIENT_ID,
             AuthenticationResponse.Type.TOKEN,
             REDIRECT_URI
-        )
-            .setScopes(arrayOf("streaming", "playlist-read")) // privileges we want access to
+        ) // set scope of privileges we want to access
+            .setScopes(arrayOf("streaming", "playlist-read", "app-remote-control"))
             .build()
 
         AuthenticationClient.openLoginActivity(handlerActivity, REQUEST_CODE, request)

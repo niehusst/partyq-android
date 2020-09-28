@@ -40,7 +40,8 @@ class NowPlayingViewModel : ViewModel() {
 
         if (UserTypeService.isHost(context)) {
             // TODO: add a vote towards skip song to master skip count holder
-            QueueService.dequeueSong(context) // TODO: delete/delegate
+            QueueService.dequeueSong(context)
+            SpotifyPlayerService.skipSong()
         } else {
             // TODO: send vote skip req through comms
         }
