@@ -105,6 +105,7 @@ class PartyActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        // TODO: remove values from shared prefs we dont want to persist?
         super.onDestroy()
     }
 
@@ -138,6 +139,18 @@ class PartyActivity : AppCompatActivity() {
     private fun startSpotifyPlayerService() {
         SpotifyRepository.start(this)
         SpotifyPlayerService.start(this, KeyFetchService.getSpotifyKey())
+
+        assertHostHasSpotifyPremium() // partyq wont work without Spotify premium
+    }
+
+    private fun assertHostHasSpotifyPremium() {
+        SpotifyPlayerService.fullyInit.observe(this, Observer {
+            if (it && SpotifyPlayerService.userHasSpotifyPremium == false) {
+                // TODO: navigate to some remediation activity to explain the issue
+                // do not let user return to dysfunctional party state
+                finish()
+            }
+        })
     }
 
     private fun launchPartyCodeDialog() {

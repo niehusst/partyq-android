@@ -1,8 +1,9 @@
 package com.niehusst.partyq.services
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.niehusst.partyq.SpotifySharedInfo
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
@@ -13,6 +14,10 @@ import timber.log.Timber
 object SpotifyPlayerService {
 
     private var spotifyAppRemote: SpotifyAppRemote? = null
+    var userHasSpotifyPremium: Boolean? = null
+
+    private val _fullyInit = MutableLiveData(false)
+    val fullyInit: LiveData<Boolean> = _fullyInit
 
     /**
      * This function must be called before any other method in this object in order to
@@ -34,8 +39,8 @@ object SpotifyPlayerService {
                     override fun onConnected(appRemote: SpotifyAppRemote) {
                         Timber.d("Connected to Spotify!")
                         spotifyAppRemote = appRemote
-//                        startAutoPlay(context) // TODO: feels bad putting this context here. i fear it will be retained in mem too long, causing problems
-                        playSong("spotify:track:4sPmO7WMQUAf45kwMOtONw")// TODO: rm (this should play "Hello" but it doesnt rn...)
+                        updateUserHasSpotifyPremium()
+                        startAutoPlay(context) // TODO: feels bad putting this context here. i fear it will be retained in mem too long, causing problems
                     }
 
                     override fun onFailure(error: Throwable) {
@@ -124,10 +129,18 @@ object SpotifyPlayerService {
         }
     }
 
-//    fun userHasSpotifyPremium(): Boolean {
-//        // TODO fix this up
-//        spotifyAppRemote?.userApi?.capabilities?.setResultCallback {
-//            return it.canPlayOnDemand
-//        }
-//    }
+    /**
+     * An async call to set the value of the field `userHasSpotifyPremium`.
+     */
+    private fun updateUserHasSpotifyPremium() {
+        spotifyAppRemote?.userApi?.capabilities
+            ?.setResultCallback {
+                userHasSpotifyPremium = it.canPlayOnDemand
+                _fullyInit.postValue(true)
+            }
+            ?.setErrorCallback {
+                userHasSpotifyPremium = false
+                _fullyInit.postValue(true)
+            }
+    }
 }
