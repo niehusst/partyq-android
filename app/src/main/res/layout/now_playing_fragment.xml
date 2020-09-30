@@ -102,7 +102,7 @@
             android:layout_height="@dimen/largeThumbnailWH"
             android:src="@drawable/ic_baseline_pause_24"
             android:contentDescription="@string/pause_song"
-            android:tag="play"
+            android:tag="pause"
             app:layout_constraintBottom_toTopOf="@id/skip_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

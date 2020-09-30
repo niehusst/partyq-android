@@ -15,7 +15,7 @@ object QueueService {
         // TODO: send update to comms. if doesnt fail, add to local queue as well. Unless host; then always add to local q
         songQueue.add(item)
         notifyDataChange()
-        if (songQueue.size == 1) {
+        if (songQueue.size == 1) { // TODO: this messy af
             // start playing the first song (auto play will handle the rest)
             SpotifyPlayerService.playSong(item.uri)
         }

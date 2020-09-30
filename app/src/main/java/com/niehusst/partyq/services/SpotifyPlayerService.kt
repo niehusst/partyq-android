@@ -1,6 +1,7 @@
 package com.niehusst.partyq.services
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +9,7 @@ import com.niehusst.partyq.SpotifySharedInfo
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
-import com.spotify.protocol.types.Track
+import com.spotify.protocol.types.PlayerState
 import timber.log.Timber
 
 object SpotifyPlayerService {
@@ -18,6 +19,8 @@ object SpotifyPlayerService {
 
     private val _fullyInit = MutableLiveData(false)
     val fullyInit: LiveData<Boolean> = _fullyInit
+
+    private var trackWasStarted = false
 
     /**
      * This function must be called before any other method in this object in order to
@@ -32,7 +35,7 @@ object SpotifyPlayerService {
                 .showAuthView(false)
                 .build()
 
-            SpotifyAppRemote.connect( // TODO: test that this works even on devices that havent authed w/ appremote b4
+            SpotifyAppRemote.connect(
                 context,
                 connectionParams,
                 object : Connector.ConnectionListener {
@@ -40,7 +43,7 @@ object SpotifyPlayerService {
                         Timber.d("Connected to Spotify!")
                         spotifyAppRemote = appRemote
                         updateUserHasSpotifyPremium()
-                        startAutoPlay(context) // TODO: feels bad putting this context here. i fear it will be retained in mem too long, causing problems
+                        startAutoPlay(context)
                     }
 
                     override fun onFailure(error: Throwable) {
@@ -65,19 +68,45 @@ object SpotifyPlayerService {
         } // else do nothing
     }
 
-    fun startAutoPlay(context: Context) {
+    private fun startAutoPlay(context: Context) {// TODO: i fear context will be retained in mem too long, causing problems
         // Subscribe to PlayerState
         // TODO: how to start plyaing the first song??? hold local prev song = null? and compare track on evetn callback?
         //  (currently mixing responsibilty in the queue service)
         spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback {
-            val track: Track = it.track
-            Timber.d("Playing ${track.name} by ${track.artist.name}")
-            if (it.playbackPosition == track.duration) {
-                // TODO: play next song from queue
+            setTrackWasStarted(it)
+            Log.e("BIGGYCHEESE", "starting cb ${it.track?.name}")
+            val isPaused = it.isPaused
+            val position = it.playbackPosition
+            val hasEnded = trackWasStarted && isPaused && position == 0L
+            Log.e("BIGGYCHEESE", "pos $position and has ended $hasEnded")
+            val songPlayingIsNotQueueHead = it.track?.uri != QueueService.peekQueue()?.uri
+            if (hasEnded) {
+                trackWasStarted = false
                 QueueService.dequeueSong(context)
                 val nextSong = QueueService.peekQueue()
-                nextSong?.run {
-                    playSong(this.uri)
+                if (nextSong == null) {
+                    // pause before Spotify autoplay starts a random song
+                    pauseSong()
+                    Log.e("BIGGYCHEESE", "pausing curr song ${it.track?.name}")
+                } else {
+                    playSong(nextSong.uri)
+                    Log.e("BIGGYCHEESE", "plyaing next song ${nextSong.name}")
+                }
+            } else if(songPlayingIsNotQueueHead && !it.isPaused) {
+                /* Sometimes Spotify misses the end-of-song event, or something goes wrong with
+                 * playing the next song and Spotify starts playing a random song from autoplay.
+                 * To remedy this, we're just going to hammer app-remote w/ the correct command
+                 * until it gets it right.
+                 */
+                Log.e("BIGGYCHEESE", "we arent playing the right song for some reason")
+                val correctCurrSong = QueueService.peekQueue()
+                if (correctCurrSong == null) {
+                    // pause the currently playing Spotify autoplay random song
+                    pauseSong()
+                    Log.e("BIGGYCHEESE", "pausing curr song ${it.track?.name}")
+                } else {
+                    playSong(correctCurrSong.uri)
+                    Log.e("BIGGYCHEESE", "plyaing next song ${correctCurrSong.name}")
                 }
             }
         }
@@ -86,15 +115,15 @@ object SpotifyPlayerService {
         //  (but what if user already has songs in their spotify queue when starting the app?)
     }
 
-    /* TODO calls should be made like this???
-    playerApi.getPlayerState()
-        .setResultCallback(playerState -> {
-            // have fun with playerState
-        })
-        .setErrorCallback(throwable -> {
-            // =(
-        });
-     */
+    private fun setTrackWasStarted(playerState: PlayerState) {
+        val position = playerState.playbackPosition
+        val duration = playerState.track.duration
+        val isPlaying = !playerState.isPaused
+
+        if (!trackWasStarted && position > 0 && duration > 0 && isPlaying) {
+            trackWasStarted = true
+        }
+    }
 
     /**
      * Play the song specified by the given URI.
@@ -103,7 +132,9 @@ object SpotifyPlayerService {
      * have a premium account results in a random song being played.
      */
     fun playSong(songUri: String) {
-        spotifyAppRemote?.playerApi?.play(songUri)
+        spotifyAppRemote?.playerApi?.play(songUri)?.setErrorCallback {
+            Log.e("BIGGYCHEESE","playing song died. $it")
+        }
     }
 
     fun pauseSong() {
@@ -115,7 +146,7 @@ object SpotifyPlayerService {
     }
 
     fun skipSong() {
-        spotifyAppRemote?.playerApi?.skipNext()
+        spotifyAppRemote?.playerApi?.skipNext() // TODO: this isnt working w/ the queue
     }
 
     /**
@@ -131,6 +162,8 @@ object SpotifyPlayerService {
 
     /**
      * An async call to set the value of the field `userHasSpotifyPremium`.
+     * Updates the LiveData `_fullyInit` to alert observers that they can now check if the user
+     * has Spotify premium.
      */
     private fun updateUserHasSpotifyPremium() {
         spotifyAppRemote?.userApi?.capabilities
