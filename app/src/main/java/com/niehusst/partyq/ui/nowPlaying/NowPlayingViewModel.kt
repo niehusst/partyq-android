@@ -14,7 +14,7 @@ class NowPlayingViewModel : ViewModel() {
 
     fun isNewCurrItem(): Boolean {
         val newHead = QueueService.peekQueue()
-        if (newHead != currItem) { // TODO: but what if the same song is twice in a row?
+        if (newHead?.queueingTime != currItem?.queueingTime) {
             currItem = newHead
             hasVotedSkip = false
             return true
@@ -40,16 +40,10 @@ class NowPlayingViewModel : ViewModel() {
 
         if (UserTypeService.isHost(context)) {
             // TODO: add a vote towards skip song to master skip count holder
-//            QueueService.dequeueSong(context)
             SpotifyPlayerService.skipSong()
         } else {
             // TODO: send vote skip req through comms
         }
         Toast.makeText(context, "Your vote to skip has been counted", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onCleared() {
-        // TODO: is this a good spot to disconnect from spotify?? except that it never gets called bcus owner fragment never calls ondestroy probs bcus of bottomnav stuff
-        super.onCleared()
     }
 }

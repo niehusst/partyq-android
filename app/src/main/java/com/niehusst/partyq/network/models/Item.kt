@@ -16,7 +16,7 @@ data class Item(
     @Json(name = "explicit")
     val explicit: Boolean,
     @Json(name = "external_ids")
-    val externalIds: ExternalIds,
+    val externalIds: ExternalIds?,
     @Json(name = "external_urls")
     val externalUrls: ExternalUrls?,
     @Json(name = "href")
@@ -38,6 +38,8 @@ data class Item(
     @Json(name = "uri")
     val uri: String
 ) {
+    var queueingTime: Long = 0L
+
     fun artistsAsPrettyString(): String {
         var nameList = ""
         var i = 0
