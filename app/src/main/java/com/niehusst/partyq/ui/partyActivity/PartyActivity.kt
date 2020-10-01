@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
@@ -37,6 +38,9 @@ class PartyActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             setupBottomNavBinding()
         } // else wait for onRestoreInstanceState
+
+        // dont let device sleep, severing connection to Spotify and other services
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         // set search as first active tab
         binding.bottomNav.selectedItemId = R.id.searchFragment
