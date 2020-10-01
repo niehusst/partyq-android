@@ -13,7 +13,6 @@ object QueueService {
 
     fun enqueueSong(item: Item, isHost: Boolean): Boolean {
         if (isHost) {
-            item.queueingTime = System.currentTimeMillis()
             songQueue.add(item)
             notifyDataChange()
 

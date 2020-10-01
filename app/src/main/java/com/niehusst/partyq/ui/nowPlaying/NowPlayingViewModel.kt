@@ -14,7 +14,7 @@ class NowPlayingViewModel : ViewModel() {
 
     fun isNewCurrItem(): Boolean {
         val newHead = QueueService.peekQueue()
-        if (newHead?.queueingTime != currItem?.queueingTime) {
+        if (System.identityHashCode(newHead) != System.identityHashCode(currItem)) {
             currItem = newHead
             hasVotedSkip = false
             return true

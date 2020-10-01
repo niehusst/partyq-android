@@ -38,8 +38,6 @@ data class Item(
     @Json(name = "uri")
     val uri: String
 ) {
-    var queueingTime: Long = 0L
-
     fun artistsAsPrettyString(): String {
         var nameList = ""
         var i = 0
