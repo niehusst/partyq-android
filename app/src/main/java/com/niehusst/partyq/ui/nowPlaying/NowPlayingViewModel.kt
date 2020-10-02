@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.niehusst.partyq.network.models.Item
 import com.niehusst.partyq.services.QueueService
+import com.niehusst.partyq.services.SpotifyPlayerService
 import com.niehusst.partyq.services.UserTypeService
 
 class NowPlayingViewModel : ViewModel() {
@@ -13,7 +14,7 @@ class NowPlayingViewModel : ViewModel() {
 
     fun isNewCurrItem(): Boolean {
         val newHead = QueueService.peekQueue()
-        if (newHead != currItem) { // TODO: but what if the same song is twice in a row?
+        if (System.identityHashCode(newHead) != System.identityHashCode(currItem)) {
             currItem = newHead
             hasVotedSkip = false
             return true
@@ -22,11 +23,11 @@ class NowPlayingViewModel : ViewModel() {
     }
 
     fun playSong() {
-        // TODO: call spotify player service
+        SpotifyPlayerService.resumeSong()
     }
 
     fun pauseSong() {
-        // TODO: call spotfy player service
+        SpotifyPlayerService.pauseSong()
     }
 
     /**
@@ -39,7 +40,7 @@ class NowPlayingViewModel : ViewModel() {
 
         if (UserTypeService.isHost(context)) {
             // TODO: add a vote towards skip song to master skip count holder
-            QueueService.dequeueSong(context) // TODO: delete/delegate
+            SpotifyPlayerService.skipSong()
         } else {
             // TODO: send vote skip req through comms
         }

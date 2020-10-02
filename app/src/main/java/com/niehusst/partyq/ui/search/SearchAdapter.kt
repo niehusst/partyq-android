@@ -9,6 +9,7 @@ import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SearchResultItemBinding
 import com.niehusst.partyq.network.models.Item
 import com.niehusst.partyq.services.QueueService
+import com.niehusst.partyq.services.UserTypeService
 
 class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
 
@@ -17,7 +18,7 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = SearchResultItemBinding.inflate(layoutInflater, parent, false)
-        return ResultViewHolder(binding)
+        return ResultViewHolder(binding, UserTypeService.isHost(parent.context))
     }
 
     override fun getItemCount(): Int {
@@ -29,7 +30,8 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
     }
 
     inner class ResultViewHolder(
-        private val binding: SearchResultItemBinding
+        private val binding: SearchResultItemBinding,
+        private val isHost: Boolean
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Item) {
@@ -41,8 +43,8 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
                 .into(binding.thumbnail)
 
             binding.root.setOnClickListener {
-                // give more visual confirmation that song was added to queue
-                if (QueueService.enqueueSong(item)) {
+                // enqueue a copy so that the same exact obj ref doesnt reappear in queue
+                if (QueueService.enqueueSong(item.copy(), isHost)) {
                     showSuccess()
                 } else {
                     showError()

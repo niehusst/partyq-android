@@ -16,7 +16,7 @@ data class Item(
     @Json(name = "explicit")
     val explicit: Boolean,
     @Json(name = "external_ids")
-    val externalIds: ExternalIds,
+    val externalIds: ExternalIds?,
     @Json(name = "external_urls")
     val externalUrls: ExternalUrls?,
     @Json(name = "href")

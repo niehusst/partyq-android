@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
@@ -18,6 +19,8 @@ import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.extensions.setupWithNavController
 import com.niehusst.partyq.repository.SpotifyRepository
+import com.niehusst.partyq.services.KeyFetchService
+import com.niehusst.partyq.services.SpotifyPlayerService
 import timber.log.Timber
 
 class PartyActivity : AppCompatActivity() {
@@ -30,16 +33,18 @@ class PartyActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_party)
         setSupportActionBar(findViewById(R.id.toolbar))
-        startConnectionService()
+        startCommunicationService()
         startSpotifyPlayerService()
         if (savedInstanceState == null) {
             setupBottomNavBinding()
         } // else wait for onRestoreInstanceState
 
+        // dont let device sleep to prevent severing connection to Spotify and other services
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         // set search as first active tab
         binding.bottomNav.selectedItemId = R.id.searchFragment
     }
-    // TODO: display errors in fragment somehow. (toast? put as bg text? snackbar?)
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
@@ -97,6 +102,17 @@ class PartyActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        // TODO: disconnect from spotify app remote ok? will we be unable to resume host abilities after onStart?
+        SpotifyPlayerService.disconnect()
+    }
+
+    override fun onDestroy() {
+        // TODO: remove values from shared prefs we dont want to persist?
+        super.onDestroy()
+    }
+
     private fun setupBottomNavBinding() {
         val navGraphIds = listOf(
             R.navigation.search_nav_graph,
@@ -119,14 +135,26 @@ class PartyActivity : AppCompatActivity() {
         currNavController = controller
     }
 
-    private fun startConnectionService() {
+    private fun startCommunicationService() {
         // TODO: delegate host vs guest logic to the repo/service
         // TODO: should i worry about accidentally starting service multiple times? could happen on process death recovery?
     }
 
     private fun startSpotifyPlayerService() {
-        // TODO: ? need any more than this? if music playing requires more setup, do that here
         SpotifyRepository.start(this)
+        SpotifyPlayerService.start(this, KeyFetchService.getSpotifyKey())
+
+        assertHostHasSpotifyPremium() // partyq wont work without Spotify premium
+    }
+
+    private fun assertHostHasSpotifyPremium() {
+        SpotifyPlayerService.fullyInit.observe(this, Observer {
+            if (it && SpotifyPlayerService.userHasSpotifyPremium == false) {
+                // TODO: navigate to some remediation activity to explain the issue
+                // do not let user return to dysfunctional party state
+                finish()
+            }
+        })
     }
 
     private fun launchPartyCodeDialog() {
