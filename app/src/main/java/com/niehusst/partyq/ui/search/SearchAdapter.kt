@@ -43,7 +43,7 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
                 .into(binding.thumbnail)
 
             binding.root.setOnClickListener {
-                // feed queue a copy so that the same obj doest reappear in queue
+                // enqueue a copy so that the same exact obj ref doesnt reappear in queue
                 if (QueueService.enqueueSong(item.copy(), isHost)) {
                     showSuccess()
                 } else {

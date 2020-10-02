@@ -1,7 +1,6 @@
 package com.niehusst.partyq.services
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -95,7 +94,7 @@ object SpotifyPlayerService {
                 } else {
                     playSong(nextSong.uri)
                 }
-            } else if(songPlayingIsNotQueueHead && !it.isPaused) {
+            } else if (songPlayingIsNotQueueHead && !it.isPaused) {
                 /* Sometimes Spotify misses the end-of-song event, or something goes wrong with
                  * playing the next song and Spotify starts playing a random song from autoplay.
                  * To remedy this, we're just going to hammer app-remote w/ the correct command
