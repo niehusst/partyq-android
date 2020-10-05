@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.niehusst.partyq.databinding.AboutFragmentBinding
 
-class AboutFragment : Fragment() {
+class AboutFragment : BottomSheetDialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -15,5 +15,11 @@ class AboutFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return AboutFragmentBinding.inflate(layoutInflater).root
+    }
+
+    companion object {
+        fun newInstance(): AboutFragment {
+            return AboutFragment()
+        }
     }
 }

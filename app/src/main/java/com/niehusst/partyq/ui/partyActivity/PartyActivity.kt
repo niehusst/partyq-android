@@ -11,7 +11,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.niehusst.partyq.R
 import com.niehusst.partyq.SharedPrefNames.PARTY_FIRST_START
@@ -21,6 +20,8 @@ import com.niehusst.partyq.extensions.setupWithNavController
 import com.niehusst.partyq.repository.SpotifyRepository
 import com.niehusst.partyq.services.KeyFetchService
 import com.niehusst.partyq.services.SpotifyPlayerService
+import com.niehusst.partyq.ui.about.AboutFragment
+import com.niehusst.partyq.ui.legal.LegalFragment
 import timber.log.Timber
 
 class PartyActivity : AppCompatActivity() {
@@ -67,8 +68,14 @@ class PartyActivity : AppCompatActivity() {
                 launchPartyCodeDialog()
                 true
             }
-            R.id.aboutFragment,
-            R.id.legalFragment -> NavigationUI.onNavDestinationSelected(item, currNavController?.value!!)
+            R.id.aboutFragment -> {
+                AboutFragment.newInstance().show(supportFragmentManager, null)
+                true
+            }
+            R.id.legalFragment -> {
+                LegalFragment.newInstance().show(supportFragmentManager, null)
+                true
+            }
             else -> {
                 Timber.e("Menu item not found")
                 false

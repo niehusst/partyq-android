@@ -6,14 +6,13 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.niehusst.partyq.R
 import com.niehusst.partyq.SpotifySharedInfo
-import com.niehusst.partyq.services.SpotifyAuthenticator
+import com.niehusst.partyq.ui.about.AboutFragment
+import com.niehusst.partyq.ui.legal.LegalFragment
 import com.niehusst.partyq.ui.spotifyLogin.SpotifyLoginFragment
-import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
@@ -43,9 +42,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.aboutFragment,
+            R.id.aboutFragment -> {
+                AboutFragment.newInstance().show(supportFragmentManager, null)
+                true
+            }
             R.id.legalFragment -> {
-                NavigationUI.onNavDestinationSelected(item, nav_host_fragment.findNavController())
+                LegalFragment.newInstance().show(supportFragmentManager, null)
                 true
             }
             else -> {
