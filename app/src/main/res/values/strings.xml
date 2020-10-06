@@ -21,7 +21,6 @@
     <string name="authenticate_with_spotify">Authenticate with Spotify</string>
     <string name="info">INFO</string>
     <string name="why_is_this">Why is this?</string>
-<!--   TODO: new auth no longer requires spotify app to be on the same device? but how does play music then..? -->
     <string name="info_content">Starting a party requires you have a Spotify premium account and that you have the Spotify mobile app downloaded on this device.</string>
 
     <!-- PartyActivity + misc -->
@@ -54,4 +53,9 @@
     <string name="play_song">Play song</string>
     <string name="pause_song">Pause song</string>
     <string name="no_song_playing">No\nSong\nPlaying</string>
+
+    <!-- PartyJoin -->
+    <string name="join_content">Enter your host\'s 4-digit code to join their party.</string>
+    <string name="party_code_hint">1234</string>
+    <string name="submit">Submit</string>
 </resources>

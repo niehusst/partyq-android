@@ -2,7 +2,7 @@ package com.niehusst.partyq.services
 
 import com.niehusst.partyq.network.models.Item
 
-object CommunicationService {
+object CommunicationService { // TODO: think about making this into a bound service
 
     fun connectToParty() {
         // TODO: start/connect to party net
