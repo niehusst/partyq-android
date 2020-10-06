@@ -2,11 +2,15 @@ package com.niehusst.partyq.ui.partyActivity
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -18,11 +22,14 @@ import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.extensions.setupWithNavController
 import com.niehusst.partyq.repository.SpotifyRepository
+import com.niehusst.partyq.services.CommunicationService.REQUEST_CODE_REQUIRED_PERMISSIONS
+import com.niehusst.partyq.services.CommunicationService.REQUIRED_PERMISSIONS
 import com.niehusst.partyq.services.KeyFetchService
 import com.niehusst.partyq.services.SpotifyPlayerService
 import com.niehusst.partyq.ui.about.AboutFragment
 import com.niehusst.partyq.ui.legal.LegalFragment
 import timber.log.Timber
+
 
 class PartyActivity : AppCompatActivity() {
 
@@ -107,6 +114,10 @@ class PartyActivity : AppCompatActivity() {
                 .putBoolean(PARTY_FIRST_START, false)
                 .apply()
         }
+
+        if (!hasPermissions(this, REQUIRED_PERMISSIONS)) {
+            requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS);
+        }
     }
 
     override fun onStop() {
@@ -170,5 +181,42 @@ class PartyActivity : AppCompatActivity() {
 
     private fun leaveParty() {
         // TODO:
+    }
+
+    /**
+     * Returns true if the app was granted all the permissions. Otherwise, returns false.
+     */
+    private fun hasPermissions(context: Context, permissions: Array<String>): Boolean {
+        for (permission in permissions) {
+            if (ContextCompat.checkSelfPermission(context, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
+    }
+
+    /**
+     * Handles user acceptance (or denial) of our permission request.
+     */
+    @CallSuper
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode != REQUEST_CODE_REQUIRED_PERMISSIONS) {
+            return
+        }
+        for (grantResult in grantResults) {
+            if (grantResult == PackageManager.PERMISSION_DENIED) {
+                // TODO: tweak this? maybe nav to remediation activity
+                Toast.makeText(this, "Partyq cannot function without these permissions", Toast.LENGTH_LONG).show()
+                finish()
+                return
+            }
+        }
+        recreate()
     }
 }
