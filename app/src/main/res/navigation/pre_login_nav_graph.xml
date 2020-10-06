@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_partyConnectFragment_to_spotifyLoginFragment"
             app:destination="@id/spotifyLoginFragment" />
+        <action
+            android:id="@+id/action_partyConnectFragment_to_partyJoinFragment"
+            app:destination="@id/partyJoinFragment" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
@@ -42,4 +45,9 @@
         android:name="com.niehusst.partyq.ui.partyActivity.PartyActivity"
         android:label="PartyActivity"
         tools:layout="@layout/activity_party"/>
+    <fragment
+        android:id="@+id/partyJoinFragment"
+        android:name="com.niehusst.partyq.ui.partyJoin.PartyJoinFragment"
+        android:label="PartyJoinFragment"
+        tools:layout="@layout/party_join_fragment"/>
 </navigation>

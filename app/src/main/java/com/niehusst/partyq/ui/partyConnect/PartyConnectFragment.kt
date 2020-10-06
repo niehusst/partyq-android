@@ -22,19 +22,16 @@ class PartyConnectFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = PartyConnectFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // setup click listeners
-        binding.partyJoinButton.setOnClickListener {
-            // TODO: add navigation
-            Toast.makeText(requireContext(), "Not yet implemented", Toast.LENGTH_SHORT).show()
-        }
 
+        binding.partyJoinButton.setOnClickListener {
+            this.findNavController().navigate(R.id.partyJoinFragment)
+        }
         binding.partyStartButton.setOnClickListener {
             this.findNavController().navigate(R.id.spotifyLoginFragment)
         }

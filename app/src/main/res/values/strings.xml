@@ -54,4 +54,9 @@
     <string name="play_song">Play song</string>
     <string name="pause_song">Pause song</string>
     <string name="no_song_playing">No\nSong\nPlaying</string>
+
+    <!-- PartyJoin -->
+    <string name="join_content">Enter your host\'s 4-digit code to join their party.</string>
+    <string name="party_code_hint">1234</string>
+    <string name="submit">Submit</string>
 </resources>
