@@ -63,7 +63,7 @@ class PartyConnectFragmentTest {
         // WHEN - party_start_button is clicked
         onView(withId(R.id.party_join_button)).perform(click())
 
-        // THEN - navigation to PartyJoinFragment is initiated TODO:
+        // THEN - navigation to PartyJoinFragment is initiated
 //        assertEquals(R.id.partyJoinFragment, navController.currentDestination?.id)
     }
 

@@ -4,14 +4,13 @@ import android.content.Context
 import com.niehusst.partyq.network.Resource
 import com.niehusst.partyq.network.SpotifyApi
 import com.niehusst.partyq.network.models.SearchResult
+import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.services.TokenHandlerService
 import com.niehusst.partyq.services.UserTypeService
 import timber.log.Timber
 
 object SpotifyRepository {
 
-    // TODO: do i need some way to get this back on process death recreation?
-    //  (this may already be handled since onCreate in PartyActivity is called again)
     private var api: SpotifyApi? = null
 
     /**
@@ -40,7 +39,8 @@ object SpotifyRepository {
                 Resource.error(null, "Network error")
             }
         } else {
-//          TODO  CommunicationService.sendSearchRequest(query)
+            CommunicationService.sendSearchRequest(query)
+            // TODO: how to get resutl back here???? refactor..
             Resource.error(null, "not yet implemented")
         }
     }

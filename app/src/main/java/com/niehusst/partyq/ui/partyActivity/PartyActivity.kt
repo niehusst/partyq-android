@@ -22,6 +22,7 @@ import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.extensions.setupWithNavController
 import com.niehusst.partyq.repository.SpotifyRepository
+import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.services.CommunicationService.REQUEST_CODE_REQUIRED_PERMISSIONS
 import com.niehusst.partyq.services.CommunicationService.REQUIRED_PERMISSIONS
 import com.niehusst.partyq.services.KeyFetchService
@@ -154,7 +155,7 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun startCommunicationService() {
-        // TODO: delegate host vs guest logic to the repo/service
+        CommunicationService.start(this)
         // TODO: should i worry about accidentally starting service multiple times? could happen on process death recovery?
     }
 
@@ -180,7 +181,10 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun leaveParty() {
-        // TODO:
+        // TODO: confirrmation modal
+        // TODO: finish doing cleanup, like nav
+        CommunicationService.disconnectFromParty()
+        finish()
     }
 
     /**

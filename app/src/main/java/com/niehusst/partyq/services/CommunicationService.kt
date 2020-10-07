@@ -6,6 +6,7 @@ import com.niehusst.partyq.network.models.Item
 import android.Manifest
 import com.google.android.gms.nearby.connection.*
 import timber.log.Timber
+import kotlin.text.Charsets.UTF_8
 
 object CommunicationService { // TODO: think about making this into a bound service
 
@@ -22,14 +23,18 @@ object CommunicationService { // TODO: think about making this into a bound serv
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
 
+    // list of IDs of devices connected to the device
     val connectionEndpointIds = mutableListOf<String>()
 
     /**
-     * This function must be called before any other in order to initialize `connectionsClient`
+     * This function must be called before any other in order to initialize `connectionsClient`.
+     * Required for both Host and Guest users.
      */
     fun start(context: Context) {
         connectionsClient = Nearby.getConnectionsClient(context)
     }
+
+    /* Party connection methods and callbacks */
 
     /**
      * Broadcast the calling device's availability for connection via Nearby Connections API.
@@ -39,12 +44,16 @@ object CommunicationService { // TODO: think about making this into a bound serv
     fun hostAdvertise(partyCode: String) {
         val advertOptions = AdvertisingOptions.Builder().setStrategy(STRATEGY).build()
         connectionsClient.startAdvertising(
-            partyCode, // human readable identifier for this party
+            partyCode, // identifier for this party
             SERVICE_ID, // app identifier
             object : ConnectionLifecycleCallback() {
                 override fun onConnectionInitiated(endpointId: String, connectionInfo: ConnectionInfo) {
-                    // TODO: verify matching party code (from connectionInfo) here?
-                    connectionsClient.acceptConnection(endpointId, payloadHandlerCallBacks)
+                    // verify matching party code before accepting connection
+                    if (connectionInfo.endpointName == partyCode) {
+                        connectionsClient.acceptConnection(endpointId, payloadHandlerCallBacks)
+                    } else {
+                        connectionsClient.rejectConnection(endpointId)
+                    }
                 }
 
                 override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
@@ -53,36 +62,133 @@ object CommunicationService { // TODO: think about making this into a bound serv
 
                         connectionEndpointIds.add(endpointId)
 
-                        // TODO: do we have to also be trying to discover in order to send data back?
+                        // dont stop advertising; keep connecting to guests until party ends
                     } else {
                         Timber.e("Nearby API advertising; an endpoint connection failed")
                     }
                 }
 
-                override fun onDisconnected(p0: String) {
-                    TODO("Not yet implemented")
+                override fun onDisconnected(endpointId: String) {
+                    connectionEndpointIds.remove(endpointId)
                 }
             },
             advertOptions
-        ).addOnFailureListener {
+        ) // TODO: add on failure listener to stop app if we cant connect people to party??
+    }
 
+    fun connectToParty(inputPartyCode: String) {
+        // TODO: start/connect to party net
+        val discoverOptions = DiscoveryOptions.Builder().setStrategy(STRATEGY).build()
+        connectionsClient.startDiscovery(
+            inputPartyCode,
+            object : EndpointDiscoveryCallback() {
+                override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
+                    // double check verify that party codes match before attempting connection
+                    if (info.endpointName == inputPartyCode) {
+                        Timber.i("Attempting conncection to $endpointId")
+                        connectionsClient.requestConnection(
+                            inputPartyCode,
+                            endpointId,
+                            buildGuestConnectionLifecycleCallback(inputPartyCode)
+                        )
+                    }
+                }
+
+                override fun onEndpointLost(endpointId: String) { /* no-op */ }
+            },
+            discoverOptions
+        )
+    }
+
+    private fun buildGuestConnectionLifecycleCallback(inputPartyCode: String) =
+        object : ConnectionLifecycleCallback() {
+            override fun onConnectionInitiated(endpointId: String, info: ConnectionInfo) {
+                connectionsClient.acceptConnection(endpointId, payloadHandlerCallBacks)
+            }
+
+            override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
+                if (result.status.isSuccess) {
+                    Timber.i("Nearby API successfully connected to $endpointId")
+
+                    connectionEndpointIds.add(endpointId)
+                    connectionsClient.stopDiscovery() // only connect to 1 host
+                } else {
+                    Timber.e("Nearby API advertising; an endpoint connection failed")
+                }
+            }
+
+            override fun onDisconnected(endpointId: String) {
+                // TODO: nav away to party end activity
+            }
+        }
+
+
+    /* Data sending methods */
+
+    /** Guest only method */
+    fun sendSearchRequest(query: String) {
+        if (connectionEndpointIds.size > 0) {
+            // send payload to host; the first and only endpoint in the list
+            connectionsClient.sendPayload(
+                connectionEndpointIds[0],
+                buildQueryPayload(query)
+            )
         }
     }
 
-    fun connectToParty() {
-        // TODO: start/connect to party net
+    /** Host only method */
+    fun sendSearchResults(requestingEndpointId: String, results: List<Item>) {
+        connectionsClient.sendPayload(
+            requestingEndpointId,
+            buildItemListPayload(results)
+        )
     }
 
-    fun sendSearchRequest(query: String) {
-        // TODO: send/get search req
+    /** Guest only method */
+    fun sendEnqueueRequest(item: Item) { // TODO: cut down on unused fields in Item to make payload smaller?
+        // TODO: send update queue req
     }
 
-    fun addToQueue(item: Item) {
-        // TODO: update queue
+    /** Host only method */
+    fun sendUpdatedQueue(queue: List<Item>) {
+        connectionEndpointIds.forEach { guest ->
+            connectionsClient.sendPayload(guest, buildItemListPayload(queue))
+        }
+    }
+
+    /** Guest only method */
+    fun sendSkipVote() {
+        // TODO
     }
 
     fun disconnectFromParty() {
-        // TODO: send disconnect message to all connections, then disconnect from them. also stop advertising
+        // TODO: host disconnect from guests. also stop advertising
+        connectionsClient.stopAdvertising()
+        connectionsClient.stopAllEndpoints()
+        // TODO: process is diff for guests ??
+    }
+
+
+    /* Data reception methods and callbacks */
+
+    fun receiveSearchRequest() {
+
+    }
+
+    fun receiveSearchResults() {
+
+    }
+
+    fun receiveEnqueueRequest() {
+
+    }
+
+    fun receiveUpdatedQueue(queue: List<Item>) {
+        QueueService.replaceQueue(queue)
+    }
+
+    fun receiveSkipVote() {
+
     }
 
     /**
@@ -98,8 +204,9 @@ object CommunicationService { // TODO: think about making this into a bound serv
          * @param payload - the incoming data from `endpointId`. May be incomplete.
          */
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
+            val parsedPayload = payload.asBytes()?.let { String(it, UTF_8) }
             // TODO: payload should include some identifier for what op it is
-            when(payload) {
+            when (payload) {
 
             }
         }
@@ -108,7 +215,20 @@ object CommunicationService { // TODO: think about making this into a bound serv
          * Called with progress info about an active Payload transfer, either incoming or outgoing.
          */
         override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
-            TODO("Not yet implemented")
+            if (update.status == PayloadTransferUpdate.Status.SUCCESS) {
+                // TODO: do i need this?
+            }
         }
+    }
+
+
+    /* Payload building functions */
+
+    private fun buildQueryPayload(q: String): Payload { // TODO; come up w/ consistent payload format
+        return Payload.fromBytes("query:$q".toByteArray())
+    }
+
+    private fun buildItemListPayload(items: List<Item>): Payload {
+        TODO("Not yet implemented")
     }
 }

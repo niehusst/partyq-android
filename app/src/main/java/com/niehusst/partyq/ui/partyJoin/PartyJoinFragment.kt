@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.niehusst.partyq.databinding.PartyJoinFragmentBinding
 
 class PartyJoinFragment : Fragment() {
@@ -26,8 +27,11 @@ class PartyJoinFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.loading = false
 
+        viewModel.loading.observe(viewLifecycleOwner, Observer {
+            binding.loading = it
+        })
+
         binding.submitButton.setOnClickListener {
-            // TODO: handle loading
             viewModel.connectToParty(binding.codeEditText.text.toString())
         }
     }

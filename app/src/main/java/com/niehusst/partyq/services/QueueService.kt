@@ -21,7 +21,8 @@ object QueueService {
                 SpotifyPlayerService.playSong(item.uri)
             }
         } else {
-            // TODO: send update to comms. if doesnt fail, add to local queue as well.
+            // TODO: if doesnt fail, add to local queue as well.
+            CommunicationService.sendEnqueueRequest(item)
         }
         return true // TODO: return status of comms req
     }
@@ -29,7 +30,8 @@ object QueueService {
     fun dequeueSong(context: Context) {
         songQueue.poll()
         if (UserTypeService.isHost(context)) {
-            // TODO: send update to all guests via comms (is this necessary? should a whole new copy of q be sent instead? is this a host only method?)
+            // send update to all guests
+            CommunicationService.sendUpdatedQueue(songQueue.toList())
         }
         notifyDataChange()
     }
