@@ -4,7 +4,6 @@ import android.content.Context
 import com.niehusst.partyq.SharedPrefNames.PARTY_CODE
 import com.niehusst.partyq.SharedPrefNames.PARTY_FIRST_START
 import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
-import com.niehusst.partyq.network.models.Item
 import kotlin.random.Random
 
 object PartyCodeHandler {

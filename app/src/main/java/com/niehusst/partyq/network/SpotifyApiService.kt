@@ -1,6 +1,6 @@
 package com.niehusst.partyq.network
 
-import com.niehusst.partyq.network.models.SearchResult
+import com.niehusst.partyq.network.models.api.SearchResult
 import retrofit2.http.GET
 import retrofit2.http.Query
 

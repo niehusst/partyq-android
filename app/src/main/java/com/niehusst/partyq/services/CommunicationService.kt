@@ -1,16 +1,27 @@
 package com.niehusst.partyq.services
 
+import android.Manifest
 import android.content.Context
 import com.google.android.gms.nearby.Nearby
-import com.niehusst.partyq.network.models.Item
-import android.Manifest
 import com.google.android.gms.nearby.connection.*
+import com.google.android.gms.nearby.connection.Payload.Type.BYTES
+import com.google.gson.GsonBuilder
+import com.niehusst.partyq.network.models.api.Item
+import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildEnqueuePayload
+import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildQueryPayload
+import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildSearchResultPayload
+import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildSkipVotePayload
+import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildUpdatedQueuePayload
+import com.niehusst.partyq.network.models.connection.PayloadBuilder.reconstructPayloadFromJson
+import com.niehusst.partyq.network.models.connection.Type
+import com.niehusst.partyq.utility.CompressionUtility.decompress
 import timber.log.Timber
-import kotlin.text.Charsets.UTF_8
 
 object CommunicationService { // TODO: think about making this into a bound service
 
     private lateinit var connectionsClient: ConnectionsClient
+
+    private val gson = GsonBuilder().create()
 
     private val STRATEGY = Strategy.P2P_STAR
     private const val SERVICE_ID = "com.niehusst.partyq" // just something unique to the app
@@ -73,7 +84,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
                 }
             },
             advertOptions
-        ) // TODO: add on failure listener to stop app if we cant connect people to party??
+        ) // TODO: add on failure listener to stop app if we cant connect people to party?? or will it crash itself already
     }
 
     fun connectToParty(inputPartyCode: String) {
@@ -140,25 +151,37 @@ object CommunicationService { // TODO: think about making this into a bound serv
     fun sendSearchResults(requestingEndpointId: String, results: List<Item>) {
         connectionsClient.sendPayload(
             requestingEndpointId,
-            buildItemListPayload(results)
+            buildSearchResultPayload(results)
         )
     }
 
     /** Guest only method */
     fun sendEnqueueRequest(item: Item) { // TODO: cut down on unused fields in Item to make payload smaller?
-        // TODO: send update queue req
+        if (connectionEndpointIds.size > 0) {
+            // send payload to host; the first and only endpoint in the list
+            connectionsClient.sendPayload(
+                connectionEndpointIds[0],
+                buildEnqueuePayload(item)
+            )
+        }
     }
 
     /** Host only method */
     fun sendUpdatedQueue(queue: List<Item>) {
         connectionEndpointIds.forEach { guest ->
-            connectionsClient.sendPayload(guest, buildItemListPayload(queue))
+            connectionsClient.sendPayload(guest, buildUpdatedQueuePayload(queue))
         }
     }
 
     /** Guest only method */
     fun sendSkipVote() {
-        // TODO
+        if (connectionEndpointIds.size > 0) {
+            // send payload to host; the first and only endpoint in the list
+            connectionsClient.sendPayload(
+                connectionEndpointIds[0],
+                buildSkipVotePayload()
+            )
+        }
     }
 
     fun disconnectFromParty() {
@@ -204,11 +227,38 @@ object CommunicationService { // TODO: think about making this into a bound serv
          * @param payload - the incoming data from `endpointId`. May be incomplete.
          */
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
-            val parsedPayload = payload.asBytes()?.let { String(it, UTF_8) }
-            // TODO: payload should include some identifier for what op it is
-            when (payload) {
+            if (payload.type == BYTES) {
+                val decompressedPayload = decompress(payload.asBytes()!!)
+                val parsedPayload = reconstructPayloadFromJson(decompressedPayload)
 
-            }
+                when (parsedPayload.type) {
+                    Type.QUERY -> {
+                        val query = parsedPayload.payload as? String
+                        query?.run {
+                            // TODO: perform a search here and another comms call to send back result
+                        }
+                    }
+                    Type.UPDATE_QUEUE -> {
+                        val newQueue = parsedPayload.payload as? List<Item>
+                        newQueue?.run {
+                            QueueService.replaceQueue(newQueue)
+                        }
+                    }
+                    Type.ENQUEUE -> {
+                        val item = parsedPayload.payload as? Item
+                        item?.run {
+                            QueueService.enqueueSong(item, true) // TODO: this should only ever be run by host.. is this ok?
+                        }
+                    }
+                    Type.SEARCH_RESULT -> {
+                        val searchResults = parsedPayload.payload as? List<Item>
+                        // TODO: get the results back to UI somehow
+                    }
+                    Type.SKIP_VOTE -> {
+                        // TODO: call skip vote
+                    }
+                }
+            } // else do nothing
         }
 
         /**
@@ -216,19 +266,8 @@ object CommunicationService { // TODO: think about making this into a bound serv
          */
         override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
             if (update.status == PayloadTransferUpdate.Status.SUCCESS) {
-                // TODO: do i need this?
+                // TODO: do i need this? hopefully everything should arrive in 1 package
             }
         }
-    }
-
-
-    /* Payload building functions */
-
-    private fun buildQueryPayload(q: String): Payload { // TODO; come up w/ consistent payload format
-        return Payload.fromBytes("query:$q".toByteArray())
-    }
-
-    private fun buildItemListPayload(items: List<Item>): Payload {
-        TODO("Not yet implemented")
     }
 }

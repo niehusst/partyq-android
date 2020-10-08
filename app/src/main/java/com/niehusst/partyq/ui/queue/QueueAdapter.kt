@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.niehusst.partyq.databinding.QueueListHeaderBinding
 import com.niehusst.partyq.databinding.QueueListItemBinding
-import com.niehusst.partyq.network.models.Item
+import com.niehusst.partyq.network.models.api.Item
 import com.niehusst.partyq.services.QueueService
 
 class QueueAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

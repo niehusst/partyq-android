@@ -3,7 +3,7 @@ package com.niehusst.partyq.repository
 import android.content.Context
 import com.niehusst.partyq.network.Resource
 import com.niehusst.partyq.network.SpotifyApi
-import com.niehusst.partyq.network.models.SearchResult
+import com.niehusst.partyq.network.models.api.SearchResult
 import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.services.TokenHandlerService
 import com.niehusst.partyq.services.UserTypeService

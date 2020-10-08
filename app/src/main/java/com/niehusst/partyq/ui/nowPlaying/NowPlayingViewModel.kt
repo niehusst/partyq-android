@@ -3,7 +3,7 @@ package com.niehusst.partyq.ui.nowPlaying
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
-import com.niehusst.partyq.network.models.Item
+import com.niehusst.partyq.network.models.api.Item
 import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.services.QueueService
 import com.niehusst.partyq.services.SpotifyPlayerService

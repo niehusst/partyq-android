@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SearchResultItemBinding
-import com.niehusst.partyq.network.models.Item
+import com.niehusst.partyq.network.models.api.Item
 import com.niehusst.partyq.services.QueueService
 import com.niehusst.partyq.services.UserTypeService
 

@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.NowPlayingFragmentBinding
-import com.niehusst.partyq.network.models.Item
+import com.niehusst.partyq.network.models.api.Item
 import com.niehusst.partyq.services.QueueService
 import com.niehusst.partyq.services.UserTypeService
 

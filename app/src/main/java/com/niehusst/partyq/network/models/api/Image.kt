@@ -1,4 +1,4 @@
-package com.niehusst.partyq.network.models
+package com.niehusst.partyq.network.models.api
 
 import com.squareup.moshi.Json
 
