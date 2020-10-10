@@ -12,7 +12,7 @@ import kotlin.text.Charsets.UTF_8
 class CompressionUtilityTest {
 
     @Test
-    fun `simple string compression and decompression`() {
+    fun `simple string compression and decompression is lossless`() {
         val toCompress = "having a good time with Partyq!"
         val compressedBytes = CompressionUtility.compress(toCompress)
         val decompressedString = CompressionUtility.decompress(compressedBytes)
@@ -28,22 +28,29 @@ class CompressionUtilityTest {
     }
 
     @Test
-    fun `bad input compression`() {
-
-    }
-
-    @Test
     fun `bad input decompression`() {
-
+        val input = buildBigString(1)
+        val uncompressedInput = input.toByteArray()
+        // attempt decompression on bad input
+        val decompressed = CompressionUtility.decompress(uncompressedInput)
+        // Deflate alg should have thrown exception since input wasnt actually compressed, so
+        // err handling should just rebuild string directly from bytes
+        assertEquals(input, decompressed)
     }
 
+    /**
+     * This test is a little deceptive because `compressedBytes.size` will always be equal to 5000
+     * (BUFFER_SIZE from CompressionUtility), so it doesn't actually represent very well how many
+     * bytes were saved in compression.
+     * However, this is a good sanity check that realistic payload sizes will be
+     * substantially compressed in production.
+     */
     @Test
     fun `confirmation of payload size reduction from compression for large payload`() {
-        val preCompression = buildBigString(10)
+        val preCompression = buildBigString(20)
         val uncompressedBytes = preCompression.toByteArray(UTF_8)
         val compressedBytes = CompressionUtility.compress(preCompression)
         // assert compressed payload is smaller than uncompressed version
-        println("comp size ${compressedBytes.size} <? uncomp size ${uncompressedBytes.size}")
         assert(compressedBytes.size < uncompressedBytes.size)
 
         // assert compressed payload is smaller than Nearby Connections max payload size

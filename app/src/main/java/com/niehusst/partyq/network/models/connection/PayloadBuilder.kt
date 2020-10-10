@@ -9,8 +9,12 @@ object PayloadBuilder {
 
     private val gson = GsonBuilder().create()
 
-    fun reconstructPayloadFromJson(jsonString: String): ConnectionPayload {
-        return gson.fromJson(jsonString, ConnectionPayload::class.java)
+    fun reconstructPayloadFromJson(jsonString: String): ConnectionPayload? {
+        return try {
+            gson.fromJson(jsonString, ConnectionPayload::class.java)
+        } catch (ex: Exception) {
+            null
+        }
     }
 
     fun buildQueryPayload(q: String): Payload {

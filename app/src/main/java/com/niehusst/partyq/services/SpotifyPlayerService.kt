@@ -94,6 +94,7 @@ object SpotifyPlayerService {
                 } else {
                     playSong(nextSong.uri)
                 }
+                // TODO: clear the skip vote list
             } else if (songPlayingIsNotQueueHead && !it.isPaused) {
                 /* Sometimes Spotify misses the end-of-song event, or something goes wrong with
                  * playing the next song and Spotify starts playing a random song from autoplay.

@@ -1,13 +1,13 @@
 package com.niehusst.partyq.utility
 
-import com.google.android.gms.nearby.connection.ConnectionsClient.MAX_BYTES_DATA_SIZE
 import java.util.zip.Deflater
 import java.util.zip.Inflater
 
 object CompressionUtility {
 
-    // enough bytes to reliably hold our data, but not too close the single payload limit
-    private val BUFFER_SIZE = MAX_BYTES_DATA_SIZE - 1000
+    // enough bytes to reliably hold our largest quantity of data once compressed
+    // (usually our largest data packages aren't even 1000B)
+    private const val BUFFER_SIZE = 5000
 
     fun compress(inputString: String): ByteArray {
         return try {
@@ -22,7 +22,6 @@ object CompressionUtility {
             val compressedDataLength = compressor.deflate(output)
             compressor.end()
 
-            // TODO: return slice of buffer that is just the compressed data
             output
         } catch (ex: Exception) {
             // something went wrong trying to compress, so we'll just send it uncompressed
@@ -41,7 +40,7 @@ object CompressionUtility {
 
             // Decode the bytes into a String
             String(result, 0, resultLength, Charsets.UTF_8)
-        } catch (ex: java.lang.Exception) {
+        } catch (ex: Exception) {
             // something went wrong decompressing, so just create String directly from bytes
             String(compressedBytes, Charsets.UTF_8)
         }

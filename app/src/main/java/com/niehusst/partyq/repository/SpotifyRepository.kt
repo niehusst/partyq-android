@@ -39,7 +39,7 @@ object SpotifyRepository {
                 Resource.error(null, "Network error")
             }
         } else {
-            CommunicationService.sendSearchRequest(query)
+            CommunicationService.sendQuery(query)
             // TODO: how to get resutl back here???? refactor..
             Resource.error(null, "not yet implemented")
         }

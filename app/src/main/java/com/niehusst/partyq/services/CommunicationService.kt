@@ -137,7 +137,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
     /* Data sending methods */
 
     /** Guest only method */
-    fun sendSearchRequest(query: String) {
+    fun sendQuery(query: String) {
         if (connectionEndpointIds.size > 0) {
             // send payload to host; the first and only endpoint in the list
             connectionsClient.sendPayload(
@@ -167,7 +167,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
     }
 
     /** Host only method */
-    fun sendUpdatedQueue(queue: List<Item>) {
+    fun sendUpdatedQueue(queue: List<Item>) { // TODO: this should be done periodically. with a job?
         connectionEndpointIds.forEach { guest ->
             connectionsClient.sendPayload(guest, buildUpdatedQueuePayload(queue))
         }
@@ -194,24 +194,25 @@ object CommunicationService { // TODO: think about making this into a bound serv
 
     /* Data reception methods and callbacks */
 
-    fun receiveSearchRequest() {
-
+    fun receiveQuery(requestingEndpointId: String, query: String?) = query?.run {
+        // TODO: perform a search here and another comms call to send back result
+        //sendSearchResults(requestingEndpointId,)
     }
 
-    fun receiveSearchResults() {
-
+    fun receiveSearchResults(results: List<Item>?) = results?.run {
+        // TODO: get results back to UI somehow
     }
 
-    fun receiveEnqueueRequest() {
-
+    fun receiveEnqueueRequest(item: Item?) = item?.run {
+        QueueService.enqueueSong(item, true) // TODO: this should only ever be run by host.. is this ok?
     }
 
-    fun receiveUpdatedQueue(queue: List<Item>) {
+    fun receiveUpdatedQueue(queue: List<Item>?) = queue?.run {
         QueueService.replaceQueue(queue)
     }
 
     fun receiveSkipVote() {
-
+        // TODO: call skip vote
     }
 
     /**
@@ -228,35 +229,16 @@ object CommunicationService { // TODO: think about making this into a bound serv
          */
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
             if (payload.type == BYTES) {
+                // decompress payload and rebuild the ConnectionPayload obj
                 val decompressedPayload = decompress(payload.asBytes()!!)
                 val parsedPayload = reconstructPayloadFromJson(decompressedPayload)
 
-                when (parsedPayload.type) {
-                    Type.QUERY -> {
-                        val query = parsedPayload.payload as? String
-                        query?.run {
-                            // TODO: perform a search here and another comms call to send back result
-                        }
-                    }
-                    Type.UPDATE_QUEUE -> {
-                        val newQueue = parsedPayload.payload as? List<Item>
-                        newQueue?.run {
-                            QueueService.replaceQueue(newQueue)
-                        }
-                    }
-                    Type.ENQUEUE -> {
-                        val item = parsedPayload.payload as? Item
-                        item?.run {
-                            QueueService.enqueueSong(item, true) // TODO: this should only ever be run by host.. is this ok?
-                        }
-                    }
-                    Type.SEARCH_RESULT -> {
-                        val searchResults = parsedPayload.payload as? List<Item>
-                        // TODO: get the results back to UI somehow
-                    }
-                    Type.SKIP_VOTE -> {
-                        // TODO: call skip vote
-                    }
+                when (parsedPayload?.type) {
+                    Type.QUERY          -> receiveQuery(endpointId, parsedPayload.payload as? String)
+                    Type.UPDATE_QUEUE   -> receiveUpdatedQueue(parsedPayload.payload as? List<Item>)
+                    Type.ENQUEUE        -> receiveEnqueueRequest(parsedPayload.payload as? Item)
+                    Type.SEARCH_RESULT  -> receiveSearchResults(parsedPayload.payload as? List<Item>)
+                    Type.SKIP_VOTE      -> receiveSkipVote()
                 }
             } // else do nothing
         }
