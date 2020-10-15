@@ -2,10 +2,13 @@ package com.niehusst.partyq.services
 
 import android.Manifest
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
 import com.google.android.gms.nearby.connection.Payload.Type.BYTES
 import com.google.gson.GsonBuilder
+import com.niehusst.partyq.network.Status
 import com.niehusst.partyq.network.models.api.Item
 import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildEnqueuePayload
 import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildQueryPayload
@@ -21,8 +24,6 @@ object CommunicationService { // TODO: think about making this into a bound serv
 
     private lateinit var connectionsClient: ConnectionsClient
 
-    private val gson = GsonBuilder().create()
-
     private val STRATEGY = Strategy.P2P_STAR
     private const val SERVICE_ID = "com.niehusst.partyq" // just something unique to the app
     const val REQUEST_CODE_REQUIRED_PERMISSIONS = 1
@@ -36,6 +37,10 @@ object CommunicationService { // TODO: think about making this into a bound serv
 
     // list of IDs of devices connected to the device
     val connectionEndpointIds = mutableListOf<String>()
+
+    // for communicating to guests when they've been connected to a party
+    private val _connected = MutableLiveData<Status>(null)
+    val connected: LiveData<Status> = _connected
 
     /**
      * This function must be called before any other in order to initialize `connectionsClient`.
@@ -87,8 +92,14 @@ object CommunicationService { // TODO: think about making this into a bound serv
         ) // TODO: add on failure listener to stop app if we cant connect people to party?? or will it crash itself already
     }
 
+    /**
+     * Allow guests to connect to an existing party with a party code matching `inputPartyCode`.
+     * Communicates back whether a party was found or not matching `inputPartyCode` via the
+     * `connected` LiveData.
+     */
     fun connectToParty(inputPartyCode: String) {
-        // TODO: start/connect to party net
+        _connected.value = Status.LOADING
+
         val discoverOptions = DiscoveryOptions.Builder().setStrategy(STRATEGY).build()
         connectionsClient.startDiscovery(
             inputPartyCode,
@@ -96,7 +107,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
                 override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
                     // double check verify that party codes match before attempting connection
                     if (info.endpointName == inputPartyCode) {
-                        Timber.i("Attempting conncection to $endpointId")
+                        Timber.i("Attempting connection to $endpointId")
                         connectionsClient.requestConnection(
                             inputPartyCode,
                             endpointId,
@@ -114,22 +125,26 @@ object CommunicationService { // TODO: think about making this into a bound serv
     private fun buildGuestConnectionLifecycleCallback(inputPartyCode: String) =
         object : ConnectionLifecycleCallback() {
             override fun onConnectionInitiated(endpointId: String, info: ConnectionInfo) {
-                connectionsClient.acceptConnection(endpointId, payloadHandlerCallBacks)
+                // only connect if the party codes are the same
+                if (info.endpointName == inputPartyCode) {
+                    connectionsClient.acceptConnection(endpointId, payloadHandlerCallBacks)
+                }
             }
 
             override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
                 if (result.status.isSuccess) {
                     Timber.i("Nearby API successfully connected to $endpointId")
-
+                    _connected.value = Status.SUCCESS
                     connectionEndpointIds.add(endpointId)
                     connectionsClient.stopDiscovery() // only connect to 1 host
                 } else {
                     Timber.e("Nearby API advertising; an endpoint connection failed")
+                    _connected.value = Status.ERROR
                 }
             }
 
             override fun onDisconnected(endpointId: String) {
-                // TODO: nav away to party end activity
+                // TODO: nav away to party end activity. do i have to have some global Livedata to monitor so PartyActivity knows to do something???
             }
         }
 
@@ -156,7 +171,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
     }
 
     /** Guest only method */
-    fun sendEnqueueRequest(item: Item) { // TODO: cut down on unused fields in Item to make payload smaller?
+    fun sendEnqueueRequest(item: Item) {
         if (connectionEndpointIds.size > 0) {
             // send payload to host; the first and only endpoint in the list
             connectionsClient.sendPayload(
@@ -185,7 +200,6 @@ object CommunicationService { // TODO: think about making this into a bound serv
     }
 
     fun disconnectFromParty() {
-        // TODO: host disconnect from guests. also stop advertising
         connectionsClient.stopAdvertising()
         connectionsClient.stopAllEndpoints()
         // TODO: process is diff for guests ??
@@ -230,8 +244,8 @@ object CommunicationService { // TODO: think about making this into a bound serv
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
             if (payload.type == BYTES) {
                 // decompress payload and rebuild the ConnectionPayload obj
-                val decompressedPayload = decompress(payload.asBytes()!!)
-                val parsedPayload = reconstructPayloadFromJson(decompressedPayload)
+                val decompressedPayload = payload.asBytes()?.let { decompress(it) }
+                val parsedPayload = decompressedPayload?.let { reconstructPayloadFromJson(it) }
 
                 when (parsedPayload?.type) {
                     Type.QUERY          -> receiveQuery(endpointId, parsedPayload.payload as? String)
@@ -249,6 +263,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
         override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
             if (update.status == PayloadTransferUpdate.Status.SUCCESS) {
                 // TODO: do i need this? hopefully everything should arrive in 1 package
+                Timber.e("Received a payload update for some reason; a payload was too large.")
             }
         }
     }

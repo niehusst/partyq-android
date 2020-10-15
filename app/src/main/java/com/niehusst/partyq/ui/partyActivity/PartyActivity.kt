@@ -22,11 +22,9 @@ import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.extensions.setupWithNavController
 import com.niehusst.partyq.repository.SpotifyRepository
-import com.niehusst.partyq.services.CommunicationService
+import com.niehusst.partyq.services.*
 import com.niehusst.partyq.services.CommunicationService.REQUEST_CODE_REQUIRED_PERMISSIONS
 import com.niehusst.partyq.services.CommunicationService.REQUIRED_PERMISSIONS
-import com.niehusst.partyq.services.KeyFetchService
-import com.niehusst.partyq.services.SpotifyPlayerService
 import com.niehusst.partyq.ui.about.AboutFragment
 import com.niehusst.partyq.ui.legal.LegalFragment
 import timber.log.Timber
@@ -46,7 +44,7 @@ class PartyActivity : AppCompatActivity() {
         startSpotifyPlayerService()
         if (savedInstanceState == null) {
             setupBottomNavBinding()
-        } // else wait for onRestoreInstanceState
+        } // else wait for onRestoreInstanceState()
 
         // dont let device sleep to prevent severing connection to Spotify and other services
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -157,6 +155,11 @@ class PartyActivity : AppCompatActivity() {
     private fun startCommunicationService() {
         CommunicationService.start(this)
         // TODO: should i worry about accidentally starting service multiple times? could happen on process death recovery?
+        if (UserTypeService.isHost(this)) {
+            PartyCodeHandler.getPartyCode(this)?.let { code ->
+                CommunicationService.hostAdvertise(code)
+            }
+        }
     }
 
     private fun startSpotifyPlayerService() {
@@ -182,7 +185,7 @@ class PartyActivity : AppCompatActivity() {
 
     private fun leaveParty() {
         // TODO: confirrmation modal
-        // TODO: finish doing cleanup, like nav
+        // TODO: finish doing cleanup, like nav to end activity
         CommunicationService.disconnectFromParty()
         finish()
     }
@@ -215,7 +218,7 @@ class PartyActivity : AppCompatActivity() {
         }
         for (grantResult in grantResults) {
             if (grantResult == PackageManager.PERMISSION_DENIED) {
-                // TODO: tweak this? maybe nav to remediation activity
+                // TODO: nav to remediation activity
                 Toast.makeText(this, "Partyq cannot function without these permissions", Toast.LENGTH_LONG).show()
                 finish()
                 return
