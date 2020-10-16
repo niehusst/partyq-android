@@ -5,11 +5,14 @@ import com.niehusst.partyq.services.CommunicationService
 
 class PartyJoinViewModel : ViewModel() {
 
-    fun connectToParty(code: String) {
+    /**
+     * Return false to indicate problem
+     */
+    fun connectToParty(code: String): Boolean {
         if (code.length != 4) {
-            // TODO: indicate problem?
-            return
+            return false
         }
         CommunicationService.connectToParty(code)
+        return true
     }
 }

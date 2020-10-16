@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -24,6 +25,8 @@ class PartyJoinFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = PartyJoinFragmentBinding.inflate(inflater)
+        // start comms service so guests can use it to connect to host
+        CommunicationService.start(requireContext())
         return binding.root
     }
 
@@ -34,7 +37,16 @@ class PartyJoinFragment : Fragment() {
         setupObservers()
 
         binding.submitButton.setOnClickListener {
-            viewModel.connectToParty(binding.codeEditText.text.toString())
+            // TODO: will closing the app while in discovery mode cause mem leaks?
+            val codeLongEnough = viewModel.connectToParty(binding.codeEditText.text.toString())
+
+            if (!codeLongEnough) {
+                Toast.makeText(
+                    requireContext(),
+                    R.string.party_code_too_short_message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
