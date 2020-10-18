@@ -2,6 +2,7 @@ package com.niehusst.partyq.services
 
 import android.Manifest
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.nearby.Nearby
@@ -32,7 +33,10 @@ object CommunicationService { // TODO: think about making this into a bound serv
         Manifest.permission.BLUETOOTH_ADMIN,
         Manifest.permission.ACCESS_WIFI_STATE,
         Manifest.permission.CHANGE_WIFI_STATE,
-        Manifest.permission.ACCESS_COARSE_LOCATION
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+
+        Manifest.permission.NFC,
+        Manifest.permission.ACCESS_FINE_LOCATION // TODO: make sure that location is enabled (manually) on the device???
     )
 
     // list of IDs of devices connected to the device
@@ -66,8 +70,10 @@ object CommunicationService { // TODO: think about making this into a bound serv
                 override fun onConnectionInitiated(endpointId: String, connectionInfo: ConnectionInfo) {
                     // verify matching party code before accepting connection
                     if (connectionInfo.endpointName == partyCode) {
+                        Timber.d("Accepting connection to $endpointId")
                         connectionsClient.acceptConnection(endpointId, payloadHandlerCallBacks)
                     } else {
+                        Timber.d("Rejecting connection due to mismatched party code ${connectionInfo.endpointName}")
                         connectionsClient.rejectConnection(endpointId)
                     }
                 }
@@ -75,9 +81,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
                 override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
                     if (result.status.isSuccess) {
                         Timber.i("Nearby API successfully connected to $endpointId")
-
                         connectionEndpointIds.add(endpointId)
-
                         // dont stop advertising; keep connecting to guests until party ends
                     } else {
                         Timber.e("Nearby API advertising; an endpoint connection failed")
@@ -89,7 +93,9 @@ object CommunicationService { // TODO: think about making this into a bound serv
                 }
             },
             advertOptions
-        ) // TODO: add on failure listener to stop app if we cant connect people to party?? or will it crash itself already
+        ).addOnFailureListener { Timber.e("Advertising failed to start: $it") }
+            .addOnSuccessListener { Timber.d("Started advertising successfully") }
+        // TODO: add on failure listener to stop app if we cant connect people to party?? or will it crash itself already
     }
 
     /**
@@ -102,7 +108,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
 
         val discoverOptions = DiscoveryOptions.Builder().setStrategy(STRATEGY).build()
         connectionsClient.startDiscovery(
-            inputPartyCode,
+            SERVICE_ID, // app identifier
             object : EndpointDiscoveryCallback() {
                 override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
                     // double check verify that party codes match before attempting connection
@@ -112,14 +118,19 @@ object CommunicationService { // TODO: think about making this into a bound serv
                             inputPartyCode,
                             endpointId,
                             buildGuestConnectionLifecycleCallback(inputPartyCode)
-                        )
+                        ).addOnSuccessListener { Timber.d("Connection requested successfully") }
+                            .addOnFailureListener { Timber.e("Connection request failed: $it") }
                     }
                 }
 
-                override fun onEndpointLost(endpointId: String) { /* no-op */ }
+                override fun onEndpointLost(endpointId: String) {
+                    Timber.e("Lost discovered endpoint $endpointId")
+                    _connected.value = Status.ERROR
+                }
             },
             discoverOptions
-        )
+        ).addOnFailureListener { Timber.e("Failed to start discovery: $it") }
+            .addOnSuccessListener { Timber.d("Discovery started successfully") }
     }
 
     private fun buildGuestConnectionLifecycleCallback(inputPartyCode: String) =
@@ -128,6 +139,8 @@ object CommunicationService { // TODO: think about making this into a bound serv
                 // only connect if the party codes are the same
                 if (info.endpointName == inputPartyCode) {
                     connectionsClient.acceptConnection(endpointId, payloadHandlerCallBacks)
+                        .addOnSuccessListener { Timber.d("Connection accepted successfully") }
+                        .addOnFailureListener { Timber.e("Accepting connection failed: $it") }
                 }
             }
 
@@ -138,7 +151,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
                     connectionEndpointIds.add(endpointId)
                     connectionsClient.stopDiscovery() // only connect to 1 host
                 } else {
-                    Timber.e("Nearby API advertising; an endpoint connection failed")
+                    Timber.e("Nearby API advertising: endpoint $endpointId connection failed")
                     _connected.value = Status.ERROR
                 }
             }

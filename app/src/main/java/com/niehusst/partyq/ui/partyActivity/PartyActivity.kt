@@ -115,7 +115,7 @@ class PartyActivity : AppCompatActivity() {
         }
 
         if (!hasPermissions(this, REQUIRED_PERMISSIONS)) {
-            requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS);
+            requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS)
         }
     }
 
@@ -157,6 +157,7 @@ class PartyActivity : AppCompatActivity() {
         // TODO: should i worry about accidentally starting service multiple times? could happen on process death recovery?
         if (UserTypeService.isHost(this)) {
             PartyCodeHandler.getPartyCode(this)?.let { code ->
+                Timber.d("Starting to advertise for $code")
                 CommunicationService.hostAdvertise(code)
             }
         }
@@ -187,6 +188,7 @@ class PartyActivity : AppCompatActivity() {
         // TODO: confirrmation modal
         // TODO: finish doing cleanup, like nav to end activity
         CommunicationService.disconnectFromParty()
+        SpotifyPlayerService.disconnect()
         finish()
     }
 
