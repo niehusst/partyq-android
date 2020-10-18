@@ -9,9 +9,9 @@ object PayloadBuilder {
 
     private val gson = GsonBuilder().create()
 
-    fun reconstructPayloadFromJson(jsonString: String): ConnectionPayload? {
+    fun <T> reconstructFromJson(jsonString: String, classOfT: Class<T>): T? {
         return try {
-            gson.fromJson(jsonString, ConnectionPayload::class.java)
+            gson.fromJson(jsonString, classOfT)
         } catch (ex: Exception) {
             null
         }
@@ -34,11 +34,13 @@ object PayloadBuilder {
     }
 
     fun buildSkipVotePayload(): Payload {
-        return buildPayload(Type.SKIP_VOTE, null)
+        // no data is required to be sent; the type in itself is sufficient info
+        return buildPayload(Type.SKIP_VOTE, "")
     }
 
-    private fun buildPayload(type: Type, payload: Any?): Payload {
-        val jsonPayload = gson.toJson(ConnectionPayload(type, payload))
+    private fun buildPayload(type: Type, payload: Any): Payload {
+        val payloadKernel = gson.toJson(payload)
+        val jsonPayload = gson.toJson(ConnectionPayload(type, payloadKernel))
         val compressedPayload = compress(jsonPayload)
         return Payload.fromBytes(compressedPayload)
     }

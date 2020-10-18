@@ -13,7 +13,7 @@ class PayloadBuilderTest {
         val payload = ConnectionPayload(Type.QUERY, "happy path")
         val jsonPayload = gson.toJson(payload)
 
-        val reconstruction = PayloadBuilder.reconstructPayloadFromJson(jsonPayload)
+        val reconstruction = PayloadBuilder.reconstructFromJson(jsonPayload, ConnectionPayload::class.java)
 
         assertEquals(payload, reconstruction)
     }
@@ -21,7 +21,7 @@ class PayloadBuilderTest {
     @Test
     fun `attempt reconstructing bad payload is null`() {
         val badJson = "a;lskjeiafowie"
-        val result = PayloadBuilder.reconstructPayloadFromJson(badJson)
+        val result = PayloadBuilder.reconstructFromJson(badJson, ConnectionPayload::class.java)
 
         assertNull(result)
     }

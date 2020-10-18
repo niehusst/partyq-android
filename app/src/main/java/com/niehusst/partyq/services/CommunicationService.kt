@@ -2,21 +2,20 @@ package com.niehusst.partyq.services
 
 import android.Manifest
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
 import com.google.android.gms.nearby.connection.Payload.Type.BYTES
-import com.google.gson.GsonBuilder
 import com.niehusst.partyq.network.Status
 import com.niehusst.partyq.network.models.api.Item
+import com.niehusst.partyq.network.models.connection.ConnectionPayload
+import com.niehusst.partyq.network.models.connection.PayloadBuilder
 import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildEnqueuePayload
 import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildQueryPayload
 import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildSearchResultPayload
 import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildSkipVotePayload
 import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildUpdatedQueuePayload
-import com.niehusst.partyq.network.models.connection.PayloadBuilder.reconstructPayloadFromJson
 import com.niehusst.partyq.network.models.connection.Type
 import com.niehusst.partyq.utility.CompressionUtility.decompress
 import timber.log.Timber
@@ -82,7 +81,10 @@ object CommunicationService { // TODO: think about making this into a bound serv
                     if (result.status.isSuccess) {
                         Timber.i("Nearby API successfully connected to $endpointId")
                         connectionEndpointIds.add(endpointId)
-                        // dont stop advertising; keep connecting to guests until party ends
+                        // give the newly connected endpoint the current queue
+                        sendUpdatedQueue(QueueService.getQueueItems())
+
+                        // don't stop advertising; keep connecting to guests until party ends
                     } else {
                         Timber.e("Nearby API advertising; an endpoint connection failed")
                     }
@@ -196,8 +198,9 @@ object CommunicationService { // TODO: think about making this into a bound serv
 
     /** Host only method */
     fun sendUpdatedQueue(queue: List<Item>) { // TODO: this should be done periodically. with a job?
+        val queuePayload = buildUpdatedQueuePayload(queue)
         connectionEndpointIds.forEach { guest ->
-            connectionsClient.sendPayload(guest, buildUpdatedQueuePayload(queue))
+            connectionsClient.sendPayload(guest, queuePayload)
         }
     }
 
@@ -258,14 +261,33 @@ object CommunicationService { // TODO: think about making this into a bound serv
             if (payload.type == BYTES) {
                 // decompress payload and rebuild the ConnectionPayload obj
                 val decompressedPayload = payload.asBytes()?.let { decompress(it) }
-                val parsedPayload = decompressedPayload?.let { reconstructPayloadFromJson(it) }
+                Timber.d("Received payload $decompressedPayload")
+                val parsedPayload = decompressedPayload?.let { json ->
+                    PayloadBuilder.reconstructFromJson(
+                        json,
+                        ConnectionPayload::class.java
+                    )
+                }
 
                 when (parsedPayload?.type) {
-                    Type.QUERY          -> receiveQuery(endpointId, parsedPayload.payload as? String)
-                    Type.UPDATE_QUEUE   -> receiveUpdatedQueue(parsedPayload.payload as? List<Item>)
-                    Type.ENQUEUE        -> receiveEnqueueRequest(parsedPayload.payload as? Item)
-                    Type.SEARCH_RESULT  -> receiveSearchResults(parsedPayload.payload as? List<Item>)
-                    Type.SKIP_VOTE      -> receiveSkipVote()
+                    Type.QUERY -> {
+                        // TODO: probs dont need to reconstruct
+                        val payloadKernel = PayloadBuilder.reconstructFromJson(parsedPayload.payload, String::class.java)
+                        receiveQuery(endpointId, payloadKernel)
+                    }
+                    Type.UPDATE_QUEUE -> {
+                        val payloadKernel = PayloadBuilder.reconstructFromJson(parsedPayload.payload, Array<Item>::class.java)
+                        receiveUpdatedQueue(payloadKernel?.toList())
+                    }
+                    Type.ENQUEUE -> {
+                        val payloadKernel = PayloadBuilder.reconstructFromJson(parsedPayload.payload, Item::class.java)
+                        receiveEnqueueRequest(payloadKernel)
+                    }
+                    Type.SEARCH_RESULT -> {
+                        val payloadKernel = PayloadBuilder.reconstructFromJson(parsedPayload.payload, Array<Item>::class.java)
+                        receiveSearchResults(payloadKernel?.toList())
+                    }
+                    Type.SKIP_VOTE -> receiveSkipVote()
                 }
             } // else do nothing
         }

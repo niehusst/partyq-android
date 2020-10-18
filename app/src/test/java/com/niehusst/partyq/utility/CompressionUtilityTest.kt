@@ -47,7 +47,7 @@ class CompressionUtilityTest {
      */
     @Test
     fun `confirmation of payload size reduction from compression for large payload`() {
-        val preCompression = buildBigString(20)
+        val preCompression = buildBigString(20) // 20 is number of results we get from a search
         val uncompressedBytes = preCompression.toByteArray(UTF_8)
         val compressedBytes = CompressionUtility.compress(preCompression)
         // assert compressed payload is smaller than uncompressed version
@@ -127,7 +127,7 @@ class CompressionUtilityTest {
 
         // build json payload object, like the app does
         val gson = GsonBuilder().create()
-        val payload = ConnectionPayload(Type.SEARCH_RESULT, objList)
+        val payload = ConnectionPayload(Type.SEARCH_RESULT, gson.toJson(objList))
         return gson.toJson(payload)
     }
 }
