@@ -268,6 +268,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
                         ConnectionPayload::class.java
                     )
                 }
+                Timber.d("Payload kernel unboxed as ${parsedPayload?.payload}")
 
                 when (parsedPayload?.type) {
                     Type.QUERY -> {
