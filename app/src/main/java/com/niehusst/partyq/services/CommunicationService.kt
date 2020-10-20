@@ -9,6 +9,7 @@ import com.google.android.gms.nearby.connection.*
 import com.google.android.gms.nearby.connection.Payload.Type.BYTES
 import com.niehusst.partyq.network.Status
 import com.niehusst.partyq.network.models.api.Item
+import com.niehusst.partyq.network.models.api.SearchResult
 import com.niehusst.partyq.network.models.connection.ConnectionPayload
 import com.niehusst.partyq.network.models.connection.PayloadBuilder
 import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildEnqueuePayload
@@ -17,7 +18,12 @@ import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildSearchR
 import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildSkipVotePayload
 import com.niehusst.partyq.network.models.connection.PayloadBuilder.buildUpdatedQueuePayload
 import com.niehusst.partyq.network.models.connection.Type
+import com.niehusst.partyq.repository.SpotifyRepository
 import com.niehusst.partyq.utility.CompressionUtility.decompress
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 object CommunicationService { // TODO: think about making this into a bound service
@@ -42,7 +48,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
     val connectionEndpointIds = mutableListOf<String>()
 
     // for communicating to guests when they've been connected to a party
-    private val _connected = MutableLiveData<Status>(null)
+    private val _connected = MutableLiveData(Status.NO_ACTION)
     val connected: LiveData<Status> = _connected
 
     /**
@@ -82,7 +88,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
                         Timber.i("Nearby API successfully connected to $endpointId")
                         connectionEndpointIds.add(endpointId)
                         // give the newly connected endpoint the current queue
-                        sendUpdatedQueue(QueueService.getQueueItems())
+                        sendUpdatedQueue(QueueService.getQueueItems()) // TODO: this isnt working
 
                         // don't stop advertising; keep connecting to guests until party ends
                     } else {
@@ -178,7 +184,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
     }
 
     /** Host only method */
-    fun sendSearchResults(requestingEndpointId: String, results: List<Item>) {
+    fun sendSearchResults(requestingEndpointId: String, results: SearchResult?) {
         connectionsClient.sendPayload(
             requestingEndpointId,
             buildSearchResultPayload(results)
@@ -216,6 +222,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
     }
 
     fun disconnectFromParty() {
+        _connected.value = Status.NO_ACTION
         connectionsClient.stopAdvertising()
         connectionsClient.stopAllEndpoints()
         // TODO: process is diff for guests ??
@@ -225,12 +232,21 @@ object CommunicationService { // TODO: think about making this into a bound serv
     /* Data reception methods and callbacks */
 
     fun receiveQuery(requestingEndpointId: String, query: String?) = query?.run {
-        // TODO: perform a search here and another comms call to send back result
-        //sendSearchResults(requestingEndpointId,)
+        // perform a search for the guest and send back result
+        GlobalScope.launch(Dispatchers.IO) { // TODO: will this crash the app if we close app during coroutine exec? (since global scope is not cancelled)
+            val res = SpotifyRepository.getSearchTrackResults(query)
+            sendSearchResults(requestingEndpointId, res)
+        }
     }
 
-    fun receiveSearchResults(results: List<Item>?) = results?.run {
-        // TODO: get results back to UI somehow
+    fun receiveSearchResults(results: SearchResult?) {
+        if (results != null) {
+            SearchResultHandler.receiveSearchResults(results)
+            SearchResultHandler.setStatus(Status.SUCCESS)
+        } else {
+            Timber.e("Received null search result payload from host")
+            SearchResultHandler.setStatus(Status.ERROR)
+        }
     }
 
     fun receiveEnqueueRequest(item: Item?) = item?.run {
@@ -268,7 +284,6 @@ object CommunicationService { // TODO: think about making this into a bound serv
                         ConnectionPayload::class.java
                     )
                 }
-                Timber.d("Payload kernel unboxed as ${parsedPayload?.payload}")
 
                 when (parsedPayload?.type) {
                     Type.QUERY -> {
@@ -285,8 +300,8 @@ object CommunicationService { // TODO: think about making this into a bound serv
                         receiveEnqueueRequest(payloadKernel)
                     }
                     Type.SEARCH_RESULT -> {
-                        val payloadKernel = PayloadBuilder.reconstructFromJson(parsedPayload.payload, Array<Item>::class.java)
-                        receiveSearchResults(payloadKernel?.toList())
+                        val payloadKernel = PayloadBuilder.reconstructFromJson(parsedPayload.payload, SearchResult::class.java)
+                        receiveSearchResults(payloadKernel)
                     }
                     Type.SKIP_VOTE -> receiveSkipVote()
                 }

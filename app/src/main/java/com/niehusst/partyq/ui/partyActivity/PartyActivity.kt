@@ -119,15 +119,11 @@ class PartyActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        // TODO: disconnect from spotify app remote ok? will we be unable to resume host abilities after onStart?
-        SpotifyPlayerService.disconnect()
-    }
-
     override fun onDestroy() {
         // TODO: remove values from shared prefs we dont want to persist?
+        // TODO: kill fragment saved state so that we wont see dead data when joining a diff party w/o closing app
         super.onDestroy()
+        //leaveParty()
     }
 
     private fun setupBottomNavBinding() {
@@ -154,7 +150,7 @@ class PartyActivity : AppCompatActivity() {
 
     private fun startCommunicationService() {
         CommunicationService.start(this)
-        // TODO: should i worry about accidentally starting service multiple times? could happen on process death recovery?
+
         if (UserTypeService.isHost(this)) {
             PartyCodeHandler.getPartyCode(this)?.let { code ->
                 Timber.d("Starting to advertise for $code")

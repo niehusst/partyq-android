@@ -49,12 +49,12 @@ class QueueAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private val binding: QueueListItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
          fun bind(item: Item) {
-            binding.songTitle.text = item.name
-            binding.artistName.text = item.artistsAsPrettyString()
-            Glide.with(binding.root)
-                .load(item.album.images?.lastOrNull()?.url)
-                .fitCenter()
-                .into(binding.thumbnail)
+             binding.songTitle.text = item.name
+             binding.artistName.text = item.artistsAsPrettyString()
+             Glide.with(binding.root)
+                 .load(item.album.images?.lastOrNull()?.url)
+                 .fitCenter()
+                 .into(binding.thumbnail)
         }
     }
 
