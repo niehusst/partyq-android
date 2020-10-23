@@ -1,6 +1,5 @@
 package com.niehusst.partyq.services
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.niehusst.partyq.network.Status
