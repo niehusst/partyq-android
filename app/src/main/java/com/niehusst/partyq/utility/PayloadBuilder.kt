@@ -22,50 +22,20 @@ object PayloadBuilder {
         }
     }
 
-    fun buildQueryPayload(q: String): Payload {
-        return buildPayload(
-            Type.QUERY,
-            q
-        )
-    }
+    fun buildQueryPayload(q: String): Payload = buildPayload(Type.QUERY, q)
 
-    fun buildSearchResultPayload(res: SearchResult?): Payload {
-        return buildPayload(
-            Type.SEARCH_RESULT,
-            res
-        )
-    }
+    fun buildSearchResultPayload(res: SearchResult?): Payload = buildPayload(Type.SEARCH_RESULT, res)
 
-    fun buildUpdatedQueuePayload(items: List<Item>): Payload {
-        return buildPayload(
-            Type.UPDATE_QUEUE,
-            items
-        )
-    }
+    fun buildUpdatedQueuePayload(items: List<Item>): Payload = buildPayload(Type.UPDATE_QUEUE, items)
 
-    fun buildEnqueuePayload(item: Item): Payload {
-        return buildPayload(
-            Type.ENQUEUE,
-            item
-        )
-    }
+    fun buildEnqueuePayload(item: Item): Payload = buildPayload(Type.ENQUEUE, item)
 
-    fun buildSkipVotePayload(): Payload {
-        // no data is required to be sent; the type in itself is sufficient info
-        return buildPayload(
-            Type.SKIP_VOTE,
-            null
-        )
-    }
+    // no data is required to be sent; the type in itself is sufficient info
+    fun buildSkipVotePayload(): Payload = buildPayload(Type.SKIP_VOTE, null)
 
     private fun buildPayload(type: Type, payload: Any?): Payload {
         val payloadKernel = gson.toJson(payload)
-        val jsonPayload = gson.toJson(
-            ConnectionPayload(
-                type,
-                payloadKernel
-            )
-        )
+        val jsonPayload = gson.toJson(ConnectionPayload(type, payloadKernel))
         val compressedPayload = compress(jsonPayload)
         return Payload.fromBytes(compressedPayload)
     }

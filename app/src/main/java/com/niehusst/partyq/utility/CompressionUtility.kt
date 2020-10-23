@@ -41,7 +41,7 @@ object CompressionUtility {
     fun decompress(compressedBytes: ByteArray): String {
         return try {
             val decompressor = Inflater()
-            decompressor.setInput(compressedBytes)//, 0, BUFFER_SIZE)
+            decompressor.setInput(compressedBytes)
             val buffer = ByteArray(BUFFER_SIZE)
             val output = ByteArrayOutputStream(compressedBytes.size)
 

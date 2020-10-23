@@ -29,7 +29,6 @@ import com.niehusst.partyq.ui.about.AboutFragment
 import com.niehusst.partyq.ui.legal.LegalFragment
 import timber.log.Timber
 
-
 class PartyActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPartyBinding
