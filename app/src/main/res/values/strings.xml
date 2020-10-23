@@ -36,7 +36,6 @@
     <string name="no_results">No Results</string>
     <string name="error_face">Error :(</string>
     <string name="song_added_to_queue">Song Added to Queue</string>
-    <string name="error_adding_song_to_queue">Error Adding Song to Queue</string>
 
     <!-- PartyCode -->
     <string name="close_popup">Close popup</string>

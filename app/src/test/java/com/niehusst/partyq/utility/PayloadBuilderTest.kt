@@ -1,5 +1,7 @@
-package com.niehusst.partyq.network.models.connection
+package com.niehusst.partyq.utility
 
+import com.niehusst.partyq.network.models.connection.ConnectionPayload
+import com.niehusst.partyq.network.models.connection.Type
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -7,7 +9,11 @@ class PayloadBuilderTest {
 
     @Test
     fun `reconstruct good payload creates identical object`() {
-        val payload = ConnectionPayload(Type.QUERY, "happy path")
+        val payload =
+            ConnectionPayload(
+                Type.QUERY,
+                "happy path"
+            )
         val jsonPayload = "{\"type\":\"QUERY\",\"payload\":\"happy path\"}"
 
         val reconstruction = PayloadBuilder.reconstructFromJson(jsonPayload, ConnectionPayload::class.java)

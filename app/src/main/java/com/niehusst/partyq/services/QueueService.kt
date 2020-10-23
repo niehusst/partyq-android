@@ -11,20 +11,18 @@ object QueueService {
     val dataChangedTrigger = MutableLiveData<Any?>(null)
     private var songQueue: Queue<Item> = LinkedList()
 
-    fun enqueueSong(item: Item, isHost: Boolean): Boolean {
+    fun enqueueSong(item: Item, isHost: Boolean) {
         if (isHost) {
             songQueue.add(item)
             notifyDataChange()
 
-            if (songQueue.size == 1) { // TODO: this is a bit messy?
+            if (songQueue.size == 1) {
                 // start playing the first song (auto play will handle the rest)
                 SpotifyPlayerService.playSong(item.uri)
             }
         } else {
-            // TODO: if doesnt fail, add to local queue as well.
             CommunicationService.sendEnqueueRequest(item)
         }
-        return true // TODO: return status of comms req
     }
 
     fun dequeueSong(context: Context) {
