@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SearchResultItemBinding
-import com.niehusst.partyq.network.models.Item
+import com.niehusst.partyq.network.models.api.Item
 import com.niehusst.partyq.services.QueueService
 import com.niehusst.partyq.services.UserTypeService
 
@@ -44,11 +44,9 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
 
             binding.root.setOnClickListener {
                 // enqueue a copy so that the same exact obj ref doesnt reappear in queue
-                if (QueueService.enqueueSong(item.copy(), isHost)) {
-                    showSuccess()
-                } else {
-                    showError()
-                }
+                QueueService.enqueueSong(item.copy(), isHost)
+                // no good way to get result of op back w/o global state, so just show success
+                showSuccess()
             }
         }
 
@@ -60,17 +58,6 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
             )
             snackPopup.view.setBackgroundColor(binding.root.context.getColor(R.color.colorSuccess))
             snackPopup.setTextColor(binding.root.context.getColor(R.color.onColorSuccess))
-            snackPopup.show()
-        }
-
-        private fun showError() {
-            val snackPopup = Snackbar.make(
-                binding.root,
-                R.string.error_adding_song_to_queue,
-                Snackbar.LENGTH_SHORT
-            )
-            snackPopup.view.setBackgroundColor(binding.root.context.getColor(R.color.colorError))
-            snackPopup.setTextColor(binding.root.context.getColor(R.color.onColorError))
             snackPopup.show()
         }
     }

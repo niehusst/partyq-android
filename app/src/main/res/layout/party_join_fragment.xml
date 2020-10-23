@@ -107,6 +107,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:progressText="@{@string/searching_for_party}"
             isGone="@{!loading}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

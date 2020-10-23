@@ -1,7 +1,7 @@
-package com.niehusst.partyq.network.models
+package com.niehusst.partyq.network.models.api
 
 import com.squareup.moshi.Json
-
+// TODO: cut down on unused fields to make payload smaller?
 data class Item(
     @Json(name = "album")
     val album: Album,
@@ -54,9 +54,9 @@ data class Item(
     fun getSpotifyLink(): String {
         return listOf(
             externalUrls?.spotify,
-            album.externalUrls?.spotify,
+            album?.externalUrls?.spotify,
             artists?.firstOrNull()?.externalUrls?.spotify,
-            album.artists?.firstOrNull()?.externalUrls?.spotify,
+            album?.artists?.firstOrNull()?.externalUrls?.spotify,
             href // last ditch effort to put out some spotify url
         ).firstOrNull { it != null } ?: "N/A"
     }

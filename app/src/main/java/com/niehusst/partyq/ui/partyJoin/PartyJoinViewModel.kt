@@ -1,13 +1,22 @@
 package com.niehusst.partyq.ui.partyJoin
 
 import androidx.lifecycle.ViewModel
+import com.niehusst.partyq.services.CommunicationService
 
 class PartyJoinViewModel : ViewModel() {
 
-    fun connectToParty(code: String) {
+    var lastCode: String = ""
+
+    /**
+     * Begins connection discovery.
+     * Returns false to indicate problem with code length.
+     */
+    fun connectToParty(code: String): Boolean {
         if (code.length != 4) {
-            return // fast fail
+            return false
         }
-        // TODO:
+        lastCode = code
+        CommunicationService.connectToParty(code)
+        return true
     }
 }

@@ -1,5 +1,6 @@
-package com.niehusst.partyq.network.models
+package com.niehusst.partyq.network.models.api
 
+import com.niehusst.partyq.network.models.api.Item
 import com.squareup.moshi.Json
 
 data class Tracks(

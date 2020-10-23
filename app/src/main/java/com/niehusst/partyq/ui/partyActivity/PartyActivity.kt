@@ -2,11 +2,15 @@ package com.niehusst.partyq.ui.partyActivity
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -18,8 +22,9 @@ import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.extensions.setupWithNavController
 import com.niehusst.partyq.repository.SpotifyRepository
-import com.niehusst.partyq.services.KeyFetchService
-import com.niehusst.partyq.services.SpotifyPlayerService
+import com.niehusst.partyq.services.*
+import com.niehusst.partyq.services.CommunicationService.REQUEST_CODE_REQUIRED_PERMISSIONS
+import com.niehusst.partyq.services.CommunicationService.REQUIRED_PERMISSIONS
 import com.niehusst.partyq.ui.about.AboutFragment
 import com.niehusst.partyq.ui.legal.LegalFragment
 import timber.log.Timber
@@ -36,9 +41,10 @@ class PartyActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         startCommunicationService()
         startSpotifyPlayerService()
+        listenForDisconnection()
         if (savedInstanceState == null) {
             setupBottomNavBinding()
-        } // else wait for onRestoreInstanceState
+        } // else wait for onRestoreInstanceState()
 
         // dont let device sleep to prevent severing connection to Spotify and other services
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -107,17 +113,17 @@ class PartyActivity : AppCompatActivity() {
                 .putBoolean(PARTY_FIRST_START, false)
                 .apply()
         }
-    }
 
-    override fun onStop() {
-        super.onStop()
-        // TODO: disconnect from spotify app remote ok? will we be unable to resume host abilities after onStart?
-        SpotifyPlayerService.disconnect()
+        if (!hasPermissions(this, REQUIRED_PERMISSIONS)) {
+            requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS)
+        }
     }
 
     override fun onDestroy() {
         // TODO: remove values from shared prefs we dont want to persist?
+        // TODO: kill fragment saved state so that we wont see dead data when joining a diff party w/o closing app
         super.onDestroy()
+        //leaveParty()
     }
 
     private fun setupBottomNavBinding() {
@@ -143,8 +149,14 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun startCommunicationService() {
-        // TODO: delegate host vs guest logic to the repo/service
-        // TODO: should i worry about accidentally starting service multiple times? could happen on process death recovery?
+        CommunicationService.start(this)
+
+        if (UserTypeService.isHost(this)) {
+            PartyCodeHandler.getPartyCode(this)?.let { code ->
+                Timber.d("Starting to advertise for $code")
+                CommunicationService.hostAdvertise(code)
+            }
+        }
     }
 
     private fun startSpotifyPlayerService() {
@@ -169,6 +181,57 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun leaveParty() {
-        // TODO:
+        // TODO: confirrmation modal
+        // TODO: finish doing cleanup, like nav to end activity. Pause curr song
+        CommunicationService.disconnectFromParty()
+        SpotifyPlayerService.disconnect()
+        finish()
+    }
+
+    private fun listenForDisconnection() {
+        PartyDisconnectionHandler.disconnected.observe(this, Observer { disconnected ->
+            if (disconnected) {
+                // TODO: nav to PartyEndActivity
+                PartyDisconnectionHandler.acknowledgeDisconnect()
+                finish()
+            }
+        })
+    }
+
+    /**
+     * Returns true if the app was granted all the permissions. Otherwise, returns false.
+     */
+    private fun hasPermissions(context: Context, permissions: Array<String>): Boolean {
+        for (permission in permissions) {
+            if (ContextCompat.checkSelfPermission(context, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
+    }
+
+    /**
+     * Handles user acceptance (or denial) of our permission request.
+     */
+    @CallSuper
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode != REQUEST_CODE_REQUIRED_PERMISSIONS) {
+            return
+        }
+        for (grantResult in grantResults) {
+            if (grantResult == PackageManager.PERMISSION_DENIED) {
+                // TODO: nav to remediation activity
+                Toast.makeText(this, "Partyq cannot function without these permissions", Toast.LENGTH_LONG).show()
+                finish()
+                return
+            }
+        }
+        recreate()
     }
 }

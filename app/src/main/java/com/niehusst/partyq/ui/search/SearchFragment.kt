@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SearchFragmentBinding
 import com.niehusst.partyq.network.Status
+import com.niehusst.partyq.services.SearchResultHandler
 
 
 class SearchFragment : Fragment() {
@@ -40,14 +41,12 @@ class SearchFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.isResult.observe(viewLifecycleOwner, Observer {
-            binding.isResults = it
-        })
-        viewModel.result.observe(viewLifecycleOwner, Observer {
+        SearchResultHandler.results.observe(viewLifecycleOwner, Observer {
             adapter.searchResults = it
+            binding.isResults = it.isNotEmpty()
             adapter.notifyDataSetChanged()
         })
-        viewModel.status.observe(viewLifecycleOwner, Observer {
+        SearchResultHandler.status.observe(viewLifecycleOwner, Observer {
             when(it) {
                 Status.LOADING -> binding.loading = true
                 Status.ERROR -> {

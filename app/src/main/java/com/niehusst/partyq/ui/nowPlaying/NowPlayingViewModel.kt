@@ -3,7 +3,8 @@ package com.niehusst.partyq.ui.nowPlaying
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
-import com.niehusst.partyq.network.models.Item
+import com.niehusst.partyq.network.models.api.Item
+import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.services.QueueService
 import com.niehusst.partyq.services.SpotifyPlayerService
 import com.niehusst.partyq.services.UserTypeService
@@ -42,7 +43,7 @@ class NowPlayingViewModel : ViewModel() {
             // TODO: add a vote towards skip song to master skip count holder
             SpotifyPlayerService.skipSong()
         } else {
-            // TODO: send vote skip req through comms
+            CommunicationService.sendSkipVote()
         }
         Toast.makeText(context, "Your vote to skip has been counted", Toast.LENGTH_SHORT).show()
     }

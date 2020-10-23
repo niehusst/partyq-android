@@ -36,7 +36,6 @@
     <string name="no_results">No Results</string>
     <string name="error_face">Error :(</string>
     <string name="song_added_to_queue">Song Added to Queue</string>
-    <string name="error_adding_song_to_queue">Error Adding Song to Queue</string>
 
     <!-- PartyCode -->
     <string name="close_popup">Close popup</string>
@@ -56,6 +55,8 @@
 
     <!-- PartyJoin -->
     <string name="join_content">Enter your host\'s 4-digit code to join their party.</string>
-    <string name="party_code_hint">1234</string>
+    <string name="party_code_hint">e.g. 1234</string>
     <string name="submit">Submit</string>
+    <string name="party_code_too_short_message">Code must be 4 digits</string>
+    <string name="searching_for_party">Searching for Party…</string>
 </resources>

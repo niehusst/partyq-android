@@ -3,7 +3,6 @@ package com.niehusst.partyq.services
 import android.app.Activity
 import com.niehusst.partyq.SpotifySharedInfo.REDIRECT_URI
 import com.niehusst.partyq.SpotifySharedInfo.REQUEST_CODE
-import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
