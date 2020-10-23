@@ -46,13 +46,6 @@ class CompressionUtilityTest {
         assertEquals(input, decompressed)
     }
 
-    /**
-     * This test is a little deceptive because `compressedBytes.size` will always be equal to 5000
-     * (BUFFER_SIZE from CompressionUtility), so it doesn't actually represent very well how many
-     * bytes were saved in compression.
-     * However, this is a good sanity check that realistic payload sizes will be
-     * substantially compressed in production.
-     */
     @Test
     fun `confirmation of payload size reduction from compression for large payload`() {
         val preCompression = buildBigString(20) // 20 is number of results we get from a search

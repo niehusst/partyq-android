@@ -1,17 +1,14 @@
 package com.niehusst.partyq.network.models.connection
 
-import com.google.gson.GsonBuilder
 import org.junit.Assert.*
 import org.junit.Test
 
 class PayloadBuilderTest {
 
     @Test
-    fun `build and reconstruct good payload`() {
-        val gson = GsonBuilder().create()
-
+    fun `reconstruct good payload creates identical object`() {
         val payload = ConnectionPayload(Type.QUERY, "happy path")
-        val jsonPayload = gson.toJson(payload)
+        val jsonPayload = "{\"type\":\"QUERY\",\"payload\":\"happy path\"}"
 
         val reconstruction = PayloadBuilder.reconstructFromJson(jsonPayload, ConnectionPayload::class.java)
 

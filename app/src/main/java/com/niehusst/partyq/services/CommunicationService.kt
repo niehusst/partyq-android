@@ -86,7 +86,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
                         Timber.i("Nearby API successfully connected to $endpointId")
                         connectionEndpointIds.add(endpointId)
                         // give the newly connected endpoint the current queue
-                        sendUpdatedQueue(QueueService.getQueueItems()) // TODO: this isnt working
+                        sendUpdatedQueue(QueueService.getQueueItems())
 
                         // don't stop advertising; keep connecting to guests until party ends
                     } else {
@@ -229,15 +229,21 @@ object CommunicationService { // TODO: think about making this into a bound serv
 
     /* Data reception methods and callbacks */
 
-    fun receiveQuery(requestingEndpointId: String, query: String?) = query?.run {
-        // TODO: return an error to sender if query is null
-        // perform a search for the guest and send back result
-        GlobalScope.launch(Dispatchers.IO) {
-            val res = SpotifyRepository.getSearchTrackResults(query)
-            sendSearchResults(requestingEndpointId, res)
+    /** Host only method */
+    fun receiveQuery(requestingEndpointId: String, query: String?) {
+        if (query == null) {
+            // send back "error data" so guest isn't left hanging
+            sendSearchResults(requestingEndpointId, null)
+        } else {
+            // perform a search for the guest and send back result
+            GlobalScope.launch(Dispatchers.IO) {
+                val res = SpotifyRepository.getSearchTrackResults(query)
+                sendSearchResults(requestingEndpointId, res)
+            }
         }
     }
 
+    /** Guest only method */
     fun receiveSearchResults(results: SearchResult?) {
         if (results != null) {
             SearchResultHandler.updateSearchResults(results)
@@ -248,14 +254,17 @@ object CommunicationService { // TODO: think about making this into a bound serv
         }
     }
 
+    /** Host only method */
     fun receiveEnqueueRequest(item: Item?) = item?.run {
-        QueueService.enqueueSong(item, true) // TODO: this should only ever be run by host.. is this ok?
+        QueueService.enqueueSong(item, true)
     }
 
+    /** Guest only method */
     fun receiveUpdatedQueue(queue: List<Item>?) = queue?.run {
         QueueService.replaceQueue(queue)
     }
 
+    /** Host only method */
     fun receiveSkipVote() {
         // TODO: call skip vote
     }
@@ -308,12 +317,10 @@ object CommunicationService { // TODO: think about making this into a bound serv
 
         /**
          * Called with progress info about an active Payload transfer, either incoming or outgoing.
+         *
+         * Since we only ever send BYTES payloads, they should all be small enough to arrive in 1
+         * piece, so there is no need to implement any payload updates.
          */
-        override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
-            if (update.status == PayloadTransferUpdate.Status.SUCCESS) {
-                // TODO: do i need this? hopefully everything should arrive in 1 package
-                Timber.e("Received a payload update for some reason; a payload was too large.")
-            }
-        }
+        override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {}
     }
 }
