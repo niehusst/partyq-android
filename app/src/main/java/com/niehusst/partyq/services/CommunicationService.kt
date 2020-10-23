@@ -163,7 +163,9 @@ object CommunicationService { // TODO: think about making this into a bound serv
             }
 
             override fun onDisconnected(endpointId: String) {
-                // TODO: nav away to party end activity. do i have to have some global Livedata to monitor so PartyActivity knows to do something???
+                connectionEndpointIds.remove(endpointId)
+                // since the host has disconnected from us, we must leave the party
+                PartyDisconnectionHandler.disconnectFromParty()
             }
         }
 

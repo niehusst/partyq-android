@@ -42,6 +42,7 @@ class PartyActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         startCommunicationService()
         startSpotifyPlayerService()
+        listenForDisconnection()
         if (savedInstanceState == null) {
             setupBottomNavBinding()
         } // else wait for onRestoreInstanceState()
@@ -186,6 +187,16 @@ class PartyActivity : AppCompatActivity() {
         CommunicationService.disconnectFromParty()
         SpotifyPlayerService.disconnect()
         finish()
+    }
+
+    private fun listenForDisconnection() {
+        PartyDisconnectionHandler.disconnected.observe(this, Observer { disconnected ->
+            if (disconnected) {
+                // TODO: nav to PartyEndActivity
+                PartyDisconnectionHandler.acknowledgeDisconnect()
+                finish()
+            }
+        })
     }
 
     /**
