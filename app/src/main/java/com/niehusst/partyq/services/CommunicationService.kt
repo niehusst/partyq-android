@@ -267,8 +267,8 @@ object CommunicationService { // TODO: think about making this into a bound serv
     }
 
     /** Host only method */
-    fun receiveSkipVote() {
-        // TODO: call skip vote
+    fun receiveSkipVoteRequest() {
+        SkipSongHandler.voteSkip()
     }
 
     /**
@@ -312,7 +312,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
                         val payloadKernel = PayloadBuilder.reconstructFromJson(parsedPayload.payload, SearchResult::class.java)
                         receiveSearchResults(payloadKernel)
                     }
-                    Type.SKIP_VOTE -> receiveSkipVote()
+                    Type.SKIP_VOTE -> receiveSkipVoteRequest()
                 }
             } // else do nothing
         }

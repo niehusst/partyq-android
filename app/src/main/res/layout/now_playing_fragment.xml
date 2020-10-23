@@ -94,7 +94,7 @@
             tools:text="Artist"
             isGone="@{noSong}"/>
 
-        <!-- song progress here?? -->
+        <!-- TODO: song progress here?? -->
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/play_toggle_button"
@@ -117,7 +117,7 @@
             android:minWidth="256dp"
             android:layout_marginTop="@dimen/mediumPadding"
             android:layout_marginBottom="@dimen/smallPadding"
-            android:text="@string/skip_song"
+            android:text="@string/vote_skip"
             app:icon="@drawable/ic_baseline_skip_next_24"
             app:iconGravity="end"
             app:iconTint="@color/black"

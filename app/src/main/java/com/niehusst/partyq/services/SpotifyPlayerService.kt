@@ -94,7 +94,9 @@ object SpotifyPlayerService {
                 } else {
                     playSong(nextSong.uri)
                 }
-                // TODO: clear the skip vote list
+
+                // new song has started, so old skip votes are nullified
+                SkipSongHandler.clearSkipCount()
             } else if (songPlayingIsNotQueueHead && !it.isPaused) {
                 /* Sometimes Spotify misses the end-of-song event, or something goes wrong with
                  * playing the next song and Spotify starts playing a random song from autoplay.
@@ -151,6 +153,8 @@ object SpotifyPlayerService {
     fun disconnect() {
         // this doesn't actually stop SPOTIFY from running and playing music
         spotifyAppRemote?.let {
+            // pause the song first so music doesn't keep playing after disconnect
+            pauseSong()
             SpotifyAppRemote.disconnect(it)
         }
     }
