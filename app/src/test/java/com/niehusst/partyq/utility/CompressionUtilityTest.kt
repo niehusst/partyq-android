@@ -28,6 +28,14 @@ class CompressionUtilityTest {
     }
 
     @Test
+    fun `big json string compression and decompression is lossless`() {
+        val jsonToCompress = buildBigString(20)
+        val compressedBytes = CompressionUtility.compress(jsonToCompress)
+        val decompressedString = CompressionUtility.decompress(compressedBytes)
+        assertEquals(jsonToCompress, decompressedString)
+    }
+
+    @Test
     fun `bad input decompression`() {
         val input = buildBigString(1)
         val uncompressedInput = input.toByteArray()
@@ -51,9 +59,11 @@ class CompressionUtilityTest {
         val uncompressedBytes = preCompression.toByteArray(UTF_8)
         val compressedBytes = CompressionUtility.compress(preCompression)
         // assert compressed payload is smaller than uncompressed version
+        println("compressed:${compressedBytes.size} < uncompressed:${uncompressedBytes.size}")
         assert(compressedBytes.size < uncompressedBytes.size)
 
         // assert compressed payload is smaller than Nearby Connections max payload size
+        println("compressed:${compressedBytes.size} < max:$MAX_BYTES_DATA_SIZE")
         assert(compressedBytes.size < MAX_BYTES_DATA_SIZE)
     }
 
