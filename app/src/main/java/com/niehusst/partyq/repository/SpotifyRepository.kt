@@ -1,7 +1,6 @@
 package com.niehusst.partyq.repository
 
 import android.content.Context
-import com.niehusst.partyq.network.Resource
 import com.niehusst.partyq.network.SpotifyApi
 import com.niehusst.partyq.network.Status
 import com.niehusst.partyq.network.models.api.SearchResult
@@ -35,7 +34,7 @@ object SpotifyRepository {
         if (UserTypeService.isHost(context)) {
             try {
                 val result = getSearchTrackResults(query) ?: throw Exception("Uninitialized api")
-                SearchResultHandler.receiveSearchResults(result)
+                SearchResultHandler.updateSearchResults(result)
                 SearchResultHandler.setStatus(Status.SUCCESS)
             } catch (err: Throwable) {
                 Timber.e(err)

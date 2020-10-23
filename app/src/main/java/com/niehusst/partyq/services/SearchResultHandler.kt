@@ -1,5 +1,6 @@
 package com.niehusst.partyq.services
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.niehusst.partyq.network.Status
@@ -14,15 +15,17 @@ object SearchResultHandler {
     private val _results = MutableLiveData<List<Item>>(listOf())
     val results: LiveData<List<Item>> = _results
 
-    fun receiveSearchResults(res: SearchResult) {
-        _status.value = Status.SUCCESS
+    fun updateSearchResults(res: SearchResult) {
         // get just the track items. Filter out duplicate URIs
-        var songs = res?.tracks?.items ?: listOf()
+        var songs = res.tracks?.items ?: listOf()
         songs = songs.distinctBy { it.uri }
-        _results.value = songs
+        _results.postValue(songs)
     }
 
+    /**
+     * Thread-safe set value of status LiveData
+     */
     fun setStatus(status: Status) {
-        _status.value = status
+        _status.postValue(status)
     }
 }

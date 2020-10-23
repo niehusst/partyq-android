@@ -182,7 +182,7 @@ class PartyActivity : AppCompatActivity() {
 
     private fun leaveParty() {
         // TODO: confirrmation modal
-        // TODO: finish doing cleanup, like nav to end activity
+        // TODO: finish doing cleanup, like nav to end activity. Pause curr song
         CommunicationService.disconnectFromParty()
         SpotifyPlayerService.disconnect()
         finish()

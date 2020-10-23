@@ -23,7 +23,6 @@ import com.niehusst.partyq.utility.CompressionUtility.decompress
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 object CommunicationService { // TODO: think about making this into a bound service
@@ -31,7 +30,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
     private lateinit var connectionsClient: ConnectionsClient
 
     private val STRATEGY = Strategy.P2P_STAR
-    private const val SERVICE_ID = "com.niehusst.partyq" // just something unique to the app
+    private const val SERVICE_ID = "com.niehusst.partyq" // identifies this app for Nearby API connections
     const val REQUEST_CODE_REQUIRED_PERMISSIONS = 1
     val REQUIRED_PERMISSIONS = arrayOf(
         Manifest.permission.BLUETOOTH,
@@ -39,9 +38,8 @@ object CommunicationService { // TODO: think about making this into a bound serv
         Manifest.permission.ACCESS_WIFI_STATE,
         Manifest.permission.CHANGE_WIFI_STATE,
         Manifest.permission.ACCESS_COARSE_LOCATION,
-
         Manifest.permission.NFC,
-        Manifest.permission.ACCESS_FINE_LOCATION // TODO: make sure that location is enabled (manually) on the device???
+        Manifest.permission.ACCESS_FINE_LOCATION // TODO: make sure that location is enabled (manually) on the device??? or is confirming modal good enough?
     )
 
     // list of IDs of devices connected to the device
@@ -121,7 +119,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
                 override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
                     // double check verify that party codes match before attempting connection
                     if (info.endpointName == inputPartyCode) {
-                        Timber.i("Attempting connection to $endpointId")
+                        Timber.d("Attempting connection to $endpointId")
                         connectionsClient.requestConnection(
                             inputPartyCode,
                             endpointId,
@@ -232,8 +230,9 @@ object CommunicationService { // TODO: think about making this into a bound serv
     /* Data reception methods and callbacks */
 
     fun receiveQuery(requestingEndpointId: String, query: String?) = query?.run {
+        // TODO: return an error to sender if query is null
         // perform a search for the guest and send back result
-        GlobalScope.launch(Dispatchers.IO) { // TODO: will this crash the app if we close app during coroutine exec? (since global scope is not cancelled)
+        GlobalScope.launch(Dispatchers.IO) {
             val res = SpotifyRepository.getSearchTrackResults(query)
             sendSearchResults(requestingEndpointId, res)
         }
@@ -241,7 +240,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
 
     fun receiveSearchResults(results: SearchResult?) {
         if (results != null) {
-            SearchResultHandler.receiveSearchResults(results)
+            SearchResultHandler.updateSearchResults(results)
             SearchResultHandler.setStatus(Status.SUCCESS)
         } else {
             Timber.e("Received null search result payload from host")
@@ -287,7 +286,6 @@ object CommunicationService { // TODO: think about making this into a bound serv
 
                 when (parsedPayload?.type) {
                     Type.QUERY -> {
-                        // TODO: probs dont need to reconstruct
                         val payloadKernel = PayloadBuilder.reconstructFromJson(parsedPayload.payload, String::class.java)
                         receiveQuery(endpointId, payloadKernel)
                     }

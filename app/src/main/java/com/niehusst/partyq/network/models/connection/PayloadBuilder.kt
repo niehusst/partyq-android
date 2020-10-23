@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import com.niehusst.partyq.network.models.api.Item
 import com.niehusst.partyq.network.models.api.SearchResult
 import com.niehusst.partyq.utility.CompressionUtility.compress
+import timber.log.Timber
 
 object PayloadBuilder {
 
@@ -14,6 +15,7 @@ object PayloadBuilder {
         return try {
             gson.fromJson(jsonString, classOfT)
         } catch (ex: Exception) {
+            Timber.e(ex)
             null
         }
     }
