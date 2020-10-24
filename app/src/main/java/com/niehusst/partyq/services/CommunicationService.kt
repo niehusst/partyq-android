@@ -2,6 +2,7 @@ package com.niehusst.partyq.services
 
 import android.Manifest
 import android.content.Context
+import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.nearby.Nearby
@@ -41,6 +42,8 @@ object CommunicationService { // TODO: think about making this into a bound serv
         Manifest.permission.NFC,
         Manifest.permission.ACCESS_FINE_LOCATION // TODO: make sure that location is enabled (manually) on the device??? or is confirming modal good enough?
     )
+
+    private const val TIMEOUT_DISCOVERY_MILLIS = 7000L
 
     // list of IDs of devices connected to the device
     val connectionEndpointIds = mutableListOf<String>()
@@ -137,6 +140,9 @@ object CommunicationService { // TODO: think about making this into a bound serv
             discoverOptions
         ).addOnFailureListener { Timber.e("Failed to start discovery: $it") }
             .addOnSuccessListener { Timber.d("Discovery started successfully") }
+
+        // timeout discovery so guest isn't left hanging if no host is found
+        startDiscoveryTimer()
     }
 
     private fun buildGuestConnectionLifecycleCallback(inputPartyCode: String) =
@@ -159,6 +165,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
                 } else {
                     Timber.e("Nearby API advertising: endpoint $endpointId connection failed")
                     _connected.value = Status.ERROR
+                    connectionsClient.stopDiscovery()
                 }
             }
 
@@ -168,6 +175,26 @@ object CommunicationService { // TODO: think about making this into a bound serv
                 PartyDisconnectionHandler.disconnectFromParty()
             }
         }
+
+
+    private fun startDiscoveryTimer() {
+        // tick interval is set to timeout time since we don't need tick updates
+        object : CountDownTimer(TIMEOUT_DISCOVERY_MILLIS, TIMEOUT_DISCOVERY_MILLIS) {
+            override fun onTick(millisUntilFinished: Long) { /* no-op */ }
+
+            override fun onFinish() {
+                if (_connected.value != Status.SUCCESS) {
+                    connectionsClient.stopDiscovery()
+                    _connected.value = Status.ERROR
+                }
+            }
+        }.start()
+    }
+
+    fun stopSearchingForParty() {
+        connectionsClient.stopDiscovery()
+        _connected.value = Status.NO_ACTION
+    }
 
 
     /* Data sending methods */
@@ -203,7 +230,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
     }
 
     /** Host only method */
-    fun sendUpdatedQueue(queue: List<Item>) { // TODO: this should be done periodically. with a job?
+    fun sendUpdatedQueue(queue: List<Item>) {
         val queuePayload = buildUpdatedQueuePayload(queue)
         connectionEndpointIds.forEach { guest ->
             connectionsClient.sendPayload(guest, queuePayload)

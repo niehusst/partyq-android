@@ -3,6 +3,7 @@ package com.niehusst.partyq.ui.nowPlaying
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import com.niehusst.partyq.R
 import com.niehusst.partyq.network.models.api.Item
 import com.niehusst.partyq.services.*
 
@@ -37,6 +38,6 @@ class NowPlayingViewModel : ViewModel() {
         } else {
             CommunicationService.sendSkipVote()
         }
-        Toast.makeText(context, "Your vote to skip has been counted", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.skip_msg, Toast.LENGTH_SHORT).show()
     }
 }

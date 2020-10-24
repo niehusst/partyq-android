@@ -20,6 +20,10 @@ object QueueService {
                 // start playing the first song (auto play will handle the rest)
                 SpotifyPlayerService.playSong(item.uri)
             }
+
+            // notify guests of updated data
+            // TODO: would a periodic batched approach be better? Even if we end up sending a lot of needless packets when data isn't updated?
+            CommunicationService.sendUpdatedQueue(songQueue.toList())
         } else {
             CommunicationService.sendEnqueueRequest(item)
         }
