@@ -60,4 +60,5 @@
     <string name="submit">Submit</string>
     <string name="party_code_too_short_message">Code must be 4 digits</string>
     <string name="searching_for_party">Searching for Party…</string>
+    <string name="party_not_found">Party not found</string>
 </resources>

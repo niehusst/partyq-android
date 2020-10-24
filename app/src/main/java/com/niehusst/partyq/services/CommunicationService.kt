@@ -43,7 +43,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
         Manifest.permission.ACCESS_FINE_LOCATION // TODO: make sure that location is enabled (manually) on the device??? or is confirming modal good enough?
     )
 
-    private const val TIMEOUT_DISCOVERY_MILLIS = 7000L
+    private const val TIMEOUT_DISCOVERY_MILLIS = 10000L
 
     // list of IDs of devices connected to the device
     val connectionEndpointIds = mutableListOf<String>()
@@ -183,7 +183,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
             override fun onTick(millisUntilFinished: Long) { /* no-op */ }
 
             override fun onFinish() {
-                if (_connected.value != Status.SUCCESS) {
+                if (_connected.value == Status.LOADING) {
                     connectionsClient.stopDiscovery()
                     _connected.value = Status.ERROR
                 }

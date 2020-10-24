@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.PartyJoinFragmentBinding
 import com.niehusst.partyq.network.Status
@@ -66,6 +67,12 @@ class PartyJoinFragment : Fragment() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        // stop discovery, if it hasn't already stopped by this point
+        CommunicationService.stopSearchingForParty()
+    }
+
     private fun observeConnectionStatus() {
         CommunicationService.connected.observe(viewLifecycleOwner, Observer { status ->
             when(status) {
@@ -80,12 +87,23 @@ class PartyJoinFragment : Fragment() {
                 }
                 Status.LOADING -> binding.loading = true
                 Status.ERROR -> {
-                    // TODO: nav to remediation
                     Timber.e("Error trying to connect to party ${viewModel.lastCode}")
-                    Toast.makeText(requireContext(), "Something hecked up", Toast.LENGTH_LONG).show()
+
+                    val snackPopup = Snackbar.make(
+                        binding.root,
+                        R.string.party_not_found,
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackPopup.view.setBackgroundColor(binding.root.context.getColor(R.color.colorError))
+                    snackPopup.setTextColor(binding.root.context.getColor(R.color.onColorError))
+                    snackPopup.show()
+
                     binding.loading = false
                 }
-                else -> { /* do nothing, no attempt to connect yet */ }
+                else -> {
+                    // for null/NO_ACTION just stop loading and wait for user interaction
+                    binding.loading = false
+                }
             }
         })
     }
