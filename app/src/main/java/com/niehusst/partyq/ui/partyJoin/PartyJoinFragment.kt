@@ -3,9 +3,11 @@ package com.niehusst.partyq.ui.partyJoin
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat
@@ -95,6 +97,11 @@ class PartyJoinFragment : Fragment() {
                         Snackbar.LENGTH_LONG
                     )
                     snackPopup.view.setBackgroundColor(binding.root.context.getColor(R.color.colorError))
+//                    (snackPopup.view.layoutParams as FrameLayout.LayoutParams).gravity = Gravity.TOP
+                    val layoutParams = snackPopup.view.layoutParams as FrameLayout.LayoutParams
+                    layoutParams.gravity = Gravity.TOP
+                    layoutParams.topMargin = requireContext().resources.getDimension(R.dimen.toolBarHeightBuffered).toInt()
+                    snackPopup.view.layoutParams = layoutParams
                     snackPopup.setTextColor(binding.root.context.getColor(R.color.onColorError))
                     snackPopup.show()
 

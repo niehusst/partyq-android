@@ -16,6 +16,7 @@
     <dimen name="textSmall">12sp</dimen>
 
     <dimen name="toolBarHeight">56dp</dimen>
+    <dimen name="toolBarHeightBuffered">64dp</dimen>
 
     <dimen name="iconWH">32dp</dimen>
     <dimen name="thumbnailWH">48dp</dimen>
