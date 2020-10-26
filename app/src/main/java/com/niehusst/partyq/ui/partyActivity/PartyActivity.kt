@@ -1,6 +1,7 @@
 package com.niehusst.partyq.ui.partyActivity
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -9,13 +10,17 @@ import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.CallSuper
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import com.niehusst.partyq.BundleNames
 import com.niehusst.partyq.R
 import com.niehusst.partyq.SharedPrefNames.PARTY_FIRST_START
 import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
@@ -121,7 +126,7 @@ class PartyActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         // TODO: remove values from shared prefs we dont want to persist?
-        // TODO: kill fragment saved state so that we wont see dead data when joining a diff party w/o closing app
+        // TODO: kill fragment saved state so that we wont see dead data when joining a diff party w/o closing app (unless we are saving it for party resumption?)
         super.onDestroy()
         //leaveParty()
     }
@@ -181,19 +186,46 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun leaveParty() {
-        // TODO: confirrmation modal
-        // TODO: finish doing cleanup, like nav to end activity
+        // build confirmation modal
+        val builder = AlertDialog.Builder(this)
+        if (UserTypeService.isHost(this)) {
+            builder.setMessage(R.string.leave_confirmation_msg_host)
+        } else {
+            builder.setMessage(R.string.leave_confirmation_msg_guest)
+        }
+        builder.apply {
+            setTitle(R.string.leave_party)
+            setPositiveButton(R.string.leave) { dialog, _ ->
+                disconnect(forced = false)
+                dialog.dismiss()
+            }
+            setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+        }
+
+        builder.create().show()
+    }
+
+    private fun disconnect(forced: Boolean) {
+        // TODO: finish doing cleanup (rm anything from shared prefs we dont want to persist)
         CommunicationService.disconnectFromParty()
         SpotifyPlayerService.disconnect()
+
+        val bundle = if (forced) {
+            bundleOf(BundleNames.END_MESSAGE to resources.getString(R.string.forced_end))
+        } else {
+            bundleOf(BundleNames.END_MESSAGE to resources.getString(R.string.optional_end))
+        }
+        findNavController(R.id.party_nav_host_fragment).navigate(R.id.partyEndActivity, bundle)
         finish()
     }
 
     private fun listenForDisconnection() {
         PartyDisconnectionHandler.disconnected.observe(this, Observer { disconnected ->
             if (disconnected) {
-                // TODO: nav to PartyEndActivity
                 PartyDisconnectionHandler.acknowledgeDisconnect()
-                finish()
+                disconnect(forced = true)
             }
         })
     }

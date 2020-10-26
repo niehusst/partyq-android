@@ -97,7 +97,7 @@ class SpotifyLoginFragment : Fragment() {
             else -> {
                 // auth flow was likely cancelled before completion
                 viewModel.stopLoading()
-                Toast.makeText(requireContext(), "Authentication cancelled", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), R.string.auth_cancelled, Toast.LENGTH_LONG).show()
             }
         }
     }

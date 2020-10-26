@@ -24,7 +24,7 @@
         <activity
             android:name=".ui.partyActivity.PartyActivity"
             android:windowSoftInputMode="adjustNothing"/>
-
+        <activity android:name=".ui.partyEnd.PartyEndActivity"/>
         <activity android:name=".ui.mainActivity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

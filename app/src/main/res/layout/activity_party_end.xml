@@ -54,10 +54,11 @@
 
                     <TextView
                         android:id="@+id/end_text"
-                        style="@style/TextAppearance.AppCompat.Title"
+                        style="@style/TextAppearance.AppCompat.Body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
+                        android:textSize="@dimen/textMedium"
                         android:text="@{endMessage}"
                         app:layout_constraintBottom_toTopOf="@id/party_again_btn"
                         app:layout_constraintEnd_toEndOf="parent"

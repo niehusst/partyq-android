@@ -27,21 +27,12 @@
         android:label="QueueFragment"
         tools:layout="@layout/queue_fragment">
         <action
-            android:id="@+id/action_queueFragment_to_partyEndFragment"
-            app:destination="@id/partyEndFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/partyEndFragment"
-        android:name="com.niehusst.partyq.ui.partyEnd.PartyEndFragment"
-        android:label="PartyEndFragment"
-        tools:layout="@layout/party_end_fragment">
-        <action
-            android:id="@+id/action_partyEndFragment_to_mainActivity2"
-            app:destination="@id/mainActivity2" />
+            android:id="@+id/action_queueFragment_to_partyEndActivity"
+            app:destination="@id/partyEndActivity" />
     </fragment>
     <activity
-        android:id="@+id/mainActivity2"
-        android:name="com.niehusst.partyq.ui.mainActivity.MainActivity"
-        android:label="MainActivity"
-        tools:layout="@layout/activity_main"/>
+        android:id="@+id/partyEndActivity"
+        android:name="com.niehusst.partyq.ui.partyEnd.PartyEndActivity"
+        android:label="PartyEndActivity"
+        tools:layout="@layout/activity_party_end"/>
 </navigation>
