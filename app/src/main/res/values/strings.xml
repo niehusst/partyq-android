@@ -61,4 +61,10 @@
     <string name="party_code_too_short_message">Code must be 4 digits</string>
     <string name="searching_for_party">Searching for Party…</string>
     <string name="party_not_found">Party not found</string>
+
+    <!-- PartyEnd -->
+    <string name="party_again">Party Again?</string>
+    <!-- TODO: fill in a bit -->
+    <string name="forced_end">The host has ended the party.</string>
+    <string name="optional_end">Thanks for partying with us! Start another party any time you want.</string>
 </resources>
