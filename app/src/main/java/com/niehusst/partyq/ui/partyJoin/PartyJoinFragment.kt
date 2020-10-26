@@ -3,9 +3,11 @@ package com.niehusst.partyq.ui.partyJoin
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.PartyJoinFragmentBinding
 import com.niehusst.partyq.network.Status
@@ -66,6 +69,12 @@ class PartyJoinFragment : Fragment() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        // stop discovery, if it hasn't already stopped by this point
+        CommunicationService.stopSearchingForParty()
+    }
+
     private fun observeConnectionStatus() {
         CommunicationService.connected.observe(viewLifecycleOwner, Observer { status ->
             when(status) {
@@ -80,12 +89,28 @@ class PartyJoinFragment : Fragment() {
                 }
                 Status.LOADING -> binding.loading = true
                 Status.ERROR -> {
-                    // TODO: nav to remediation
                     Timber.e("Error trying to connect to party ${viewModel.lastCode}")
-                    Toast.makeText(requireContext(), "Something hecked up", Toast.LENGTH_LONG).show()
+
+                    val snackPopup = Snackbar.make(
+                        binding.root,
+                        R.string.party_not_found,
+                        Snackbar.LENGTH_LONG
+                    )
+                    snackPopup.view.setBackgroundColor(binding.root.context.getColor(R.color.colorError))
+//                    (snackPopup.view.layoutParams as FrameLayout.LayoutParams).gravity = Gravity.TOP
+                    val layoutParams = snackPopup.view.layoutParams as FrameLayout.LayoutParams
+                    layoutParams.gravity = Gravity.TOP
+                    layoutParams.topMargin = requireContext().resources.getDimension(R.dimen.toolBarHeightBuffered).toInt()
+                    snackPopup.view.layoutParams = layoutParams
+                    snackPopup.setTextColor(binding.root.context.getColor(R.color.onColorError))
+                    snackPopup.show()
+
                     binding.loading = false
                 }
-                else -> { /* do nothing, no attempt to connect yet */ }
+                else -> {
+                    // for null/NO_ACTION just stop loading and wait for user interaction
+                    binding.loading = false
+                }
             }
         })
     }

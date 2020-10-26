@@ -52,6 +52,7 @@
     <string name="play_song">Play song</string>
     <string name="pause_song">Pause song</string>
     <string name="no_song_playing">No\nSong\nPlaying</string>
+    <string name="skip_msg">"Your vote to skip has been counted"</string>
 
     <!-- PartyJoin -->
     <string name="join_content">Enter your host\'s 4-digit code to join their party.</string>
@@ -59,4 +60,5 @@
     <string name="submit">Submit</string>
     <string name="party_code_too_short_message">Code must be 4 digits</string>
     <string name="searching_for_party">Searching for Party…</string>
+    <string name="party_not_found">Party not found</string>
 </resources>
