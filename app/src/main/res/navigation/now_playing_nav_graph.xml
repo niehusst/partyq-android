@@ -25,5 +25,23 @@
         android:id="@+id/nowPlayingFragment"
         android:name="com.niehusst.partyq.ui.nowPlaying.NowPlayingFragment"
         android:label="NowPlayingFragment"
-        tools:layout="@layout/now_playing_fragment"/>
+        tools:layout="@layout/now_playing_fragment">
+        <action
+            android:id="@+id/action_nowPlayingFragment_to_partyEndFragment"
+            app:destination="@id/partyEndFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/partyEndFragment"
+        android:name="com.niehusst.partyq.ui.partyEnd.PartyEndFragment"
+        android:label="PartyEndFragment"
+        tools:layout="@layout/party_end_fragment">
+        <action
+            android:id="@+id/action_partyEndFragment_to_mainActivity"
+            app:destination="@id/mainActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.niehusst.partyq.ui.mainActivity.MainActivity"
+        android:label="MainActivity"
+        tools:layout="@layout/activity_main"/>
 </navigation>

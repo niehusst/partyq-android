@@ -10,7 +10,11 @@
         android:id="@+id/searchFragment"
         android:name="com.niehusst.partyq.ui.search.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/search_fragment"/>
+        tools:layout="@layout/search_fragment">
+        <action
+            android:id="@+id/action_searchFragment_to_partyEndFragment"
+            app:destination="@id/partyEndFragment" />
+    </fragment>
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.niehusst.partyq.ui.about.AboutFragment"
@@ -26,4 +30,18 @@
         android:name="com.niehusst.partyq.ui.partyCode.PartyCodeFragment"
         android:label="PartyCodeFragment"
         tools:layout="@layout/party_code_fragment"/>
+    <fragment
+        android:id="@+id/partyEndFragment"
+        android:name="com.niehusst.partyq.ui.partyEnd.PartyEndFragment"
+        android:label="PartyEndFragment"
+        tools:layout="@layout/party_end_fragment">
+        <action
+            android:id="@+id/action_partyEndFragment_to_mainActivity3"
+            app:destination="@id/mainActivity3" />
+    </fragment>
+    <activity
+        android:id="@+id/mainActivity3"
+        android:name="com.niehusst.partyq.ui.mainActivity.MainActivity"
+        android:label="MainActivity"
+        tools:layout="@layout/activity_main"/>
 </navigation>

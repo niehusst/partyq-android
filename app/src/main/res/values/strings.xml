@@ -22,12 +22,17 @@
     <string name="info">INFO</string>
     <string name="why_is_this">Why is this?</string>
     <string name="info_content">Starting a party requires you have a Spotify premium account and that you have the Spotify mobile app downloaded on this device.</string>
+    <string name="auth_cancelled">Authentication cancelled</string>
 
     <!-- PartyActivity + misc -->
     <string name="search">Search</string>
     <string name="now_playing">Now Playing</string>
     <string name="queue">Queue</string>
     <string name="loading">Loading…</string>
+    <string name="leave_confirmation_msg_guest">Are you sure you want to leave the party?</string>
+    <string name="leave_confirmation_msg_host">Are you sure you want to leave the party? This will also end the party for all your guests.</string>
+    <string name="cancel">Cancel</string>
+    <string name="leave">Leave</string>
 
     <!-- Search -->
     <string name="search_songs">Search songs</string>
