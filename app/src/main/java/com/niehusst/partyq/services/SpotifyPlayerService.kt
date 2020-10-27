@@ -128,7 +128,8 @@ object SpotifyPlayerService {
      * Play the song specified by the given URI.
      * This method requires the calling user to be the host AND be logged into the local Spotify
      * app with a Spotify Premium account. Attempting to call this method when the user does not
-     * have a premium account results in a random song being played.
+     * have a premium account results in a random song being played rather than the one indicated
+     * by `songUri`.
      */
     fun playSong(songUri: String) {
         spotifyAppRemote?.playerApi?.play(songUri)

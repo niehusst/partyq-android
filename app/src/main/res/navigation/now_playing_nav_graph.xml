@@ -25,5 +25,14 @@
         android:id="@+id/nowPlayingFragment"
         android:name="com.niehusst.partyq.ui.nowPlaying.NowPlayingFragment"
         android:label="NowPlayingFragment"
-        tools:layout="@layout/now_playing_fragment"/>
+        tools:layout="@layout/now_playing_fragment">
+        <action
+            android:id="@+id/action_nowPlayingFragment_to_partyEndActivity2"
+            app:destination="@id/partyEndActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/partyEndActivity"
+        android:name="com.niehusst.partyq.ui.partyEnd.PartyEndActivity"
+        android:label="PartyEndActivity"
+        tools:layout="@layout/activity_party_end"/>
 </navigation>

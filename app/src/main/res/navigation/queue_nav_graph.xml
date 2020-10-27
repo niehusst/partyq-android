@@ -25,5 +25,14 @@
         android:id="@+id/queueFragment"
         android:name="com.niehusst.partyq.ui.queue.QueueFragment"
         android:label="QueueFragment"
-        tools:layout="@layout/queue_fragment"/>
+        tools:layout="@layout/queue_fragment">
+        <action
+            android:id="@+id/action_queueFragment_to_partyEndActivity"
+            app:destination="@id/partyEndActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/partyEndActivity"
+        android:name="com.niehusst.partyq.ui.partyEnd.PartyEndActivity"
+        android:label="PartyEndActivity"
+        tools:layout="@layout/activity_party_end"/>
 </navigation>
