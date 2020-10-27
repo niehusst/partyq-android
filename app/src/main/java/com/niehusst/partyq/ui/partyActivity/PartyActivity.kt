@@ -211,6 +211,9 @@ class PartyActivity : AppCompatActivity() {
         // TODO: finish doing cleanup (rm anything from shared prefs we dont want to persist)
         CommunicationService.disconnectFromParty()
         SpotifyPlayerService.disconnect()
+        SkipSongHandler.clearSkipCount()
+        SearchResultHandler.clearSearch()
+        QueueService.clearQueue()
 
         val bundle = if (forced) {
             bundleOf(BundleNames.END_MESSAGE to resources.getString(R.string.forced_end))

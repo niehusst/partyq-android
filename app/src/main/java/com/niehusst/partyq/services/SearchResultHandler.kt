@@ -21,10 +21,12 @@ object SearchResultHandler {
         _results.postValue(songs)
     }
 
-    /**
-     * Thread-safe set value of status LiveData
-     */
     fun setStatus(status: Status) {
         _status.postValue(status)
+    }
+
+    fun clearSearch() {
+        _results.postValue(listOf())
+        _status.postValue(Status.NO_ACTION)
     }
 }

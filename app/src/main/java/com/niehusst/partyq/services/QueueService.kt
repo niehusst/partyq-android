@@ -51,6 +51,10 @@ object QueueService {
         return songQueue.peek()
     }
 
+    fun clearQueue() {
+        replaceQueue(emptyList())
+    }
+
     private fun notifyDataChange() {
         dataChangedTrigger.value = null
     }

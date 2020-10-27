@@ -252,6 +252,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
         _connected.value = Status.NO_ACTION
         connectionsClient.stopAdvertising()
         connectionsClient.stopAllEndpoints()
+        connectionEndpointIds.clear()
         // TODO: process is diff for guests ??
     }
 
