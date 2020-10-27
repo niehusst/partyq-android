@@ -1,7 +1,6 @@
 package com.niehusst.partyq.ui.partyActivity
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -209,12 +208,14 @@ class PartyActivity : AppCompatActivity() {
 
     private fun disconnect(forced: Boolean) {
         // TODO: finish doing cleanup (rm anything from shared prefs we dont want to persist)
+        // clean up party state
         CommunicationService.disconnectFromParty()
         SpotifyPlayerService.disconnect()
         SkipSongHandler.clearSkipCount()
         SearchResultHandler.clearSearch()
         QueueService.clearQueue()
 
+        // choose correct message to display in PartyEndActivity, and launch preventing return
         val bundle = if (forced) {
             bundleOf(BundleNames.END_MESSAGE to resources.getString(R.string.forced_end))
         } else {

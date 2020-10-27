@@ -69,7 +69,6 @@
 
     <!-- PartyEnd -->
     <string name="party_again">Party Again?</string>
-    <!-- TODO: fill in a bit -->
-    <string name="forced_end">The host has ended the party.</string>
-    <string name="optional_end">Thanks for partying with us! Start another party any time you want.</string>
+    <string name="forced_end">The host has ended the party. Start or join another party to get the music flowing again!</string>
+    <string name="optional_end">You\'ve now left the party. Start or join another party to get the music flowing again!</string>
 </resources>

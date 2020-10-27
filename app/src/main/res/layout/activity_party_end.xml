@@ -64,7 +64,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Thanks for partying" />
+                        tools:text="@string/optional_end" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/party_again_btn"
