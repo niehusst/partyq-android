@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +24,7 @@ import com.niehusst.partyq.SharedPrefNames.PARTY_FIRST_START
 import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.extensions.setupWithNavController
+import com.niehusst.partyq.ui.remediation.RemediationActivity
 import com.niehusst.partyq.repository.SpotifyRepository
 import com.niehusst.partyq.services.*
 import com.niehusst.partyq.services.CommunicationService.REQUEST_CODE_REQUIRED_PERMISSIONS
@@ -173,7 +173,7 @@ class PartyActivity : AppCompatActivity() {
     private fun assertHostHasSpotifyPremium() {
         SpotifyPlayerService.fullyInit.observe(this, Observer {
             if (it && SpotifyPlayerService.userHasSpotifyPremium == false) {
-                // TODO: navigate to some remediation activity to explain the issue
+                launchRemediationActivity(R.string.no_spotify_premium_msg)
                 // do not let user return to dysfunctional party state
                 finish()
             }
@@ -262,12 +262,20 @@ class PartyActivity : AppCompatActivity() {
         }
         for (grantResult in grantResults) {
             if (grantResult == PackageManager.PERMISSION_DENIED) {
-                // TODO: nav to remediation activity
-                Toast.makeText(this, "Partyq cannot function without these permissions", Toast.LENGTH_LONG).show()
+                launchRemediationActivity(R.string.denied_permissions_msg)
                 finish()
                 return
             }
         }
         recreate()
+    }
+
+    private fun launchRemediationActivity(strId: Int) {
+        val intent = Intent(this, RemediationActivity::class.java)
+        intent.putExtra(
+            BundleNames.REMEDIATION_MESSAGE,
+            resources?.getString(strId)
+        )
+        startActivity(intent)
     }
 }
