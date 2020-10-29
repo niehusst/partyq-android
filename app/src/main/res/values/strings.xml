@@ -21,7 +21,7 @@
     <string name="authenticate_with_spotify">Authenticate with Spotify</string>
     <string name="info">INFO</string>
     <string name="why_is_this">Why is this?</string>
-    <string name="info_content">Starting a party requires you have a Spotify premium account and that you have the Spotify mobile app downloaded on this device.</string>
+    <string name="info_content">Starting a party requires you have the Spotify mobile app downloaded on this device and that you are logged into it with a Spotify premium account.</string>
     <string name="auth_cancelled">Authentication cancelled</string>
 
     <!-- PartyActivity + misc -->
@@ -71,4 +71,12 @@
     <string name="party_again">Party Again?</string>
     <string name="forced_end">The host has ended the party. Start or join another party to get the music flowing again!</string>
     <string name="optional_end">You\'ve now left the party. Start or join another party to get the music flowing again!</string>
+
+    <!-- Remediation -->
+    <string name="generic_error_msg">Something seems to have gone wrong connecting you to the party. Make sure that you have granted partyq all the required permissions, have downloaded the Spotify app on this device, and are logged into it with a Spotify Premium account. Please try again after checking each requirement.</string>
+    <string name="denied_permissions_msg">The partyq app uses Bluetooth and/or local Wifi to connect everyone in the party and exchange data. In order to accomplish this connection, partyq requires Wifi, Bluetooth, and (unintuitively) Location permissions. Please come back after granting the missing permissions in the Settings app or by retrying your last action.</string>
+    <string name="no_spotify_premium_msg">We noticed that the Spotify account logged into your Spotify app isn\'t premium. The partyq app relies on the Spotify app to play specific songs and, unfortunately, Spotify free doesn\'t let you play specific songs at will (if you tried, it would instead play a random song). Please come back after logging into a Spotify Premium account in your Spotify app.</string>
+    <string name="no_spotify_msg">The partyq app relies on the Spotify app to play music; if you don\'t have the Spotify app installed (and are logged in with a premium account) then you can\'t play any music! Please come back after installing and logging into the Spotify app on this device.</string>
+    <string name="got_it">got it</string>
+    <string name="oops">OOPS!</string>
 </resources>
