@@ -123,13 +123,6 @@ class PartyActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        // TODO: remove values from shared prefs we dont want to persist?
-        // TODO: kill fragment saved state so that we wont see dead data when joining a diff party w/o closing app (unless we are saving it for party resumption?)
-        super.onDestroy()
-        //leaveParty()
-    }
-
     private fun setupBottomNavBinding() {
         val navGraphIds = listOf(
             R.navigation.search_nav_graph,
@@ -207,7 +200,6 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun disconnect(forced: Boolean) {
-        // TODO: finish doing cleanup (rm anything from shared prefs we dont want to persist)
         // clean up party state
         CommunicationService.disconnectFromParty()
         SpotifyPlayerService.disconnect()

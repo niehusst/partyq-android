@@ -90,12 +90,20 @@ class SpotifyLoginFragment : Fragment() {
             }
             AuthenticationResponse.Type.ERROR -> {
                 // on failure
-                Timber.e("Auth for code ${response.code} error: ${response.error}") // TODO: only seems to get here when no internet?
+                Timber.e("Auth for code ${response.code} error: ${response.error}")
                 viewModel.stopLoading()
-                Toast.makeText(requireContext(), "Please connect to internet to login", Toast.LENGTH_LONG).show()
-//                launchRemediationActivity()
+                if (response.error == "NO_INTERNET_CONNECTION") {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.no_wifi_msg,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    launchRemediationActivity()
+                }
             }
             else -> {
+                Timber.e("Auth for type ${response.type} code ${response.code} error: ${response.error}")
                 // auth flow was likely cancelled before completion
                 viewModel.stopLoading()
                 Toast.makeText(requireContext(), R.string.auth_cancelled, Toast.LENGTH_LONG).show()

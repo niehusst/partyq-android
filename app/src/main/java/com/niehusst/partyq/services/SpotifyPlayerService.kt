@@ -1,5 +1,6 @@
 package com.niehusst.partyq.services
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.LiveData
@@ -56,24 +57,20 @@ object SpotifyPlayerService {
                         Timber.e("Failed to connect to Spotify:\n $error")
 
                         val intent = Intent(context, RemediationActivity::class.java)
-                        if (error is NotLoggedInException || error is UserNotAuthorizedException) {
-                            intent.putExtra(
-                                BundleNames.REMEDIATION_MESSAGE,
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        intent.putExtra(
+                            BundleNames.REMEDIATION_MESSAGE,
+                            if (error is NotLoggedInException || error is UserNotAuthorizedException) {
                                 context.resources.getString(R.string.no_spotify_premium_msg)
-                            )
-                        } else if (error is CouldNotFindSpotifyApp) {
-                            intent.putExtra(
-                                BundleNames.REMEDIATION_MESSAGE,
+                            } else if (error is CouldNotFindSpotifyApp) {
                                 context.resources.getString(R.string.no_spotify_msg)
-                            )
-                        } else {
-                            // generic error
-                            intent.putExtra(
-                                BundleNames.REMEDIATION_MESSAGE,
+                            } else {
                                 context.resources.getString(R.string.generic_error_msg)
-                            )
-                        }
+                            }
+                        )
                         context.startActivity(intent)
+                        // finish PartyActivity
+                        (context as Activity).finish()
                     }
                 }
             )

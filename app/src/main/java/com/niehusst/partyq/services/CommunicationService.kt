@@ -26,7 +26,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-object CommunicationService { // TODO: think about making this into a bound service
+object CommunicationService {
 
     private lateinit var connectionsClient: ConnectionsClient
 
@@ -40,7 +40,7 @@ object CommunicationService { // TODO: think about making this into a bound serv
         Manifest.permission.CHANGE_WIFI_STATE,
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.NFC,
-        Manifest.permission.ACCESS_FINE_LOCATION // TODO: make sure that location is enabled (manually) on the device??? or is confirming modal good enough?
+        Manifest.permission.ACCESS_FINE_LOCATION
     )
 
     private const val TIMEOUT_DISCOVERY_MILLIS = 10000L
@@ -253,7 +253,6 @@ object CommunicationService { // TODO: think about making this into a bound serv
         connectionsClient.stopAdvertising()
         connectionsClient.stopAllEndpoints()
         connectionEndpointIds.clear()
-        // TODO: process is diff for guests ??
     }
 
 
