@@ -50,9 +50,6 @@ class PartyActivity : AppCompatActivity() {
             setupBottomNavBinding()
         } // else wait for onRestoreInstanceState()
 
-        // dont let device sleep to prevent severing connection to Spotify and other services
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
         // set search as first active tab
         binding.bottomNav.selectedItemId = R.id.searchFragment
     }
