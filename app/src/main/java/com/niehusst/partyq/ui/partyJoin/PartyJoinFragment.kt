@@ -1,6 +1,7 @@
 package com.niehusst.partyq.ui.partyJoin
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Gravity
@@ -16,9 +17,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.niehusst.partyq.BundleNames
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.PartyJoinFragmentBinding
 import com.niehusst.partyq.network.Status
+import com.niehusst.partyq.ui.remediation.RemediationActivity
 import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.services.PartyCodeHandler
 import timber.log.Timber
@@ -46,7 +49,6 @@ class PartyJoinFragment : Fragment() {
         observeConnectionStatus()
 
         binding.submitButton.setOnClickListener {
-            // TODO: will closing the app while in discovery mode cause mem leaks?
             val codeLongEnough = viewModel.connectToParty(binding.codeEditText.text.toString())
 
             if (!codeLongEnough) {
@@ -97,7 +99,6 @@ class PartyJoinFragment : Fragment() {
                         Snackbar.LENGTH_LONG
                     )
                     snackPopup.view.setBackgroundColor(binding.root.context.getColor(R.color.colorError))
-//                    (snackPopup.view.layoutParams as FrameLayout.LayoutParams).gravity = Gravity.TOP
                     val layoutParams = snackPopup.view.layoutParams as FrameLayout.LayoutParams
                     layoutParams.gravity = Gravity.TOP
                     layoutParams.topMargin = requireContext().resources.getDimension(R.dimen.toolBarHeightBuffered).toInt()
@@ -126,29 +127,5 @@ class PartyJoinFragment : Fragment() {
             }
         }
         return true
-    }
-
-    /**
-     * Handles user acceptance (or denial) of our permission request.
-     */
-    @CallSuper
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode != CommunicationService.REQUEST_CODE_REQUIRED_PERMISSIONS) {
-            return
-        }
-        for (grantResult in grantResults) {
-            if (grantResult == PackageManager.PERMISSION_DENIED) {
-                // TODO: nav to remediation activity
-                Toast.makeText(requireContext(), "Partyq cannot function without these permissions", Toast.LENGTH_LONG).show()
-                activity?.finish()
-                return
-            }
-        }
-        activity?.recreate()
     }
 }

@@ -62,7 +62,6 @@ class SearchFragment : Fragment() {
             }
         })
     }
-    // TODO: add paging ability
 
     private fun setSearchListener() {
         binding.searchBar.setOnEditorActionListener { v, actionId, _ ->

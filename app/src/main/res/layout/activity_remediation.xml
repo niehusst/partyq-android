@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="remediationMsg"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/primary200">
+
+        <ImageView
+            android:id="@+id/err_icon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="@dimen/hugePadding"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_baseline_error_24"
+            app:layout_constraintBottom_toTopOf="@id/card_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/marginSpace"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/largePadding">
+
+                <TextView
+                    android:id="@+id/card_title"
+                    style="@style/TextAppearance.AppCompat.Display1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/oops"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/dividerColor"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:layout_marginStart="@dimen/smallPadding"
+                    android:layout_marginEnd="@dimen/smallPadding"
+                    app:layout_constraintTop_toBottomOf="@id/card_title"/>
+
+                <TextView
+                    android:id="@+id/err_text"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:layout_marginHorizontal="@dimen/smallPadding"
+                    android:text="@{remediationMsg}"
+                    android:textAlignment="textStart"
+                    android:textSize="@dimen/textMedium"
+                    app:layout_constraintBottom_toTopOf="@id/confirm_btn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/divider"
+                    tools:text="@string/no_spotify_premium_msg" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/confirm_btn"
+                    style="@style/PartyqButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:paddingHorizontal="@dimen/hugePadding"
+                    android:text="@string/got_it"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/err_text" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

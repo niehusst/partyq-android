@@ -1,17 +1,22 @@
 package com.niehusst.partyq.ui.mainActivity
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.niehusst.partyq.BundleNames
 import com.niehusst.partyq.R
 import com.niehusst.partyq.SpotifySharedInfo
+import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.ui.about.AboutFragment
 import com.niehusst.partyq.ui.legal.LegalFragment
+import com.niehusst.partyq.ui.remediation.RemediationActivity
 import com.niehusst.partyq.ui.spotifyLogin.SpotifyLoginFragment
 import timber.log.Timber
 
@@ -66,5 +71,38 @@ class MainActivity : AppCompatActivity() {
                 ?.childFragmentManager?.fragments?.firstOrNull { it.isVisible }
             (fragment as? SpotifyLoginFragment)?.onAuthResult(resultCode, data)
         }
+    }
+
+    /**
+     * Handles user acceptance (or denial) of our permission request.
+     * (Requested in child fragment PartyJoinFragment, but result is sent to parent activity)
+     */
+    @CallSuper
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode != CommunicationService.REQUEST_CODE_REQUIRED_PERMISSIONS) {
+            return
+        }
+        for (grantResult in grantResults) {
+            if (grantResult == PackageManager.PERMISSION_DENIED) {
+                launchRemediationActivity()
+                finish()
+                return
+            }
+        }
+        recreate()
+    }
+
+    private fun launchRemediationActivity() {
+        val intent = Intent(this, RemediationActivity::class.java)
+        intent.putExtra(
+            BundleNames.REMEDIATION_MESSAGE,
+            resources?.getString(R.string.denied_permissions_msg)
+        )
+        startActivity(intent)
     }
 }

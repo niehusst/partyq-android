@@ -1,13 +1,20 @@
 package com.niehusst.partyq.services
 
+import android.app.Activity
 import android.content.Context
-import android.widget.Toast
+import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.niehusst.partyq.BundleNames
+import com.niehusst.partyq.R
 import com.niehusst.partyq.SpotifySharedInfo
+import com.niehusst.partyq.ui.remediation.RemediationActivity
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
+import com.spotify.android.appremote.api.error.CouldNotFindSpotifyApp
+import com.spotify.android.appremote.api.error.NotLoggedInException
+import com.spotify.android.appremote.api.error.UserNotAuthorizedException
 import com.spotify.protocol.types.PlayerState
 import timber.log.Timber
 
@@ -46,21 +53,24 @@ object SpotifyPlayerService {
                     }
 
                     override fun onFailure(error: Throwable) {
-                        // Something went wrong when attempting to connect
+                        // Something went wrong when attempting to connect to Spotify App
                         Timber.e("Failed to connect to Spotify:\n $error")
-                        Toast.makeText(
-                            context,
-                            "Couldn't connect to Spotify app",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        // TODO: remediation of some sort (maybe they dont have the spotify app or something)
-                        /*
-                        if (error is NotLoggedInException || error is UserNotAuthorizedException) {
-                            // Show login button and trigger the login flow from auth library when clicked
-                        } else if (error is CouldNotFindSpotifyApp) {
-                            // Show button to download Spotify
-                        } else {}
-                         */
+
+                        val intent = Intent(context, RemediationActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        intent.putExtra(
+                            BundleNames.REMEDIATION_MESSAGE,
+                            if (error is NotLoggedInException || error is UserNotAuthorizedException) {
+                                context.resources.getString(R.string.no_spotify_premium_msg)
+                            } else if (error is CouldNotFindSpotifyApp) {
+                                context.resources.getString(R.string.no_spotify_msg)
+                            } else {
+                                context.resources.getString(R.string.generic_error_msg)
+                            }
+                        )
+                        context.startActivity(intent)
+                        // finish PartyActivity
+                        (context as Activity).finish()
                     }
                 }
             )

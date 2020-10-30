@@ -11,8 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.niehusst.partyq.BundleNames
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SpotifyLoginFragmentBinding
+import com.niehusst.partyq.ui.remediation.RemediationActivity
 import com.niehusst.partyq.services.PartyCodeHandler
 import com.niehusst.partyq.services.TokenHandlerService
 import com.niehusst.partyq.services.UserTypeService
@@ -59,7 +61,7 @@ class SpotifyLoginFragment : Fragment() {
      * Handles the activity result from the Spotify-provided LoginActivity. If successful,
      * saves the authentication token, create the code for the party, and sets the user
      * as the host.
-     * Otherwise, the loading spinner is stopped and a Toast tells the user what's up.
+     * Otherwise, the loading spinner is stopped and user is sent to RemediationActivity.
      */
     fun onAuthResult(resultCode: Int, intent: Intent?) {
         val response = AuthenticationClient.getResponse(resultCode, intent)
@@ -90,15 +92,31 @@ class SpotifyLoginFragment : Fragment() {
                 // on failure
                 Timber.e("Auth for code ${response.code} error: ${response.error}")
                 viewModel.stopLoading()
-                // TODO: insert some sort of error remediation. Troubleshooting instructions?
-                //  reiterate Requirements for party start?
-                Toast.makeText(requireContext(), "Failed to connect to Spotify", Toast.LENGTH_LONG).show()
+                if (response.error == "NO_INTERNET_CONNECTION") {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.no_wifi_msg,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    launchRemediationActivity()
+                }
             }
             else -> {
+                Timber.e("Auth for type ${response.type} code ${response.code} error: ${response.error}")
                 // auth flow was likely cancelled before completion
                 viewModel.stopLoading()
                 Toast.makeText(requireContext(), R.string.auth_cancelled, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun launchRemediationActivity() {
+        val intent = Intent(activity, RemediationActivity::class.java)
+        intent.putExtra(
+            BundleNames.REMEDIATION_MESSAGE,
+            context?.resources?.getString(R.string.generic_error_msg)
+        )
+        startActivity(intent)
     }
 }
