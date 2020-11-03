@@ -4,9 +4,19 @@ Note that many of the Spotify API endpoints that this app depend on are in beta 
 
 ## Acks
 Retrofit2
-Spotify (API and sdks)
-Nearby Connections API
+Spotify web API
+Spotify AppRemote SDK
+Spotify Authentication SDK
+Nearby Connections API (play-services-nearby)
 Timber
 Glide
-Android Architecture Components samples
+Android Architecture Components samples (for bottom nav code)
+gson
+AndroidX
+Material Components for Android
+Jetbrains KotlinX Coroutines
+Jetbrains kotlin-stdlib-jkd8
+Jetbrains kotlinx-coroutines-test
+MockK
+Espresso
 

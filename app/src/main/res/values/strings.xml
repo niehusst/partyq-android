@@ -11,11 +11,21 @@
     <string name="leave_party">Leave Party</string>
     <string name="party_code">Party Code</string>
 
-    <!-- About and Legal TODO: fill in -->
+    <!-- About -->
     <string name="about_title">About partyq</string>
-    <string name="about_content">content</string>
+    <string name="about_basic_content">The partyq app lets you and a group of friends use Spotify to listen to and add music from a shared queue that only people in the party have access to. The special thing about partyq is that only one person (the host) needs to have Spotify Premium in order for everyone to be able to use it! partyq is the high-tech equivalent of passing your phone around for people to add songs to your Spotify queue.</string>
+    <string name="about_tech_details_title">Technical Details</string>
+    <string name="about_tech_details_content">The partyq app plays music by connecting to the Spotify app downloaded on the host’s device and simply telling Spotify to play the specific songs in the queue. This requires a Spotify Premium account because Spotify Free users can’t play specific songs; they can only play random songs by the same artist, or in the same genre as the song they really want to listen to.\n\nFor guests to perform an action, like add a song request to the queue, guests send their request to the host for them to execute on their Spotify account. All the guests connect to the host’s device via Bluetooth or wifi, so you need to be either connected to the same wifi as your host or physically within ~10 meters to be able to send and receive data as intended. This Bluetooth/wifi connection requires you to grant wifi, Bluetooth, and location privileges to the partyq app. Location privileges are unintuitively required not because partyq uses your location in any way, but because your location could potentially be obtained from data that is used to achieve a wifi device connection. Without any one of these permissions, partyq would be unable to connect your device to any others.</string>
+    <string name="about_contrib_title">Contributing</string>
+    <string name="about_contrib_content">The partyq app is open source under the Apache-2.0 license! That means that if you want to report an issue, contribute to the app, suggest new features, or just look at the code, you can do it all on the partyq GitHub page: https://github.com/niehusst/partyq</string>
+
+    <!-- Legal -->
     <string name="legal_title">Legal Information</string>
-    <string name="legal_content">content</string>
+    <string name="legal_privacy_policy_title">partyq Privacy Policy</string>
+    <string name="legal_privacy_policy_content">content</string>
+    <string name="legal_open_source_lic_title">Open Source Licenses</string>
+    <string name="legal_open_source_lic_intro">Thanks to these dudes...</string>
+    <string name="legal_open_source_lic_content">content</string>
 
     <!-- SpotifyLogin -->
     <string name="authenticate_with_spotify">Authenticate with Spotify</string>
