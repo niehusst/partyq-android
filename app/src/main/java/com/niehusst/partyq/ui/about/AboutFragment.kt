@@ -2,6 +2,7 @@ package com.niehusst.partyq.ui.about
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,9 @@ class AboutFragment : BottomSheetDialogFragment() {
         } catch (ex: PackageManager.NameNotFoundException) {
             Timber.e(ex)
         }
+
+        // link github URL in text
+        binding.partyqLicense.movementMethod = LinkMovementMethod.getInstance()
     }
 
     companion object {

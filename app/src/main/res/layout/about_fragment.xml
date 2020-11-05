@@ -22,7 +22,8 @@
             android:layout_marginTop="@dimen/marginSpace"
             android:text="@string/about_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/version_no"/>
 
         <TextView
             android:id="@+id/version_no"
@@ -31,6 +32,7 @@
             android:layout_marginStart="@dimen/marginSpace"
             android:text="@{versionNumber}"
             app:layout_constraintTop_toBottomOf="@id/about_fragment_title"
+            app:layout_constraintBottom_toTopOf="@id/divider"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="v0.1.0" />
 
@@ -42,12 +44,16 @@
             android:layout_marginStart="@dimen/mediumPadding"
             android:layout_marginEnd="@dimen/mediumPadding"
             android:background="@color/dividerColor"
-            app:layout_constraintTop_toBottomOf="@id/version_no" />
+            app:layout_constraintTop_toBottomOf="@id/version_no"
+            app:layout_constraintBottom_toTopOf="@id/scroll_container"/>
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.8"
             android:layout_margin="@dimen/marginSpace"
+            android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +62,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/marginSpace"
                 android:orientation="vertical">
 
                 <TextView
@@ -86,12 +91,13 @@
                     android:text="@string/about_contrib_title"/>
 
                 <TextView
+                    android:id="@+id/partyq_license"
                     style="@style/TextAppearance.AppCompat.Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/about_contrib_content" />
 
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
