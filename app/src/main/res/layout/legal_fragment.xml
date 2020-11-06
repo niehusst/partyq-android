@@ -240,6 +240,15 @@
                     android:layout_height="wrap_content"
                     android:text="@string/legal_partyq_lic_content" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:background="@color/backgroundColor"
+                    android:padding="@dimen/largePadding"
+                    android:text="@string/partyq_lic"
+                    android:textColor="@color/onBackgroundColorLight"/>
+
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
