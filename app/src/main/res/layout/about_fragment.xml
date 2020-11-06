@@ -2,20 +2,39 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="versionNumber"
+            type="String" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/about_fragment_title"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/about_title"
             android:layout_marginStart="@dimen/marginSpace"
             android:layout_marginTop="@dimen/marginSpace"
-            style="@style/TextAppearance.AppCompat.Title"
+            android:text="@string/about_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/version_no"/>
+
+        <TextView
+            android:id="@+id/version_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/marginSpace"
+            android:text="@{versionNumber}"
+            app:layout_constraintTop_toBottomOf="@id/about_fragment_title"
+            app:layout_constraintBottom_toTopOf="@id/divider"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="v0.1.0" />
 
         <View
             android:id="@+id/divider"
@@ -25,19 +44,60 @@
             android:layout_marginStart="@dimen/mediumPadding"
             android:layout_marginEnd="@dimen/mediumPadding"
             android:background="@color/dividerColor"
-            app:layout_constraintTop_toBottomOf="@id/about_fragment_title"
-            />
+            app:layout_constraintTop_toBottomOf="@id/version_no"
+            app:layout_constraintBottom_toTopOf="@id/scroll_container"/>
 
-        <TextView
-            android:id="@+id/about_fragment_content"
-            style="@style/TextAppearance.AppCompat.Body1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_margin="@dimen/marginSpace"
-            android:text="@string/about_content"
+            android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider" />
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            app:layout_constraintHeight_percent="0.8">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/about_basic_content" />
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Large"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/marginSpace"
+                    android:text="@string/about_tech_details_title"/>
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/about_tech_details_content" />
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Large"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/marginSpace"
+                    android:text="@string/about_contrib_title"/>
+
+                <TextView
+                    android:id="@+id/partyq_license"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/about_contrib_content" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
