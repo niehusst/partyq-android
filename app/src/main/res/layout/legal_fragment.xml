@@ -15,34 +15,232 @@
             android:layout_marginTop="@dimen/marginSpace"
             style="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/divider"/>
 
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginTop="@dimen/marginSpace"
-            android:layout_marginStart="@dimen/mediumPadding"
-            android:layout_marginEnd="@dimen/mediumPadding"
+            android:layout_marginHorizontal="@dimen/mediumPadding"
             android:background="@color/dividerColor"
             app:layout_constraintTop_toBottomOf="@id/legal_fragment_title"
-            />
+            app:layout_constraintBottom_toTopOf="@id/scroll_container"/>
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/marginSpace"
+            android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider">
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            app:layout_constraintHeight_percent="0.8">
 
-            <TextView
-                android:id="@+id/legal_fragment_content"
-                style="@style/TextAppearance.AppCompat.Body1"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/marginSpace"
-                android:text="@string/legal_content" />
-        </ScrollView>
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Large"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/legal_privacy_policy_title"/>
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/legal_privacy_policy_content" />
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Large"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/largePadding"
+                    android:text="@string/legal_acks_title"/>
+                <!-- third party licensing -->
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:text="@string/retrofit"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundColor"
+                    android:padding="@dimen/largePadding"
+                    android:text="@string/retrofit_lic"
+                    android:textColor="@color/onBackgroundColorLight"/>
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:text="@string/spotify_api"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundColor"
+                    android:padding="@dimen/largePadding"
+                    android:text="@string/spotify_api_lic"
+                    android:textColor="@color/onBackgroundColorLight"/>
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:text="@string/spotify_appremote_auth"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundColor"
+                    android:padding="@dimen/largePadding"
+                    android:text="@string/spotify_appremote_auth_lic"
+                    android:textColor="@color/onBackgroundColorLight"/>
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:text="@string/gps_nearby"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundColor"
+                    android:padding="@dimen/largePadding"
+                    android:text="@string/gps_nearby_lic"
+                    android:textColor="@color/onBackgroundColorLight"/>
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:text="@string/timber"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundColor"
+                    android:padding="@dimen/largePadding"
+                    android:text="@string/timber_lic"
+                    android:textColor="@color/onBackgroundColorLight"/>
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:text="@string/glide"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundColor"
+                    android:padding="@dimen/largePadding"
+                    android:text="@string/glide_lic"
+                    android:textColor="@color/onBackgroundColorLight"/>
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:text="@string/gson"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundColor"
+                    android:padding="@dimen/largePadding"
+                    android:text="@string/gson_lic"
+                    android:textColor="@color/onBackgroundColorLight"/>
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:text="@string/android_material_espresso_samples"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundColor"
+                    android:padding="@dimen/largePadding"
+                    android:text="@string/android_material_espresso_samples_lic"
+                    android:textColor="@color/onBackgroundColorLight"/>
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:text="@string/jetbrains"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundColor"
+                    android:padding="@dimen/largePadding"
+                    android:text="@string/jetbrains_lic"
+                    android:textColor="@color/onBackgroundColorLight"/>
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumPadding"
+                    android:text="@string/mockk"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundColor"
+                    android:padding="@dimen/largePadding"
+                    android:text="@string/mockk_lic"
+                    android:textColor="@color/onBackgroundColorLight"/>
+
+                <!-- Partyq license -->
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Large"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/largePadding"
+                    android:text="@string/legal_partyq_lic_title"/>
+
+                <TextView
+                    android:id="@+id/partyq_lic_text"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/legal_partyq_lic_content" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
