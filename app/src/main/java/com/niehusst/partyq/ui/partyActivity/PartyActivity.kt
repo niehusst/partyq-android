@@ -6,7 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +25,6 @@ import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.extensions.setupWithNavController
 import com.niehusst.partyq.ui.remediation.RemediationActivity
-import com.niehusst.partyq.repository.SpotifyRepository
 import com.niehusst.partyq.services.*
 import com.niehusst.partyq.services.CommunicationService.REQUEST_CODE_REQUIRED_PERMISSIONS
 import com.niehusst.partyq.services.CommunicationService.REQUIRED_PERMISSIONS
@@ -37,6 +36,7 @@ class PartyActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPartyBinding
     private var currNavController: LiveData<NavController>? = null
+    private val viewModel by viewModels<PartyActivityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -143,19 +143,11 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun startCommunicationService() {
-        CommunicationService.start(this)
-
-        if (UserTypeService.isHost(this)) {
-            PartyCodeHandler.getPartyCode(this)?.let { code ->
-                Timber.d("Starting to advertise for $code")
-                CommunicationService.hostAdvertise(code)
-            }
-        }
+        viewModel.startCommunicationService(this)
     }
 
     private fun startSpotifyPlayerService() {
-        SpotifyRepository.start(this)
-        SpotifyPlayerService.start(this, KeyFetchService.getSpotifyKey())
+        viewModel.startSpotifyPlayerService(this)
 
         assertHostHasSpotifyPremium() // partyq wont work without Spotify premium
     }
@@ -198,11 +190,7 @@ class PartyActivity : AppCompatActivity() {
 
     private fun disconnect(forced: Boolean) {
         // clean up party state
-        CommunicationService.disconnectFromParty()
-        SpotifyPlayerService.disconnect()
-        SkipSongHandler.clearSkipCount()
-        SearchResultHandler.clearSearch()
-        QueueService.clearQueue()
+        viewModel.resetAllServices()
 
         // choose correct message to display in PartyEndActivity, and launch preventing return
         val bundle = if (forced) {
