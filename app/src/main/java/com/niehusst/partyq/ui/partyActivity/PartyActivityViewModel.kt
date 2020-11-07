@@ -32,3 +32,4 @@ class PartyActivityViewModel : ViewModel() {
         QueueService.clearQueue()
     }
 }
+
