@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AlertDialog
@@ -26,7 +25,6 @@ import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.databinding.ActivityPartyBinding
 import com.niehusst.partyq.extensions.setupWithNavController
 import com.niehusst.partyq.ui.remediation.RemediationActivity
-import com.niehusst.partyq.repository.SpotifyRepository
 import com.niehusst.partyq.services.*
 import com.niehusst.partyq.services.CommunicationService.REQUEST_CODE_REQUIRED_PERMISSIONS
 import com.niehusst.partyq.services.CommunicationService.REQUIRED_PERMISSIONS
