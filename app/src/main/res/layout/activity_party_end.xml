@@ -18,14 +18,14 @@
             android:id="@+id/partyq_logo"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="@dimen/hugePadding"
             android:importantForAccessibility="no"
+            android:padding="@dimen/hugePadding"
             android:src="@drawable/q"
             app:layout_constraintBottom_toTopOf="@id/wrapper"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_weight="4" />
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/wrapper"
@@ -36,8 +36,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/partyq_logo"
-            app:layout_constraintVertical_weight="2">
+            app:layout_constraintTop_toBottomOf="@id/partyq_logo">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_container"
