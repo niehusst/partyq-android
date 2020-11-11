@@ -12,10 +12,13 @@ object SkipSongHandler {
         // +1 to include the host in the count
         val numPartyGoers = CommunicationService.connectionEndpointIds.size + 1
 
-        if (++skipCount > numPartyGoers / 2) {
+        skipCount++
+        if (skipCount > numPartyGoers / 2) {
             // skip song
             SpotifyPlayerService.skipSong()
-            // clearing count is handled by autoplay in SpotifyPlayerService
+
+            // clear registered votes for next song
+            clearSkipCount()
         }
     }
 

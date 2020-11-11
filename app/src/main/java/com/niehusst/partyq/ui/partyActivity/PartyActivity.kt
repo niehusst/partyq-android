@@ -155,6 +155,7 @@ class PartyActivity : AppCompatActivity() {
     private fun assertHostHasSpotifyPremium() {
         SpotifyPlayerService.fullyInit.observe(this, Observer {
             if (it && SpotifyPlayerService.userHasSpotifyPremium == false) {
+                Timber.e("Spotify premium not detected")
                 launchRemediationActivity(R.string.no_spotify_premium_msg)
                 // do not let user return to dysfunctional party state
                 finish()
@@ -190,7 +191,7 @@ class PartyActivity : AppCompatActivity() {
 
     private fun disconnect(forced: Boolean) {
         // clean up party state
-        viewModel.resetAllServices()
+        viewModel.resetAllServices(this)
 
         // choose correct message to display in PartyEndActivity, and launch preventing return
         val bundle = if (forced) {
@@ -218,6 +219,7 @@ class PartyActivity : AppCompatActivity() {
         for (permission in permissions) {
             if (ContextCompat.checkSelfPermission(context, permission)
                     != PackageManager.PERMISSION_GRANTED) {
+                Timber.e("Required permission $permission was denied")
                 return false
             }
         }
