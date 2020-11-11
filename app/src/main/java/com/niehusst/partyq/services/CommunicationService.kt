@@ -25,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.lang.Exception
 
 object CommunicationService {
 
@@ -266,7 +267,13 @@ object CommunicationService {
         } else {
             // perform a search for the guest and send back result
             GlobalScope.launch(Dispatchers.IO) {
-                val res = SpotifyRepository.getSearchTrackResults(query)
+                val res: SearchResult? = try {
+                    SpotifyRepository.getSearchTrackResults(query)
+                } catch (ex: Throwable) {
+                    Timber.e("Error doing search for $requestingEndpointId:\n $ex")
+                    // make sure guest gets a response back; null indicating error
+                    null
+                }
                 sendSearchResults(requestingEndpointId, res)
             }
         }
@@ -279,6 +286,7 @@ object CommunicationService {
             SearchResultHandler.setStatus(Status.SUCCESS)
         } else {
             Timber.e("Received null search result payload from host")
+            // TODO: allow packing exceptions into SearchResult objects to enable better err msgs
             SearchResultHandler.setStatus(Status.ERROR)
         }
     }
