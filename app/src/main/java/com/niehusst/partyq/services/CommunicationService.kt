@@ -25,7 +25,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.Exception
 
 object CommunicationService {
 
@@ -105,7 +104,7 @@ object CommunicationService {
             advertOptions
         ).addOnFailureListener { Timber.e("Advertising failed to start: $it") }
             .addOnSuccessListener { Timber.d("Started advertising successfully") }
-        // TODO: add on failure listener to stop app if we cant connect people to party?? or will it crash itself already
+        // TODO: add on failure listener to stop app if we cant connect people to party??
     }
 
     /**
