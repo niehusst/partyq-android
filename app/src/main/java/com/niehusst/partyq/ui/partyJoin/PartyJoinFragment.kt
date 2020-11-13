@@ -1,7 +1,6 @@
 package com.niehusst.partyq.ui.partyJoin
 
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Gravity
@@ -10,20 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.niehusst.partyq.BundleNames
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.PartyJoinFragmentBinding
 import com.niehusst.partyq.network.Status
-import com.niehusst.partyq.ui.remediation.RemediationActivity
 import com.niehusst.partyq.services.CommunicationService
-import com.niehusst.partyq.services.PartyCodeHandler
 import timber.log.Timber
 
 class PartyJoinFragment : Fragment() {
@@ -81,9 +76,8 @@ class PartyJoinFragment : Fragment() {
         CommunicationService.connected.observe(viewLifecycleOwner, Observer { status ->
             when(status) {
                 Status.SUCCESS -> {
-                    Timber.i("Successfully connected to a party")
-                    // save the party code that got us connected
-                    PartyCodeHandler.setPartyCode(viewModel.lastCode, requireContext())
+                    Timber.d("Successfully connected to a party")
+                    viewModel.setGuestData(requireContext())
 
                     // nav to party and end MainActivity so user can't go back to pre-login
                     findNavController().navigate(R.id.partyActivity)

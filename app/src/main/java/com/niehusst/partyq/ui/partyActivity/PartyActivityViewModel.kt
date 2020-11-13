@@ -24,12 +24,13 @@ class PartyActivityViewModel : ViewModel() {
         SpotifyPlayerService.start(context, KeyFetchService.getSpotifyKey())
     }
 
-    fun resetAllServices() {
+    fun resetAllServices(context: Context) {
         CommunicationService.disconnectFromParty()
         SpotifyPlayerService.disconnect()
         SkipSongHandler.clearSkipCount()
         SearchResultHandler.clearSearch()
         QueueService.clearQueue()
+        UserTypeService.clearHostData(context)
+        SpotifyRepository.stop()
     }
 }
-

@@ -104,7 +104,7 @@ object CommunicationService {
             advertOptions
         ).addOnFailureListener { Timber.e("Advertising failed to start: $it") }
             .addOnSuccessListener { Timber.d("Started advertising successfully") }
-        // TODO: add on failure listener to stop app if we cant connect people to party?? or will it crash itself already
+        // TODO: add on failure listener to stop app if we cant connect people to party??
     }
 
     /**
@@ -266,7 +266,13 @@ object CommunicationService {
         } else {
             // perform a search for the guest and send back result
             GlobalScope.launch(Dispatchers.IO) {
-                val res = SpotifyRepository.getSearchTrackResults(query)
+                val res: SearchResult? = try {
+                    SpotifyRepository.getSearchTrackResults(query)
+                } catch (ex: Throwable) {
+                    Timber.e("Error doing search for $requestingEndpointId:\n $ex")
+                    // make sure guest gets a response back; null indicating error
+                    null
+                }
                 sendSearchResults(requestingEndpointId, res)
             }
         }
@@ -279,6 +285,7 @@ object CommunicationService {
             SearchResultHandler.setStatus(Status.SUCCESS)
         } else {
             Timber.e("Received null search result payload from host")
+            // TODO: allow packing exceptions into SearchResult objects to enable better err msgs
             SearchResultHandler.setStatus(Status.ERROR)
         }
     }

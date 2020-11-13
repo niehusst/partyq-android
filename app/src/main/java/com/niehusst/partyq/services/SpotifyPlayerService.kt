@@ -159,15 +159,17 @@ object SpotifyPlayerService {
 
     /**
      * Disconnect from the remote connection to the Spotify app to prevent memory leaks.
-     * Should be executed onStop().
+     * Also clear app remote reference from memory to prevent reconnection.
      */
     fun disconnect() {
-        // this doesn't actually stop SPOTIFY from running and playing music
+        // disconnecting doesn't actually stop the Spotify app from running and playing music
         spotifyAppRemote?.let {
             // pause the song first so music doesn't keep playing after disconnect
             pauseSong()
             SpotifyAppRemote.disconnect(it)
         }
+
+        spotifyAppRemote = null
     }
 
     /**

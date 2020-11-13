@@ -17,6 +17,21 @@ object UserTypeService {
         userIsHost = true
     }
 
+    fun setSelfAsGuest(context: Context) {
+        clearHostData(context)
+
+        userIsHost = false
+    }
+
+    fun clearHostData(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
+        prefs.edit()
+            .remove(IS_HOST)
+            .apply()
+
+        userIsHost = null
+    }
+
     /**
      * Determine if the user is the host of the current party. Use shared prefs to persist
      * across process death.
