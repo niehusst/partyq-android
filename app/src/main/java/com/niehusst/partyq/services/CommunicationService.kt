@@ -43,9 +43,11 @@ object CommunicationService {
         Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-    private const val TIMEOUT_DISCOVERY_MILLIS = 10000L
+    private const val TIMEOUT_DISCOVERY_MILLIS = 20000L
+    private const val TIMEOUT_INTERVAL_MILLIS = 1000L
+    private var discoveryTimer: CountDownTimer? = null
 
-    // list of IDs of devices connected to the device
+    // list of IDs of party guests connected to the host device
     val connectionEndpointIds = mutableListOf<String>()
 
     // for communicating to guests when they've been connected to a party
@@ -178,9 +180,13 @@ object CommunicationService {
 
 
     private fun startDiscoveryTimer() {
-        // tick interval is set to timeout time since we don't need tick updates
-        object : CountDownTimer(TIMEOUT_DISCOVERY_MILLIS, TIMEOUT_DISCOVERY_MILLIS) {
-            override fun onTick(millisUntilFinished: Long) { /* no-op */ }
+        discoveryTimer = object : CountDownTimer(TIMEOUT_DISCOVERY_MILLIS, TIMEOUT_INTERVAL_MILLIS) {
+            override fun onTick(millisUntilFinished: Long) {
+                if (_connected.value == Status.SUCCESS) {
+                    // cancel count down on successful connection
+                    this.cancel()
+                }
+            }
 
             override fun onFinish() {
                 if (_connected.value == Status.LOADING) {
@@ -194,6 +200,10 @@ object CommunicationService {
     fun stopSearchingForParty() {
         connectionsClient.stopDiscovery()
         _connected.value = Status.NO_ACTION
+
+        // stop count down timer
+        discoveryTimer?.cancel()
+        discoveryTimer = null
     }
 
 

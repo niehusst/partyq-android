@@ -42,18 +42,7 @@ class PartyJoinFragment : Fragment() {
         binding.loading = false
 
         observeConnectionStatus()
-
-        binding.submitButton.setOnClickListener {
-            val codeLongEnough = viewModel.connectToParty(binding.codeEditText.text.toString())
-
-            if (!codeLongEnough) {
-                Toast.makeText(
-                    requireContext(),
-                    R.string.party_code_too_short_message,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+        setClickListeners()
     }
 
     override fun onStart() {
@@ -70,6 +59,24 @@ class PartyJoinFragment : Fragment() {
         super.onStop()
         // stop discovery, if it hasn't already stopped by this point
         CommunicationService.stopSearchingForParty()
+    }
+
+    private fun setClickListeners() {
+        binding.submitButton.setOnClickListener {
+            val codeLongEnough = viewModel.connectToParty(binding.codeEditText.text.toString())
+
+            if (!codeLongEnough) {
+                Toast.makeText(
+                    requireContext(),
+                    R.string.party_code_too_short_message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        binding.stopButton.setOnClickListener {
+            CommunicationService.stopSearchingForParty()
+        }
     }
 
     private fun observeConnectionStatus() {
