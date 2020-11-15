@@ -116,6 +116,7 @@
             style="@style/PartyqButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/hugePadding"
             android:layout_marginBottom="@dimen/mediumPadding"
             android:text="@string/stop_searching"
             app:layout_constraintBottom_toBottomOf="parent"
