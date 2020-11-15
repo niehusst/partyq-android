@@ -99,6 +99,7 @@
     <string name="party_code_too_short_message">Code must be 4 digits</string>
     <string name="searching_for_party">Searching for Party…</string>
     <string name="party_not_found">Party not found</string>
+    <string name="stop_searching">Stop searching</string>
 
     <!-- PartyEnd -->
     <string name="party_again">Party Again?</string>
@@ -110,6 +111,7 @@
     <string name="denied_permissions_msg">The partyq app uses Bluetooth and/or local Wifi to connect everyone in the party and exchange data. In order to accomplish this connection, partyq requires Wifi, Bluetooth, and (unintuitively) Location permissions. Please come back after granting the missing permissions in the Settings app or by retrying your last action.</string>
     <string name="no_spotify_premium_msg">We noticed that the Spotify account logged into your Spotify app isn\'t premium. The partyq app relies on the Spotify app to play specific songs and, unfortunately, Spotify free doesn\'t let you play specific songs at will (if you tried, it would instead play a random song). Please come back after logging into a Spotify Premium account in your Spotify app.</string>
     <string name="no_spotify_msg">The partyq app relies on the Spotify app to play music; if you don\'t have the Spotify app installed (and are logged in with a premium account) then you can\'t play any music! Please come back after installing and logging into the Spotify app on this device.</string>
+    <string name="spotify_crash_msg">Spotify and/or partyq\'s connections to Spotify has crashed. Without the connection to Spotify, you can\'t control what music is played. You will have to try starting the party over again, sorry!</string>
     <string name="got_it">got it</string>
     <string name="oops">OOPS!</string>
 </resources>

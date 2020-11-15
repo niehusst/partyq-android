@@ -10,17 +10,26 @@ class PartyJoinViewModel : ViewModel() {
 
     var lastCode: String = ""
 
+    fun startCommunicationService(context: Context) {
+        CommunicationService.start(context)
+    }
+
     /**
      * Begins connection discovery.
-     * Returns false to indicate problem with code length.
+     *
+     * @return - false to indicate problem with code length, else true when discovery has started
      */
-    fun connectToParty(code: String): Boolean {
+    fun searchForParty(code: String): Boolean {
         if (code.length != 4) {
             return false
         }
         lastCode = code
         CommunicationService.connectToParty(code)
         return true
+    }
+
+    fun stopSearchingForParty() {
+        CommunicationService.stopSearchingForParty()
     }
 
     fun setGuestData(context: Context) {

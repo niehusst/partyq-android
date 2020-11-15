@@ -102,12 +102,26 @@
         </androidx.cardview.widget.CardView>
 
         <include
+            android:id="@+id/include"
             layout="@layout/loading_spinner"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:progressText="@{@string/searching_for_party}"
+            isGone="@{!loading}" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/stop_button"
+            style="@style/PartyqButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/hugePadding"
+            android:layout_marginBottom="@dimen/mediumPadding"
+            android:text="@string/stop_searching"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             isGone="@{!loading}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
