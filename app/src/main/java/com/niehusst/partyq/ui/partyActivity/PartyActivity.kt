@@ -60,6 +60,26 @@ class PartyActivity : AppCompatActivity() {
         setupBottomNavBinding()
     }
 
+    override fun onStart() {
+        super.onStart()
+        val prefs = this.applicationContext.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
+        if (prefs.getBoolean(PARTY_FIRST_START, false)) {
+            launchPartyCodeDialog()
+            prefs.edit()
+                .putBoolean(PARTY_FIRST_START, false)
+                .apply()
+        }
+
+        if (!hasPermissions(this, REQUIRED_PERMISSIONS)) {
+            requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS)
+        }
+    }
+
+    override fun onDestroy() {
+//        disconnect(forced = false) // TODO: see if the behavior is any diff w/ and w/o this line
+        super.onDestroy()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu_loggedin, menu)
         return true
@@ -102,21 +122,6 @@ class PartyActivity : AppCompatActivity() {
             home.addCategory(Intent.CATEGORY_HOME)
             home.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(home)
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val prefs = this.applicationContext.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
-        if (prefs.getBoolean(PARTY_FIRST_START, false)) {
-            launchPartyCodeDialog()
-            prefs.edit()
-                .putBoolean(PARTY_FIRST_START, false)
-                .apply()
-        }
-
-        if (!hasPermissions(this, REQUIRED_PERMISSIONS)) {
-            requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS)
         }
     }
 
@@ -189,11 +194,17 @@ class PartyActivity : AppCompatActivity() {
         builder.create().show()
     }
 
+    /**
+     * Disconnect from and clear all partyq services, and launch the PartyEndActivity.
+     *
+     * @param forced - Indicates whether the host forcefully disconnected from the guest (true), or
+     *                  the guest voluntarily left the party (false). Indicates which text to show.
+     */
     private fun disconnect(forced: Boolean) {
         // clean up party state
         viewModel.resetAllServices(this)
 
-        // choose correct message to display in PartyEndActivity, and launch preventing return
+        // choose correct message to display in PartyEndActivity and launch, preventing return
         val bundle = if (forced) {
             bundleOf(BundleNames.END_MESSAGE to resources.getString(R.string.forced_end))
         } else {
