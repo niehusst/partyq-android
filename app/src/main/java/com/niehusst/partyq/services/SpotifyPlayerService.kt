@@ -14,6 +14,7 @@ import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.android.appremote.api.error.CouldNotFindSpotifyApp
 import com.spotify.android.appremote.api.error.NotLoggedInException
+import com.spotify.android.appremote.api.error.SpotifyConnectionTerminatedException
 import com.spotify.android.appremote.api.error.UserNotAuthorizedException
 import com.spotify.protocol.types.PlayerState
 import timber.log.Timber
@@ -56,16 +57,18 @@ object SpotifyPlayerService {
                         // Something went wrong when attempting to connect to Spotify App
                         Timber.e("Failed to connect to Spotify:\n $error")
 
+                        // go to RemediationActivity
                         val intent = Intent(context, RemediationActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                         intent.putExtra(
                             BundleNames.REMEDIATION_MESSAGE,
-                            if (error is NotLoggedInException || error is UserNotAuthorizedException) {
-                                context.resources.getString(R.string.no_spotify_premium_msg)
-                            } else if (error is CouldNotFindSpotifyApp) {
-                                context.resources.getString(R.string.no_spotify_msg)
-                            } else {
-                                context.resources.getString(R.string.generic_error_msg)
+
+                            when (error) {
+                                is NotLoggedInException,
+                                is UserNotAuthorizedException -> context.resources.getString(R.string.no_spotify_premium_msg)
+                                is CouldNotFindSpotifyApp -> context.resources.getString(R.string.no_spotify_msg)
+                                is SpotifyConnectionTerminatedException -> context.resources.getString(R.string.spotify_crash_msg)
+                                else -> context.resources.getString(R.string.generic_error_msg)
                             }
                         )
                         context.startActivity(intent)
