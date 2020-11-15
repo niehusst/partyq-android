@@ -43,7 +43,7 @@ object CommunicationService {
         Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-    private const val TIMEOUT_DISCOVERY_MILLIS = 20000L //TODO: more???? still dont find it in time sometimes
+    private const val TIMEOUT_DISCOVERY_MILLIS = 20000L
     private const val TIMEOUT_INTERVAL_MILLIS = 1000L
     private var discoveryTimer: CountDownTimer? = null
 
