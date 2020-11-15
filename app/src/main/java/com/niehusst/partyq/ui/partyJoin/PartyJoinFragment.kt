@@ -33,7 +33,7 @@ class PartyJoinFragment : Fragment() {
     ): View? {
         binding = PartyJoinFragmentBinding.inflate(inflater)
         // start comms service so guests can use it to connect to host
-        CommunicationService.start(requireContext())
+        viewModel.startCommunicationService(requireContext())
         return binding.root
     }
 
@@ -58,12 +58,12 @@ class PartyJoinFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         // stop discovery, if it hasn't already stopped by this point
-        CommunicationService.stopSearchingForParty()
+        viewModel.stopSearchingForParty()
     }
 
     private fun setClickListeners() {
         binding.submitButton.setOnClickListener {
-            val codeLongEnough = viewModel.connectToParty(binding.codeEditText.text.toString())
+            val codeLongEnough = viewModel.searchForParty(binding.codeEditText.text.toString())
 
             if (!codeLongEnough) {
                 Toast.makeText(
@@ -75,7 +75,7 @@ class PartyJoinFragment : Fragment() {
         }
 
         binding.stopButton.setOnClickListener {
-            CommunicationService.stopSearchingForParty()
+            viewModel.stopSearchingForParty()
         }
     }
 
