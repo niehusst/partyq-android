@@ -166,10 +166,15 @@ object SpotifyPlayerService {
      */
     fun disconnect() {
         // disconnecting doesn't actually stop the Spotify app from running and playing music
-        spotifyAppRemote?.let {
+        spotifyAppRemote?.let { appRemote ->
             // pause the song first so music doesn't keep playing after disconnect
-            pauseSong()
-            SpotifyAppRemote.disconnect(it)
+            appRemote.playerApi.pause().setResultCallback {
+                SpotifyAppRemote.disconnect(appRemote)
+            }.setErrorCallback {
+                Timber.e("Error pausing Spotify:\n$it")
+                // we have to disconnect anyway
+                SpotifyAppRemote.disconnect(appRemote)
+            }
         }
 
         spotifyAppRemote = null
