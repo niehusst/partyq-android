@@ -76,7 +76,8 @@ class PartyActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-//        disconnect(forced = false) // TODO: see if the behavior is any diff w/ and w/o this line
+        // clean up all our connected services
+        viewModel.resetAllServices(this)
         super.onDestroy()
     }
 
