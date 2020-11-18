@@ -84,6 +84,7 @@ class QueueAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             binding.artistName.text = item.artistsAsPrettyString()
             Glide.with(binding.root)
                 .load(item.album.images?.lastOrNull()?.url)
+                .error(R.drawable.album)
                 .fitCenter()
                 .into(binding.thumbnail)
         }
