@@ -91,12 +91,6 @@ class PartyActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        // clean up all our connected services
-        viewModel.resetAllServices(this)
-        super.onDestroy()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu_loggedin, menu)
         return true
