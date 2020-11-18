@@ -51,6 +51,7 @@ class NowPlayingFragment : Fragment() {
             // Get first image since it should be the largest (last is smallest)
             Glide.with(this)
                 .load(item.album.images?.firstOrNull()?.url)
+                .error(R.drawable.album)
                 .fitCenter()
                 .into(binding.albumImage)
         }

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.QueueListHeaderBinding
 import com.niehusst.partyq.databinding.QueueListItemBinding
 import com.niehusst.partyq.network.models.api.Item
@@ -53,6 +54,7 @@ class QueueAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
              binding.artistName.text = item.artistsAsPrettyString()
              Glide.with(binding.root)
                  .load(item.album.images?.lastOrNull()?.url)
+                 .error(R.drawable.album)
                  .fitCenter()
                  .into(binding.thumbnail)
         }
