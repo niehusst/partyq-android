@@ -23,7 +23,8 @@ attach_workspace: &attach_workspace
   attach_workspace:
     at: *root_dir
 
-
+# write circleci env var into local file for release keystore build
+base64 -d <<< $PARTYQ_KEYSTORE_FILE > partyq_release.jks
 
 version: 2.1
 jobs:

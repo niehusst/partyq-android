@@ -4,10 +4,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 android {
     signingConfigs {
         release {
@@ -32,11 +28,32 @@ android {
 
     signingConfigs {
         release {
-            // get signing data from properties file
-            storeFile file(keystoreProperties["PARTYQ_KEYSTORE_FILENAME"])
-            storePassword keystoreProperties["PARTYQ_KEYSTORE_PASSWORD"]
-            keyAlias keystoreProperties["PARTYQ_KEY_ALIAS"]
-            keyPassword keystoreProperties["PARTYQ_KEY_PASSWORD"]
+            def keystorePropertiesFile = rootProject.file("keystore.properties")
+            if (keystorePropertiesFile != null) {
+                // local env: load release build info from properties file
+                def keystoreProperties = new Properties()
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+                def keystore_fname = keystoreProperties["PARTYQ_KEYSTORE_FILENAME"]
+                def keystore_password = keystoreProperties["PARTYQ_KEYSTORE_PASSWORD"]
+                def key_alias = keystoreProperties["PARTYQ_KEY_ALIAS"]
+                def key_password = keystoreProperties["PARTYQ_KEY_PASSWORD"]
+
+                storeFile file(keystore_fname)
+                storePassword keystore_password
+                keyAlias key_alias
+                keyPassword key_password
+            } else {
+                // circleci env: load release build info from env vars
+                def keystore_fname = System.getenv("PARTYQ_KEYSTORE_FILENAME")
+                def keystore_password = System.getenv("PARTYQ_KEYSTORE_PASSWORD")
+                def key_alias = System.getenv("PARTYQ_KEY_ALIAS")
+                def key_password = System.getenv("PARTYQ_KEY_PASSWORD")
+
+                storeFile file(keystore_fname)
+                storePassword keystore_password
+                keyAlias key_alias
+                keyPassword key_password
+            }
         }
     }
 
