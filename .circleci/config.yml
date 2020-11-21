@@ -7,7 +7,7 @@ aliases:
     name: Generate secrets files
     command: |
       echo "SPOTIFY_CLIENT_ID="$SPOTIFY_CLIENT_ID > apikey.properties
-      echo $PARTYQ_KEYSTORE_FILE | base64 -D > partyq_release.jks
+      echo $PARTYQ_KEYSTORE_FILE | base64 --decode > partyq_release.jks
 
 defaults: &defaults
   working_directory: *root_dir
