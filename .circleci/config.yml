@@ -6,7 +6,7 @@ aliases:
     # write circleci env vars into local files
     name: Generate secrets files
     command: |
-      echo "SPOTIFY_CLIENT_ID="$SPOTIFY_CLIENT_ID > apikey.properties;
+      echo "SPOTIFY_CLIENT_ID="$SPOTIFY_CLIENT_ID > apikey.properties
       base64 -D <<< $PARTYQ_KEYSTORE_FILE > partyq_release.jks
 
 defaults: &defaults
