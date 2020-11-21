@@ -2,10 +2,12 @@ aliases:
   - &root_dir
     ~/code
 
-  - &set_api_keys
-    name: Generate secrets file
+  - &set_secrets_from_env_vars
+    # write circleci env vars into local files
+    name: Generate secrets files
     command: |
-      echo "SPOTIFY_CLIENT_ID="$SPOTIFY_CLIENT_ID > apikey.properties
+      echo "SPOTIFY_CLIENT_ID="$SPOTIFY_CLIENT_ID > apikey.properties;
+      base64 -D <<< $PARTYQ_KEYSTORE_FILE > partyq_release.jks
 
 defaults: &defaults
   working_directory: *root_dir
@@ -23,8 +25,6 @@ attach_workspace: &attach_workspace
   attach_workspace:
     at: *root_dir
 
-# write circleci env var into local file for release keystore build
-base64 -d <<< $PARTYQ_KEYSTORE_FILE > partyq_release.jks
 
 version: 2.1
 jobs:
@@ -33,7 +33,7 @@ jobs:
     steps:
       - checkout
       - *restore_deps
-      - run: *set_api_keys
+      - run: *set_secrets_from_env_vars
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
@@ -47,7 +47,7 @@ jobs:
       - checkout
       - *attach_workspace
       - *restore_deps
-      - run: *set_api_keys
+      - run: *set_secrets_from_env_vars
       - run:
           name: Lint
           command: ./gradlew lint --stacktrace --status
@@ -59,7 +59,7 @@ jobs:
       - checkout
       - *attach_workspace
       - *restore_deps
-      - run: *set_api_keys
+      - run: *set_secrets_from_env_vars
       - run:
           name: Run Unit Tests
           command: ./gradlew test --stacktrace
