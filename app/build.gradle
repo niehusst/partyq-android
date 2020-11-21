@@ -29,7 +29,7 @@ android {
     signingConfigs {
         release {
             def keystorePropertiesFile = rootProject.file("keystore.properties")
-            if (keystorePropertiesFile != null) {
+            if (keystorePropertiesFile.exists()) {
                 // local env: load release build info from properties file
                 def keystoreProperties = new Properties()
                 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
