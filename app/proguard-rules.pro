@@ -97,3 +97,7 @@
 
 # keep all network serialized models
 -keep class com.niehusst.partyq.network.models.** { *; }
+
+
+# ignore unimportant warnings
+-dontwarn java.lang.instrument.ClassFileTransformer
