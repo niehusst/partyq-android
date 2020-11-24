@@ -1,24 +1,36 @@
 # partyq
-Distributed music queue app (android)
-Note that many of the Spotify API endpoints that this app depend on are in beta and are subject to change w/o warning.
 
-## Acks
-Retrofit2
-Spotify web API
-Spotify AppRemote SDK
-Spotify Authentication SDK
-Nearby Connections API (play-services-nearby)
-Timber
-Glide
-Android Architecture Components samples (for bottom nav code)
-gson
-AndroidX
-Material Components for Android
-Jetbrains KotlinX Coroutines
-Jetbrains kotlin-stdlib-jdk8
-Jetbrains kotlinx-coroutines-test
-MockK
-Espresso
+[![niehusst](https://circleci.com/gh/niehusst/partyq.svg?style=svg)](https://app.circleci.com/pipelines/github/niehusst/partyq)
+
+partyq is a music queue app that uses Spotify to play music. If one person has Spotify premium (and the Spotify app on their device) they can use partyq to host a music party for a group of people with partyq who don't have Spotify (and are nearby/connected to the same wifi). Everyone connected to the party can search for and add songs to a shared queue, while the host device plays the music using Spotify.
+    
+Note that many of the Spotify API endpoints that this app depends on are in beta and are subject to change without warning.
+
+## Contributing
+
+This is an open-source project, so contributions are welcome! That being said, getting your development environment up and running is a bit of a tedious process.
+
+See full environment setup instructions on the [wiki](https://github.com/niehusst/partyq/wiki/Development-Setup).
+
+## Acknowledgements
+* Retrofit2
+* Spotify web API
+* Spotify AppRemote SDK
+* Spotify Authentication SDK
+* Google Nearby Connections API (play-services-nearby)
+* Timber
+* Glide
+* Android Architecture Components samples (for bottom nav code)
+* Gson
+* AndroidX
+* Material Components for Android
+* Jetbrains KotlinX Coroutines
+* MockK
+* Espresso
+
+## Authors
+
+* **Liam Niehus-Staab** - [niehusst](https://github.com/niehusst)
 
 ## License
 ```
