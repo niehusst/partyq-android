@@ -45,7 +45,7 @@
             android:id="@+id/close_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/largePadding"
+            android:padding="@dimen/largePadding"
             android:contentDescription="@string/close_popup"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_baseline_close_24"
