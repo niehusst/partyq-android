@@ -69,7 +69,7 @@
     <string name="authenticate_with_spotify">Authenticate with Spotify</string>
     <string name="info">INFO</string>
     <string name="why_is_this">Why is this?</string>
-    <string name="info_content">Starting a party requires you have the Spotify mobile app downloaded on this device and that you are logged into it with a Spotify premium account.</string>
+    <string name="info_content">Starting a party requires you to have the Spotify mobile app downloaded on this device and that you are logged into it with a Spotify premium account.</string>
     <string name="auth_cancelled">Authentication cancelled</string>
     <string name="no_wifi_msg">Please connect to internet to login</string>
 
