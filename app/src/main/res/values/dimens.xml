@@ -18,6 +18,8 @@
 <resources>
     <dimen name="rounded">1000dp</dimen>
 
+    <dimen name="touchTargetSize">48dp</dimen>
+
     <dimen name="marginSpace">16dp</dimen>
     <dimen name="marginSpaceLarge">32dp</dimen>
 
