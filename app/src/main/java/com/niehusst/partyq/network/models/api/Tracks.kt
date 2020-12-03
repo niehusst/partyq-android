@@ -26,11 +26,11 @@ data class Tracks(
     @Json(name = "limit")
     val limit: Int,
     @Json(name = "next")
-    val next: String,
+    val next: String? = null,
     @Json(name = "offset")
     val offset: Int,
     @Json(name = "previous")
-    val previous: Int? = null,
+    val previous: String? = null,
     @Json(name = "total")
     val total: Int
 )

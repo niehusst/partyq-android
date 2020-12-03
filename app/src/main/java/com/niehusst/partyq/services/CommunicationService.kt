@@ -37,6 +37,7 @@ import com.niehusst.partyq.utility.PayloadBuilder.buildUpdatedQueuePayload
 import com.niehusst.partyq.network.models.connection.Type
 import com.niehusst.partyq.repository.SpotifyRepository
 import com.niehusst.partyq.utility.CompressionUtility.decompress
+import com.niehusst.partyq.utility.PayloadBuilder.buildPagedSearchPayload
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -227,11 +228,22 @@ object CommunicationService {
 
     /** Guest only method */
     fun sendQuery(query: String) {
-        if (connectionEndpointIds.size > 0) {
+        if (connectionEndpointIds.isNotEmpty()) {
             // send payload to host; the first and only endpoint in the list
             connectionsClient.sendPayload(
                 connectionEndpointIds[0],
                 buildQueryPayload(query)
+            )
+        }
+    }
+
+    /** Guest only method */
+    fun sendPagedSearch(reqUrl: String) {
+        if (connectionEndpointIds.isNotEmpty()) {
+            // send payload to host; the first and only endpoint in the list
+            connectionsClient.sendPayload(
+                connectionEndpointIds[0],
+                buildPagedSearchPayload(reqUrl)
             )
         }
     }
@@ -285,7 +297,7 @@ object CommunicationService {
     /* Data reception methods and callbacks */
 
     /** Host only method */
-    fun receiveQuery(requestingEndpointId: String, query: String?) {
+    fun receiveQuery(requestingEndpointId: String, query: String?, isPaged: Boolean) {
         if (query == null) {
             // send back "error data" so guest isn't left hanging
             sendSearchResults(requestingEndpointId, null)
@@ -293,7 +305,11 @@ object CommunicationService {
             // perform a search for the guest and send back result
             GlobalScope.launch(Dispatchers.IO) {
                 val res: SearchResult? = try {
-                    SpotifyRepository.getSearchTrackResults(query)
+                    if (isPaged) {
+                        SpotifyRepository.getPagedSearchTrackResults(query)
+                    } else {
+                        SpotifyRepository.getSearchTrackResults(query)
+                    }
                 } catch (ex: Throwable) {
                     Timber.e("Error doing search for $requestingEndpointId:\n $ex")
                     // make sure guest gets a response back; null indicating error
@@ -358,7 +374,11 @@ object CommunicationService {
                 when (parsedPayload?.type) {
                     Type.QUERY -> {
                         val payloadKernel = PayloadBuilder.reconstructFromJson(parsedPayload.payload, String::class.java)
-                        receiveQuery(endpointId, payloadKernel)
+                        receiveQuery(endpointId, payloadKernel, isPaged = false)
+                    }
+                    Type.PAGED_SEARCH -> {
+                        val payloadKernel = PayloadBuilder.reconstructFromJson(parsedPayload.payload, String::class.java)
+                        receiveQuery(endpointId, payloadKernel, isPaged = true)
                     }
                     Type.UPDATE_QUEUE -> {
                         val payloadKernel = PayloadBuilder.reconstructFromJson(parsedPayload.payload, Array<Item>::class.java)

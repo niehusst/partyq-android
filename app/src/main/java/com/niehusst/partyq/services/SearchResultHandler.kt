@@ -21,20 +21,24 @@ import androidx.lifecycle.MutableLiveData
 import com.niehusst.partyq.network.Status
 import com.niehusst.partyq.network.models.api.Item
 import com.niehusst.partyq.network.models.api.SearchResult
+import com.niehusst.partyq.network.models.api.Tracks
 
 object SearchResultHandler {
 
     private val _status = MutableLiveData(Status.NO_ACTION)
     val status: LiveData<Status> = _status
 
-    private val _results = MutableLiveData<List<Item>>(listOf())
-    val results: LiveData<List<Item>> = _results
+    private val _searchResultSongs = MutableLiveData<List<Item>>(listOf())
+    val searchResultSongs: LiveData<List<Item>> = _searchResultSongs
+
+    var searchResult: Tracks? = null // Provides info about API paging
 
     fun updateSearchResults(res: SearchResult) {
         // get just the track items. Filter out duplicate URIs
+        searchResult = res.tracks
         var songs = res.tracks?.items ?: listOf()
         songs = songs.distinctBy { it.uri }
-        _results.postValue(songs)
+        _searchResultSongs.postValue(songs)
     }
 
     fun setStatus(status: Status) {
@@ -42,7 +46,7 @@ object SearchResultHandler {
     }
 
     fun clearSearch() {
-        _results.postValue(listOf())
+        _searchResultSongs.postValue(listOf())
         _status.postValue(Status.NO_ACTION)
     }
 }
