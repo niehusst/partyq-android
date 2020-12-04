@@ -60,4 +60,11 @@ object TokenHandlerService {
         editor.putLong(EXPIRES_AT, expiresAt)
         editor.apply()
     }
+
+    fun clearToken(context: Context) {
+        val sharedPref = getSharedPreferences(context.applicationContext)
+        sharedPref.edit()
+            .remove(ACCESS_TOKEN)
+            .apply()
+    }
 }
