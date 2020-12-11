@@ -42,6 +42,9 @@ class LegalFragment : BottomSheetDialogFragment() {
 
         // link github URL
         binding.partyqLicText.movementMethod = LinkMovementMethod.getInstance()
+
+        // link Privacy Policy URL
+        binding.partyqPrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()
     }
 
     companion object {
