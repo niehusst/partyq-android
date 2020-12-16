@@ -25,10 +25,6 @@
         <variable
             name="lastPage"
             type="Boolean" />
-
-        <variable
-            name="pageNum"
-            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,7 +51,6 @@
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{pageNum}"
             android:textAlignment="center"
             app:layout_constraintStart_toEndOf="@id/prev_page"
             app:layout_constraintEnd_toStartOf="@id/next_page"

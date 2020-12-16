@@ -16,6 +16,7 @@
 
 package com.niehusst.partyq.ui.search
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -122,7 +123,7 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(currPage: Int, nextPageUrl: String?, prevPageUrl: String?) {
-            binding.pageNum.text = currPage.toString()
+            binding.pageNum.text = (currPage+1).toString()
             binding.firstPage = prevPageUrl == null
             binding.lastPage = nextPageUrl == null
 
