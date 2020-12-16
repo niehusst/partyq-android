@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 
 class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private var recyclerView: RecyclerView? = null
     var searchPage: Tracks? = null
     var searchResults = listOf<Item>()
 
@@ -46,6 +47,11 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         } else {
             TYPE_ITEM
         }
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -78,7 +84,8 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             (holder as PageSearchViewHolder).bind(
                 pageNum ?: 1,
                 searchPage?.next,
-                searchPage?.previous
+                searchPage?.previous,
+                recyclerView
             )
         }
     }
@@ -122,7 +129,7 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private val isHost: Boolean
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(currPage: Int, nextPageUrl: String?, prevPageUrl: String?) {
+        fun bind(currPage: Int, nextPageUrl: String?, prevPageUrl: String?, recyclerView: RecyclerView?) {
             binding.pageNum.text = (currPage+1).toString()
             binding.firstPage = prevPageUrl == null
             binding.lastPage = nextPageUrl == null
@@ -131,12 +138,16 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 nextPageUrl?.run {
                     performSearch(nextPageUrl)
                 }
+                // scroll to top to see new results
+                recyclerView?.smoothScrollToPosition(0)
             }
 
             binding.prevPage.setOnClickListener {
                 prevPageUrl?.run {
                     performSearch(prevPageUrl)
                 }
+                // scroll to top to see new results
+                recyclerView?.smoothScrollToPosition(0)
             }
         }
 
