@@ -22,6 +22,7 @@ package com.niehusst.partyq.network.models.connection
  */
 enum class Type {
     QUERY,
+    PAGED_SEARCH,
     SEARCH_RESULT,
     UPDATE_QUEUE,
     ENQUEUE,

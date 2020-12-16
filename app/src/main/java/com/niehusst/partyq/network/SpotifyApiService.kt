@@ -19,6 +19,7 @@ package com.niehusst.partyq.network
 import com.niehusst.partyq.network.models.api.SearchResult
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface SpotifyApiService {
     /**
@@ -32,5 +33,18 @@ interface SpotifyApiService {
     suspend fun searchTracks(
         @Query("q") q: String,
         @Query("type") type: String
+    ): SearchResult
+
+    /**
+     * Perform a GET request on the provided URL.
+     * The purpose of this function is to be able to easily perform a repeated request but for
+     * a previous or following page of results. (Spotify search endpoint provides full URLs for
+     * getting the next/prev page of results)
+     *
+     * @param url - The URL to perform the GET request on
+     */
+    @GET
+    suspend fun getSearchResultPage(
+        @Url url: String
     ): SearchResult
 }

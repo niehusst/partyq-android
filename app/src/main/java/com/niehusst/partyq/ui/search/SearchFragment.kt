@@ -30,7 +30,7 @@ import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SearchFragmentBinding
 import com.niehusst.partyq.network.Status
 import com.niehusst.partyq.services.SearchResultHandler
-
+import com.niehusst.partyq.services.UserTypeService
 
 class SearchFragment : Fragment() {
 
@@ -57,8 +57,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun setObservers() {
-        SearchResultHandler.results.observe(viewLifecycleOwner, Observer {
+        SearchResultHandler.searchResultSongs.observe(viewLifecycleOwner, Observer {
             adapter.searchResults = it
+            adapter.searchPage = SearchResultHandler.searchResult
             binding.isResults = it.isNotEmpty()
             adapter.notifyDataSetChanged()
         })
@@ -83,7 +84,7 @@ class SearchFragment : Fragment() {
         binding.searchBar.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 // send query to Spotify
-                viewModel.submitQuery(v.text.toString(), requireContext())
+                viewModel.submitQuery(v.text.toString(), UserTypeService.isHost(requireContext()))
                 hideKeyboard(v)
             }
             return@setOnEditorActionListener true

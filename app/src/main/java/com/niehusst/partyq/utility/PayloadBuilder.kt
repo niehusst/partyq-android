@@ -40,6 +40,8 @@ object PayloadBuilder {
 
     fun buildQueryPayload(q: String): Payload = buildPayload(Type.QUERY, q)
 
+    fun buildPagedSearchPayload(url: String): Payload = buildPayload(Type.PAGED_SEARCH, url)
+
     fun buildSearchResultPayload(res: SearchResult?): Payload = buildPayload(Type.SEARCH_RESULT, res)
 
     fun buildUpdatedQueuePayload(items: List<Item>): Payload = buildPayload(Type.UPDATE_QUEUE, items)

@@ -90,6 +90,8 @@
     <string name="no_results">No Results</string>
     <string name="error_face">Error :(</string>
     <string name="song_added_to_queue">Song Added to Queue</string>
+    <string name="prev">prev</string>
+    <string name="next">next</string>
 
     <!-- PartyCode -->
     <string name="close_popup">Close popup</string>

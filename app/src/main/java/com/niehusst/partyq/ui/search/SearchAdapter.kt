@@ -22,27 +22,71 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.niehusst.partyq.R
+import com.niehusst.partyq.databinding.SearchPageItemBinding
 import com.niehusst.partyq.databinding.SearchResultItemBinding
 import com.niehusst.partyq.network.models.api.Item
+import com.niehusst.partyq.network.models.api.Tracks
+import com.niehusst.partyq.repository.SpotifyRepository
 import com.niehusst.partyq.services.QueueService
 import com.niehusst.partyq.services.UserTypeService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
+class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private var recyclerView: RecyclerView? = null
+    var searchPage: Tracks? = null
     var searchResults = listOf<Item>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultViewHolder {
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position >= searchResults.size) {
+            TYPE_FOOTER
+        } else {
+            TYPE_ITEM
+        }
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = SearchResultItemBinding.inflate(layoutInflater, parent, false)
-        return ResultViewHolder(binding, UserTypeService.isHost(parent.context))
+        val isHost = UserTypeService.isHost(parent.context)
+
+        return if (viewType == TYPE_FOOTER) {
+            val binding = SearchPageItemBinding.inflate(layoutInflater, parent, false)
+            PageSearchViewHolder(binding, isHost)
+        } else { // TYPE_ITEM
+            val binding = SearchResultItemBinding.inflate(layoutInflater, parent, false)
+            ResultViewHolder(binding, isHost)
+        }
     }
 
     override fun getItemCount(): Int {
-        return searchResults.size
+        // +1 if results to account for the search_page_item layout at the end
+        // pagination view not included if no results
+        return if (searchResults.isNotEmpty()) { searchResults.size + 1 } else { 0 }
     }
 
-    override fun onBindViewHolder(holder: ResultViewHolder, position: Int) {
-        holder.bind(searchResults[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is ResultViewHolder) {
+            holder.bind(searchResults[position])
+        } else {
+            // to get the page num we're on, divide the index of first item in this request (offset)
+            // by the number of items received per request (limit)
+            val pageNum = searchPage?.let { it.offset / it.limit }
+
+            (holder as PageSearchViewHolder).bind(
+                pageNum ?: 0,
+                searchPage?.next,
+                searchPage?.previous,
+                recyclerView
+            )
+        }
     }
 
     inner class ResultViewHolder(
@@ -77,5 +121,45 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ResultViewHolder>() {
             snackPopup.setTextColor(binding.root.context.getColor(R.color.onColorSuccess))
             snackPopup.show()
         }
+    }
+
+    inner class PageSearchViewHolder(
+        private val binding: SearchPageItemBinding,
+        private val isHost: Boolean
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(currPage: Int, nextPageUrl: String?, prevPageUrl: String?, recyclerView: RecyclerView?) {
+            binding.pageNum.text = (currPage+1).toString()
+            binding.firstPage = prevPageUrl == null
+            binding.lastPage = nextPageUrl == null
+
+            binding.nextPage.setOnClickListener {
+                nextPageUrl?.run {
+                    performSearch(nextPageUrl)
+                }
+                // scroll to top to see new results
+                recyclerView?.smoothScrollToPosition(0)
+            }
+
+            binding.prevPage.setOnClickListener {
+                prevPageUrl?.run {
+                    performSearch(prevPageUrl)
+                }
+                // scroll to top to see new results
+                recyclerView?.smoothScrollToPosition(0)
+            }
+        }
+
+        private fun performSearch(url: String) {
+            // TODO somehow tie to viewLifeCycle? viewmodel? custom coroutine scope?
+            GlobalScope.launch(Dispatchers.IO) {
+                SpotifyRepository.searchSongsForLocalResult(url, isHost, isPaged = true)
+            }
+        }
+    }
+
+    companion object {
+        const val TYPE_FOOTER = 0
+        const val TYPE_ITEM = 1
     }
 }

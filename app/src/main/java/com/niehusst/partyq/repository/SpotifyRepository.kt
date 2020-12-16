@@ -34,7 +34,7 @@ object SpotifyRepository {
      * This must be called to initialize the API endpoint access.
      *
      * Precondition:
-     *      requires OAuth token is set before this method is called.
+     *      requires OAuth token is set in TokenHandlerService before this method is called.
      */
     fun start(ctx: Context) {
         if (UserTypeService.isHost(ctx)) {
@@ -48,12 +48,28 @@ object SpotifyRepository {
 
     /**
      * If the user is the host, make an API call to Spotify. Otherwise, send the request to the
-     * host to execute. The management of loading state is left to the calling ViewModel.
+     * host to execute w/ their OAuth token. This method is called for the side-effect of loading
+     * a SearchResult into the SearchResultHandler.
+     * The management of loading state is left to the caller.
+     *
+     * @param query - If `isPaged` is true, `query` should be a human readable string to search
+     *                against the Spotify tracks database.
+     *                Else, `query` should be a valid URL for a previous/next page of a previous
+     *                query of the Spotify API.
+     * @param isHost - Whether or not the user is the host
+     * @param isPaged - Should be true when `query` is a URL, false when `query` is a human readable string.
+     *                  Dictates what type of operation is performed on `query`.
      */
-    suspend fun searchSongsForLocalResult(query: String, context: Context) {
-        if (UserTypeService.isHost(context)) {
+    suspend fun searchSongsForLocalResult(query: String, isHost: Boolean, isPaged: Boolean) {
+        if (isHost) {
             try {
-                val result = getSearchTrackResults(query) ?: throw Exception("Uninitialized api")
+                val result = if (isPaged) {
+                    getPagedSearchTrackResults(query)
+                } else {
+                    getSearchTrackResults(query)
+                } ?: throw Exception("Uninitialized api")
+
+                // put search results where UI can find them
                 SearchResultHandler.updateSearchResults(result)
                 SearchResultHandler.setStatus(Status.SUCCESS)
             } catch (err: Throwable) {
@@ -65,6 +81,18 @@ object SpotifyRepository {
             // results to SearchResultsHandler for us
             CommunicationService.sendQuery(query)
         }
+    }
+
+    /**
+     * Executes a GET request on the provided URL `reqUrl`.
+     * Intended to perform a search of Spotify tracks for a previous/following page of results.
+     *
+     * @param reqUrl - URL to perform the GET request on
+     * @return SearchResult - POJO built from Spotify API response. Null when `api` uninitialized.
+     * @throws java.net.UnknownHostException - when calling device has no network connection
+     */
+    suspend fun getPagedSearchTrackResults(reqUrl: String): SearchResult? {
+        return api?.endPoints?.getSearchResultPage(reqUrl)
     }
 
     /**
