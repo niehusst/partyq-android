@@ -81,7 +81,7 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             val pageNum = searchPage?.let { it.offset / it.limit }
 
             (holder as PageSearchViewHolder).bind(
-                pageNum ?: 1,
+                pageNum ?: 0,
                 searchPage?.next,
                 searchPage?.previous,
                 recyclerView
