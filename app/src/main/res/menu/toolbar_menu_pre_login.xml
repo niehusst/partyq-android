@@ -26,4 +26,9 @@
         android:id="@+id/legalFragment"
         android:title="@string/legal"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/supportFragment"
+        android:title="@string/support"
+        app:showAsAction="never"/>
 </menu>

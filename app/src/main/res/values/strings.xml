@@ -26,6 +26,7 @@
     <string name="legal">Legal</string>
     <string name="leave_party">Leave Party</string>
     <string name="party_code">Party Code</string>
+    <string name="support">Support</string>
 
     <!-- About -->
     <string name="about_title">About partyq</string>
@@ -64,6 +65,14 @@
     <string name="jetbrains_lic">Copyright 2016–2020 JetBrains s.r.o.\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
     <string name="mockk">&#8226; MockK</string>
     <string name="mockk_lic">Copyright 2017 github.com/mockk\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+
+    <!-- Support -->
+    <string name="support_title">Support</string>
+    <string name="support_content">If you\'re having any issues, we\'d love to hear from you! But before that, please check out our FAQs and Common and Known Issues pages to see if you can find an answer or explanation for your problem there (it will likely also be faster, too!).</string>
+    <string name="faq_link"><a href="https://github.com/niehusst/partyq/wiki/FAQs">FAQs</a></string>
+    <string name="common_issues_link"><a href="https://github.com/niehusst/partyq/wiki/Common-and-Known-Issues">Common and Known Issues</a></string>
+    <string name="still_having_trouble">Still having trouble?</string>
+    <string name="email_developer">Email a Developer</string>
 
     <!-- SpotifyLogin -->
     <string name="authenticate_with_spotify">Authenticate with Spotify</string>
