@@ -32,6 +32,7 @@ import com.niehusst.partyq.SpotifySharedInfo
 import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.ui.about.AboutFragment
 import com.niehusst.partyq.ui.legal.LegalFragment
+import com.niehusst.partyq.ui.support.SupportFragment
 import com.niehusst.partyq.ui.remediation.RemediationActivity
 import com.niehusst.partyq.ui.spotifyLogin.SpotifyLoginFragment
 import timber.log.Timber
@@ -69,6 +70,10 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.legalFragment -> {
                 LegalFragment.newInstance().show(supportFragmentManager, null)
+                true
+            }
+            R.id.supportFragment -> {
+                SupportFragment.newInstance().show(supportFragmentManager, null)
                 true
             }
             else -> {
