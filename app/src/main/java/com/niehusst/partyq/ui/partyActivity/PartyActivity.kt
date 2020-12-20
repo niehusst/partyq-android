@@ -46,6 +46,7 @@ import com.niehusst.partyq.services.CommunicationService.REQUEST_CODE_REQUIRED_P
 import com.niehusst.partyq.services.CommunicationService.REQUIRED_PERMISSIONS
 import com.niehusst.partyq.ui.about.AboutFragment
 import com.niehusst.partyq.ui.legal.LegalFragment
+import com.niehusst.partyq.ui.support.SupportFragment
 import timber.log.Timber
 
 class PartyActivity : AppCompatActivity() {
@@ -112,6 +113,10 @@ class PartyActivity : AppCompatActivity() {
             }
             R.id.legalFragment -> {
                 LegalFragment.newInstance().show(supportFragmentManager, null)
+                true
+            }
+            R.id.supportFragment -> {
+                SupportFragment.newInstance().show(supportFragmentManager, null)
                 true
             }
             else -> {

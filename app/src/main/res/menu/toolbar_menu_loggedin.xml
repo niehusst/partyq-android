@@ -29,6 +29,11 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/supportFragment"
+        android:title="@string/support"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/party_code_item"
         android:title="@string/party_code"
         app:showAsAction="never"/>
@@ -37,4 +42,5 @@
         android:id="@+id/leave_party_item"
         android:title="@string/leave_party"
         app:showAsAction="never"/>
+
 </menu>
