@@ -21,7 +21,6 @@ class SupportFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = SupportFragmentBinding.inflate(inflater)
-
         return binding.root
     }
 
@@ -40,7 +39,6 @@ class SupportFragment : BottomSheetDialogFragment() {
     private fun launchEmailIntent() {
         val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
             putExtra(Intent.EXTRA_EMAIL, arrayOf("partyqhelp@gmail.com"))
-            //type = "message/rfc822"
             data = Uri.parse("mailto:")
         }
 
