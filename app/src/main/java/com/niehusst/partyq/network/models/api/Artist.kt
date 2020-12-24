@@ -19,7 +19,7 @@ package com.niehusst.partyq.network.models.api
 import com.squareup.moshi.Json
 
 data class Artist(
-    @Json(name = "external_urls")
+    @field:Json(name = "external_urls")
     val externalUrls: ExternalUrls?,
     @Json(name = "href")
     val href: String,

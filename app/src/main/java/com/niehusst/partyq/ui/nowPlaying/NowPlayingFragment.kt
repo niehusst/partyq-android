@@ -17,6 +17,7 @@
 package com.niehusst.partyq.ui.nowPlaying
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,6 +52,7 @@ class NowPlayingFragment : Fragment() {
         binding.isHost = UserTypeService.isHost(requireContext())
         viewModel.currItem = QueueService.peekQueue()
         bindItem(viewModel.currItem)
+        binding.spotifyLink.movementMethod = LinkMovementMethod()
 
         QueueService.dataChangedTrigger.observe(viewLifecycleOwner, Observer {
             if (viewModel.isNewCurrItem()) {
