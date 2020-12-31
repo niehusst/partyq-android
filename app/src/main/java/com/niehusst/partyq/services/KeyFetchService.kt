@@ -25,7 +25,8 @@ class KeyFetchService {
             System.loadLibrary("keys")
         }
 
-        private external fun getSpotifyClientKey(): String
+        private external fun getSpotifyClientId(): String
+        private external fun getSpotifyClientSecret(): String
 
         /**
          * Fetch the Spotify client ID key from a location slightly more secure than
@@ -36,14 +37,19 @@ class KeyFetchService {
          * @return SPOTIFY_CLIENT_ID - secret key string for authenticating/connecting to
          *                          the Spotify app via AppRemote SDK
          */
-        fun getSpotifyKey(): String {
+        fun getSpotifyId(): String {
             // if running on circleci, load key from env var
             val envVar = System.getenv("SPOTIFY_CLIENT_ID")
             if (!envVar.isNullOrEmpty()) {
                 return envVar
             }
             // otherwise fetch from "secure location"
-            return String(Base64.decode(getSpotifyClientKey(), Base64.DEFAULT))
+            return String(Base64.decode(getSpotifyClientId(), Base64.DEFAULT))
+        }
+
+        fun getSpotifySecret(): String {
+            // TODO update getting started wiki to include new func
+            return String(Base64.decode(getSpotifySecret(), Base64.DEFAULT))
         }
     }
 }

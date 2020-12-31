@@ -26,19 +26,20 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse;
 object SpotifyAuthenticator {
 
     // set from the Spotify developer dashboard
-    private val CLIENT_ID = KeyFetchService.getSpotifyKey()
+    private val CLIENT_ID = KeyFetchService.getSpotifyId()
 
     /**
      * Send an implicit intent to a LoginActivity provided by the Spotify auth SDK so the user
      * can grant partyq permission to access their Spotify account.
-     * This function is run for the side-effect of getting an API auth token from Spotify.
+     * This function is run for the side-effect of getting an API auth code from Spotify, which
+     * is used to obtain an OAuth token and refresh token.
      *
      * @param handlerActivity - the Activity to handle the onActivityResult callback from LoginActivity
      */
     fun authenticateWithSpotfiy(handlerActivity: Activity) {
         val request = AuthenticationRequest.Builder(
             CLIENT_ID,
-            AuthenticationResponse.Type.TOKEN,
+            AuthenticationResponse.Type.CODE,
             REDIRECT_URI
         ) // set scope of privileges we want to access
             .setScopes(arrayOf("streaming", "playlist-read", "app-remote-control"))
