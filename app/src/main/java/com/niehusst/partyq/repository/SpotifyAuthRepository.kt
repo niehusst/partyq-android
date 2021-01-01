@@ -14,19 +14,40 @@
  * limitations under the License.
  */
 
-package com.niehusst.partyq.services
+package com.niehusst.partyq.repository
 
 import android.app.Activity
+import android.content.Context
 import com.niehusst.partyq.SpotifySharedInfo.REDIRECT_URI
 import com.niehusst.partyq.SpotifySharedInfo.REQUEST_CODE
-import com.spotify.sdk.android.authentication.AuthenticationClient;
-import com.spotify.sdk.android.authentication.AuthenticationRequest;
-import com.spotify.sdk.android.authentication.AuthenticationResponse;
+import com.niehusst.partyq.network.SpotifyAuthApi
+import com.niehusst.partyq.network.models.auth.RefreshResult
+import com.niehusst.partyq.network.models.auth.SwapResult
+import com.niehusst.partyq.services.KeyFetchService
+import com.niehusst.partyq.services.UserTypeService
+import com.spotify.sdk.android.authentication.AuthenticationClient
+import com.spotify.sdk.android.authentication.AuthenticationRequest
+import com.spotify.sdk.android.authentication.AuthenticationResponse
 
-object SpotifyAuthenticator {
+object SpotifyAuthRepository {
 
-    // set from the Spotify developer dashboard
-    private val CLIENT_ID = KeyFetchService.getSpotifyId()
+    private var api: SpotifyAuthApi? = null
+
+    /**
+     * This must be called to initialize the API endpoint access.
+     */
+    fun start(ctx: Context) {
+        if (UserTypeService.isHost(ctx)) {
+            api = SpotifyAuthApi(
+                KeyFetchService.getSpotifyId(),
+                KeyFetchService.getSpotifySecret()
+            )
+        }
+    }
+
+    fun stop() {
+        api = null
+    }
 
     /**
      * Send an implicit intent to a LoginActivity provided by the Spotify auth SDK so the user
@@ -38,7 +59,7 @@ object SpotifyAuthenticator {
      */
     fun authenticateWithSpotfiy(handlerActivity: Activity) {
         val request = AuthenticationRequest.Builder(
-            CLIENT_ID,
+            KeyFetchService.getSpotifyId(),
             AuthenticationResponse.Type.CODE,
             REDIRECT_URI
         ) // set scope of privileges we want to access
@@ -46,5 +67,14 @@ object SpotifyAuthenticator {
             .build()
 
         AuthenticationClient.openLoginActivity(handlerActivity, REQUEST_CODE, request)
+    }
+
+
+    suspend fun getAuthTokens(code: String): SwapResult? {
+        return api?.endPoints?.swapCodeForToken(code)
+    }
+
+    suspend fun refreshAuthToken(refreshToken: String): RefreshResult? {
+        return api?.endPoints?.refreshToken(refreshToken)
     }
 }

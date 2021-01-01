@@ -18,7 +18,7 @@ package com.niehusst.partyq.ui.spotifyLogin
 
 import android.app.Activity
 import androidx.lifecycle.*
-import com.niehusst.partyq.services.SpotifyAuthenticator
+import com.niehusst.partyq.repository.SpotifyAuthRepository
 
 class SpotifyLoginViewModel : ViewModel() {
 
@@ -30,7 +30,7 @@ class SpotifyLoginViewModel : ViewModel() {
      */
     fun connectToSpotify(handlerActivity: Activity) {
         _loading.value = true
-        SpotifyAuthenticator
+        SpotifyAuthRepository
             .authenticateWithSpotfiy(handlerActivity)
     }
 

@@ -28,7 +28,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.niehusst.partyq.R
-import com.niehusst.partyq.services.SpotifyAuthenticator
+import com.niehusst.partyq.repository.SpotifyAuthRepository
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
@@ -84,7 +84,7 @@ class PartyConnectFragmentTest {
     }
 
     private fun mockSpotify() {
-        mockkObject(SpotifyAuthenticator)
-        every { SpotifyAuthenticator.authenticateWithSpotfiy(any(), any(), any()) } returns Unit
+        mockkObject(SpotifyAuthRepository)
+        every { SpotifyAuthRepository.authenticateWithSpotfiy(any(), any(), any()) } returns Unit
     }
 }

@@ -1,12 +1,25 @@
 package com.niehusst.partyq.network
 
+import com.niehusst.partyq.network.models.auth.RefreshResult
+import com.niehusst.partyq.network.models.auth.SwapResult
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
 interface SpotifyAuthApiService {
 
+    @FormUrlEncoded
     @POST("/api/token")
-    fun swapCodeForToken() // TODO: data is url encoded rather than in body?
+    suspend fun swapCodeForToken(
+        @Field("code") code: String,
+        @Field("grant_type") grantType: String = "authorization_code",
+        @Field("redirect_uri") redirectUri: String = "com.niehusst.partyq://callback"
+    ): SwapResult
 
+    @FormUrlEncoded
     @POST("/api/token")
-    fun refreshToken()
+    suspend fun refreshToken(
+        @Field("refresh_token") refreshToken: String,
+        @Field("grant_type") grantType: String = "refresh_token"
+    ): RefreshResult
 }
