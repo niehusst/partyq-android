@@ -74,7 +74,7 @@ object SpotifyAuthRepository {
         return api?.endPoints?.swapCodeForToken(code)
     }
 
-    suspend fun refreshAuthToken(refreshToken: String): RefreshResult? {
+    suspend fun refreshAuthToken(refreshToken: String): RefreshResult? { // TODO : use
         return api?.endPoints?.refreshToken(refreshToken)
     }
 }

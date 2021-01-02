@@ -18,7 +18,12 @@ package com.niehusst.partyq.ui.spotifyLogin
 
 import android.app.Activity
 import androidx.lifecycle.*
+import com.niehusst.partyq.network.models.auth.SwapResult
 import com.niehusst.partyq.repository.SpotifyAuthRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 
 class SpotifyLoginViewModel : ViewModel() {
 
@@ -35,6 +40,12 @@ class SpotifyLoginViewModel : ViewModel() {
     }
 
     fun stopLoading() {
-        _loading.value = false
+        _loading.postValue(false)
+    }
+
+    fun swapCodeForTokenAsync(code: String): Deferred<SwapResult?> {
+        return viewModelScope.async(Dispatchers.IO) {
+            return@async SpotifyAuthRepository.getAuthTokens(code)
+        }
     }
 }

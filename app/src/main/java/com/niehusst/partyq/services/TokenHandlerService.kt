@@ -21,17 +21,27 @@ import android.content.SharedPreferences
 import com.niehusst.partyq.SharedPrefNames.ACCESS_TOKEN
 import com.niehusst.partyq.SharedPrefNames.EXPIRES_AT
 import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
+import com.niehusst.partyq.SharedPrefNames.REFRESH_TOKEN
 import java.util.concurrent.TimeUnit
 
 object TokenHandlerService {
 
     private var token: String? = null
+    private var refreshToken: String? = null
     private var expiresAt: Long = 0L
 
     private fun getSharedPreferences(appContext: Context): SharedPreferences {
         return appContext.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
     }
 
+    /**
+     * Fetch the Spotify OAuth token from local memory or from shared prefs if not currently
+     * in local `token` field.
+     *
+     * @param context - Android app context for loading data from shared prefs if necessary
+     * @throws Exception when no token is saved locally/in shared prefs or when token is expired
+     * @return token - The Spotify OAuth token string for authenticating Spotify API calls
+     */
     fun getToken(context: Context): String {
         if (token == null) {
             val sharedPref = getSharedPreferences(context.applicationContext)
@@ -47,24 +57,45 @@ object TokenHandlerService {
         return token!!
     }
 
-    fun setToken(context: Context, token: String, expiresIn: Int, unit: TimeUnit) {
+    fun setToken(
+        context: Context,
+        token: String,
+        refreshToken: String,
+        expiresIn: Int,
+        unit: TimeUnit
+    ) {
         val appContext = context.applicationContext
 
         val now = System.currentTimeMillis()
         expiresAt = now + unit.toMillis(expiresIn.toLong())
         this.token = token
+        this.refreshToken = refreshToken
 
         val sharedPref = getSharedPreferences(appContext)
-        val editor = sharedPref.edit()
-        editor.putString(ACCESS_TOKEN, token)
-        editor.putLong(EXPIRES_AT, expiresAt)
-        editor.apply()
+        sharedPref.edit().apply {
+            putString(ACCESS_TOKEN, token)
+            putLong(EXPIRES_AT, expiresAt)
+            putString(REFRESH_TOKEN, refreshToken)
+        }.apply()
+    }
+
+    fun tokenIsExpired(context: Context): Boolean {
+        if (expiresAt == 0L) {
+            val sharedPref = getSharedPreferences(context.applicationContext)
+            expiresAt = sharedPref.getLong(EXPIRES_AT, 0L)
+        }
+        return System.currentTimeMillis() > expiresAt
     }
 
     fun clearToken(context: Context) {
+        token = null
+        refreshToken = null
+        expiresAt = 0L
+
         val sharedPref = getSharedPreferences(context.applicationContext)
         sharedPref.edit()
             .remove(ACCESS_TOKEN)
+            .remove(REFRESH_TOKEN)
             .apply()
     }
 }

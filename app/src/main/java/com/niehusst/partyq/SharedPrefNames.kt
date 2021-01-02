@@ -21,6 +21,8 @@ object SharedPrefNames {
     const val PREFS_FILE_NAME = "com.niehusst.partyq.sharedprefs"
     // String - the Spotify API OAuth access token
     const val ACCESS_TOKEN = "access_token"
+    // String - the Spotify token that lets you refresh your OAuth ACCESS_TOKEN on expiration
+    const val REFRESH_TOKEN = "refresh_token"
     // Long - time in millis when the Spotify API OAuth access token expires
     const val EXPIRES_AT = "expires_at"
     // String - the 4 digit code for the last party the user joined
