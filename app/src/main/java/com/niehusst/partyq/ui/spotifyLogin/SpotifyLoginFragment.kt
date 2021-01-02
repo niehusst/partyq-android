@@ -30,6 +30,7 @@ import androidx.navigation.fragment.findNavController
 import com.niehusst.partyq.BundleNames
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SpotifyLoginFragmentBinding
+import com.niehusst.partyq.repository.SpotifyAuthRepository
 import com.niehusst.partyq.ui.remediation.RemediationActivity
 import com.niehusst.partyq.services.PartyCodeHandler
 import com.niehusst.partyq.services.TokenHandlerService
@@ -46,6 +47,7 @@ class SpotifyLoginFragment : Fragment() {
 
     private lateinit var binding: SpotifyLoginFragmentBinding
     private val viewModel by viewModels<SpotifyLoginViewModel>()
+    private var firstLoad = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,10 +62,37 @@ class SpotifyLoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setObservers()
+        setClickListeners()
+    }
+
+    private fun setObservers() {
         viewModel.loading.observe(viewLifecycleOwner, Observer {
             binding.loading = it
         })
-        setClickListeners()
+
+        viewModel.tokenResponse.observe(viewLifecycleOwner, Observer { swapResult ->
+            if (swapResult != null) {
+                // save the OAuth token
+                viewModel.saveTokens(swapResult, requireContext())
+
+                // create the party code and set self as host
+                viewModel.setSelfAsHost(requireContext())
+
+                launchPartyActivity()
+            } else {
+                if (!firstLoad) {
+                    // oops something went wrong swapping code for tokens
+                    viewModel.stopLoading()
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.auth_error,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                firstLoad = false
+            }
+        })
     }
 
     private fun setClickListeners() {
@@ -84,105 +113,83 @@ class SpotifyLoginFragment : Fragment() {
      */
     fun onAuthResult(resultCode: Int, intent: Intent?) {
         val response = AuthenticationClient.getResponse(resultCode, intent)
-        // async handle result
-        CoroutineScope(Dispatchers.IO).launch {
-            when (response.type) {
-                //AuthenticationResponse.Type.TOKEN,
-                AuthenticationResponse.Type.CODE -> {
-                    /*
-                    given CODE, to get a TOKEN (and refresh token), we must make a req to "apibaseurl/v1/swap"
-                    passing the CODE we have as url encoded data:
-                    curl -X POST "https://accounts.spotify.com/api/token"
-                        -H "Authorization: Basic b64(client_id:client_secret)"
-                        -d "grant_type=authorization_code"
-                        -d "redirect_uri=com.niehusst.partyq://callback"
-                        -d "code=code from resp"
+        SpotifyAuthRepository.start()
 
-                    From this we get the data we really want and save that into tokenhandler
-                    {
-                     "access_token" : "NgAagA...Um_SHo",
-                     "expires_in" : "3600",
-                     "refresh_token" : "NgCXRK...MzYjw"
-                    }
+        when (response.type) {
+            //AuthenticationResponse.Type.TOKEN,
+            AuthenticationResponse.Type.CODE -> {
+                /*
+                given CODE, to get a TOKEN (and refresh token), we must make a req to "apibaseurl/v1/swap"
+                passing the CODE we have as url encoded data:
+                curl -X POST "https://accounts.spotify.com/api/token"
+                    -H "Authorization: Basic b64(client_id:client_secret)"
+                    -d "grant_type=authorization_code"
+                    -d "redirect_uri=com.niehusst.partyq://callback"
+                    -d "code=code from resp"
 
-                    plan:
-                    get req CODE here
-                    // build out SpotifyAuthenticator into full repository with Retrofit component
-                    make request to swap api endpoint (using viewmodel -> repository)
-                    async await type thing?
-                    set response data into token handler
-                    continue as prev
-
-                    (if a search req fails due to 401, we have to trigger a refresh call from
-                    SpotifyAuthRepository, and then once that's complete (filling new data into TokenHandler)
-                    retry the failed search request)
-
-                    refresh with
-                    curl -X POST "https://accounts.spotify.com/api/token"
-                        -H "Authorization: Basic b64(client_id:client_secret)"
-                        -d "grant_type=refresh_token"
-                        -d "refresh_token=the refresh token from before. Doesnt expire??"
-                     */
-                    // on success
-                    // use Authorization code to obtain OAuth token and refresh token
-                    val swapResult = viewModel.swapCodeForTokenAsync(response.code).await()
-
-                    if (swapResult != null) {
-                        // save the OAuth token
-                        TokenHandlerService.setToken(
-                            requireContext(),
-                            swapResult.accessToken,
-                            swapResult.refreshToken,
-                            swapResult.secondsUntilExpiration,
-                            TimeUnit.SECONDS
-                        )
-                        // create the party code and set self as host
-                        PartyCodeHandler.createPartyCode(requireContext())
-                        UserTypeService.setSelfAsHost(
-                            requireContext(),
-                            PartyCodeHandler.getPartyCode(requireContext())!!
-                        )
-
-                        findNavController().navigate(R.id.partyActivity)
-
-                        // finally, end the MainActivity so user can't go back to pre-login
-                        activity?.finish()
-                    } else {
-                        // oops something went wrong swapping code for tokens
-                        viewModel.stopLoading()
-                        Toast.makeText(
-                            requireContext(),
-                            "oop swap result was null", // TODO: change to something official
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
+                From this we get the data we really want and save that into tokenhandler
+                {
+                 "access_token" : "NgAagA...Um_SHo",
+                 "expires_in" : "3600",
+                 "refresh_token" : "NgCXRK...MzYjw"
                 }
-                AuthenticationResponse.Type.ERROR -> {
-                    // on failure
-                    Timber.e("Auth error: ${response.error}")
-                    viewModel.stopLoading()
-                    if (response.error == "NO_INTERNET_CONNECTION") {
-                        Toast.makeText(
-                            requireContext(),
-                            R.string.no_wifi_msg,
-                            Toast.LENGTH_LONG
-                        ).show()
-                    } else {
-                        launchRemediationActivity()
-                    }
-                }
-                else -> {
-                    Timber.e("Auth for type ${response.type} error: ${response.error}")
-                    // auth flow was likely cancelled before completion
-                    viewModel.stopLoading()
+
+                plan:
+                get req CODE here
+                // build out SpotifyAuthenticator into full repository with Retrofit component
+                make request to swap api endpoint (using viewmodel -> repository)
+                async await type thing?
+                set response data into token handler
+                continue as prev
+
+                (if a search req fails due to 401, we have to trigger a refresh call from
+                SpotifyAuthRepository, and then once that's complete (filling new data into TokenHandler)
+                retry the failed search request)
+
+                refresh with
+                curl -X POST "https://accounts.spotify.com/api/token"
+                    -H "Authorization: Basic b64(client_id:client_secret)"
+                    -d "grant_type=refresh_token"
+                    -d "refresh_token=the refresh token from before. Doesnt expire??"
+                 */
+                // on success
+                // use Authorization code to obtain OAuth token and refresh token
+                viewModel.swapCodeForTokenAsync(response.code)
+
+                // result handled from observing `tokenResponse` live data
+
+            }
+            AuthenticationResponse.Type.ERROR -> {
+                // on failure
+                Timber.e("Auth error: ${response.error}")
+                viewModel.stopLoading()
+                if (response.error == "NO_INTERNET_CONNECTION") {
                     Toast.makeText(
                         requireContext(),
-                        R.string.auth_cancelled,
+                        R.string.no_wifi_msg,
                         Toast.LENGTH_LONG
                     ).show()
+                } else {
+                    launchRemediationActivity()
                 }
             }
+            else -> {
+                Timber.e("Auth for type ${response.type} error: ${response.error}")
+                // auth flow was likely cancelled before completion
+                viewModel.stopLoading()
+                Toast.makeText(
+                    requireContext(),
+                    R.string.auth_cancelled,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
+    }
+
+    private fun launchPartyActivity() {
+        findNavController().navigate(R.id.partyActivity)
+        // end the MainActivity so user can't go back to pre-login
+        activity?.finish()
     }
 
     private fun launchRemediationActivity() {
@@ -192,5 +199,6 @@ class SpotifyLoginFragment : Fragment() {
             context?.resources?.getString(R.string.generic_error_msg)
         )
         startActivity(intent)
+        activity?.finish()
     }
 }

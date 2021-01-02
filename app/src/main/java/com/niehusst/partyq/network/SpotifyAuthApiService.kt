@@ -1,5 +1,6 @@
 package com.niehusst.partyq.network
 
+import com.niehusst.partyq.SpotifySharedInfo
 import com.niehusst.partyq.network.models.auth.RefreshResult
 import com.niehusst.partyq.network.models.auth.SwapResult
 import retrofit2.http.Field
@@ -13,7 +14,7 @@ interface SpotifyAuthApiService {
     suspend fun swapCodeForToken(
         @Field("code") code: String,
         @Field("grant_type") grantType: String = "authorization_code",
-        @Field("redirect_uri") redirectUri: String = "com.niehusst.partyq://callback"
+        @Field("redirect_uri") redirectUri: String = SpotifySharedInfo.REDIRECT_URI
     ): SwapResult
 
     @FormUrlEncoded

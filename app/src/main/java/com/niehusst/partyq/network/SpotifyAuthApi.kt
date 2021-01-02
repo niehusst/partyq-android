@@ -26,9 +26,15 @@ class SpotifyAuthApi(
         val httpClient = OkHttpClient.Builder()
         httpClient.addInterceptor { chain ->
             val ogRequest = chain.request()
-            // add the OAuth token to all out-going API calls
+
+            val headerKey = Base64.encodeToString(
+                "$clientId:$clientSecret".toByteArray(),
+                Base64.DEFAULT
+            ).replace("\n", "") // remove mysterious \n chars that cause errors
+
+            // add the clientId:clientSecret auth string to all out-going API calls
             val reqBuilder = ogRequest.newBuilder()
-                .header("Authorization", "Basic ${Base64.encodeToString("$clientId:$clientSecret".toByteArray(), Base64.DEFAULT)}")
+                .header("Authorization", "Basic $headerKey")
             chain.proceed(reqBuilder.build())
         }
 

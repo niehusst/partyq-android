@@ -35,14 +35,13 @@ object SpotifyAuthRepository {
 
     /**
      * This must be called to initialize the API endpoint access.
+     * This is only called when a user is preparing to authenticate with Spotify and become a host.
      */
-    fun start(ctx: Context) {
-        if (UserTypeService.isHost(ctx)) {
-            api = SpotifyAuthApi(
-                KeyFetchService.getSpotifyId(),
-                KeyFetchService.getSpotifySecret()
-            )
-        }
+    fun start() {
+        api = SpotifyAuthApi(
+            KeyFetchService.getSpotifyId(),
+            KeyFetchService.getSpotifySecret()
+        )
     }
 
     fun stop() {
