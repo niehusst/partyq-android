@@ -42,17 +42,17 @@ object TokenHandlerService {
      * @throws Exception when no token is saved locally/in shared prefs or when token is expired
      * @return token - The Spotify OAuth token string for authenticating Spotify API calls
      */
-    fun getAuthToken(context: Context): String {
-        if (token == null) {
-            val sharedPref = getSharedPreferences(context.applicationContext)
-
-            token = sharedPref.getString(ACCESS_TOKEN, null)
-            expiresAt = sharedPref.getLong(EXPIRES_AT, 0L)
-
-            if (token == null || expiresAt < System.currentTimeMillis()) {
-                throw Exception("Token is expired or doesn't exist")
-            }
-        }
+    fun getAuthToken(/*context: Context*/): String {
+//        if (token == null) {
+//            val sharedPref = getSharedPreferences(context.applicationContext)
+//
+//            token = sharedPref.getString(ACCESS_TOKEN, null)
+//            expiresAt = sharedPref.getLong(EXPIRES_AT, 0L)
+//
+//            if (token == null || expiresAt < System.currentTimeMillis()) {
+//                throw Exception("Token is expired or doesn't exist")
+//            }
+//        }
 
         return token!!
     }

@@ -37,9 +37,9 @@ object SpotifyRepository {
      * Precondition:
      *      requires OAuth token is set in TokenHandlerService before this method is called.
      */
-    fun start(ctx: Context) {
-        if (UserTypeService.isHost(ctx)) {
-            api = SpotifyApi(TokenHandlerService.getAuthToken(ctx))
+    fun start(isHost: Boolean /*ctx: Context*/) {
+        if (isHost) {
+            api = SpotifyApi(TokenHandlerService.getAuthToken())
         }
     }
 
@@ -100,6 +100,8 @@ object SpotifyRepository {
         return if (result?.error?.status == 401 && TokenHandlerService.tokenIsExpired()) {
             Timber.e("BIGGYCHEESE getting refresh token")
             if (attemptTokenRefresh()) {
+                // restart api repo
+                start(true)
                 // try again now that token has been refreshed
                 getPagedSearchTrackResults(reqUrl)
             } else {
@@ -108,7 +110,7 @@ object SpotifyRepository {
             }
         } else {
             Timber.e("BIGGYCHEESE was not exp")
-            return result
+            result
         }
     }
 
@@ -127,6 +129,8 @@ object SpotifyRepository {
         return if (result?.error?.status == 401 && TokenHandlerService.tokenIsExpired()) {
             Timber.e("BIGGYCHEESE getting refresh token")
             if (attemptTokenRefresh()) {
+                // restart api repo
+                start(true)
                 // try again now that token has been refreshed
                 getSearchTrackResults(query)
             } else {
@@ -135,7 +139,7 @@ object SpotifyRepository {
             }
         } else {
             Timber.e("BIGGYCHEESE was not exp")
-            return result
+            result
         }
     }
 

@@ -37,7 +37,7 @@ class PartyActivityViewModel : ViewModel() {
     }
 
     fun startSpotifyPlayerService(context: Context) {
-        SpotifyRepository.start(context)
+        SpotifyRepository.start(UserTypeService.isHost(context))
         SpotifyPlayerService.start(context, KeyFetchService.getSpotifyId())
     }
 
