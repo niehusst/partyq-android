@@ -25,6 +25,7 @@ import com.niehusst.partyq.services.SearchResultHandler
 import com.niehusst.partyq.services.TokenHandlerService
 import com.niehusst.partyq.services.UserTypeService
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 object SpotifyRepository {
 
@@ -38,7 +39,7 @@ object SpotifyRepository {
      */
     fun start(ctx: Context) {
         if (UserTypeService.isHost(ctx)) {
-            api = SpotifyApi(TokenHandlerService.getToken(ctx))
+            api = SpotifyApi(TokenHandlerService.getAuthToken(ctx))
         }
     }
 
@@ -92,7 +93,23 @@ object SpotifyRepository {
      * @throws java.net.UnknownHostException - when calling device has no network connection
      */
     suspend fun getPagedSearchTrackResults(reqUrl: String): SearchResult? {
-        return api?.endPoints?.getSearchResultPage(reqUrl)
+        val result = api?.endPoints?.getSearchResultPage(reqUrl)
+
+        Timber.e("BIGGYCHEESE checking token exp")
+        // see if failure due to expired token
+        return if (result?.error?.status == 401 && TokenHandlerService.tokenIsExpired()) {
+            Timber.e("BIGGYCHEESE getting refresh token")
+            if (attemptTokenRefresh()) {
+                // try again now that token has been refreshed
+                getPagedSearchTrackResults(reqUrl)
+            } else {
+                // couldn't refresh token to fix error
+                null
+            }
+        } else {
+            Timber.e("BIGGYCHEESE was not exp")
+            return result
+        }
     }
 
     /**
@@ -103,6 +120,43 @@ object SpotifyRepository {
      * @throws java.net.UnknownHostException - when calling device has no network connection
      */
     suspend fun getSearchTrackResults(query: String): SearchResult? {
-        return api?.endPoints?.searchTracks(query, "track")
+        val result = api?.endPoints?.searchTracks(query, "track")
+        // TODO: pass some bool to indicate whether this is a reattempt? if fail on reattempt dont try again to avoid inf recursion?
+        Timber.e("BIGGYCHEESE checking token exp")
+        // see if failure due to expired token
+        return if (result?.error?.status == 401 && TokenHandlerService.tokenIsExpired()) {
+            Timber.e("BIGGYCHEESE getting refresh token")
+            if (attemptTokenRefresh()) {
+                // try again now that token has been refreshed
+                getSearchTrackResults(query)
+            } else {
+                // couldn't refresh token to fix error
+                null
+            }
+        } else {
+            Timber.e("BIGGYCHEESE was not exp")
+            return result
+        }
+    }
+
+    private suspend fun attemptTokenRefresh(): Boolean {
+        val refreshed = SpotifyAuthRepository.refreshAuthToken(
+            TokenHandlerService.getRefreshToken()
+        )
+
+        return if (refreshed != null) {
+            TokenHandlerService.resetAuthToken(
+                refreshed.accessToken,
+                refreshed.secondsUntilExpiration,
+                TimeUnit.SECONDS
+            )
+            Timber.e("BIGGYCHEESE refresh succ now trying again")
+            // token was refreshed
+            true
+        } else {
+            Timber.e("BIGGYCHEESE refresh hecked up")
+            // refresh didn't work
+            false
+        }
     }
 }

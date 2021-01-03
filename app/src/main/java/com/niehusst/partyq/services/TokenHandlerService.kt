@@ -42,7 +42,7 @@ object TokenHandlerService {
      * @throws Exception when no token is saved locally/in shared prefs or when token is expired
      * @return token - The Spotify OAuth token string for authenticating Spotify API calls
      */
-    fun getToken(context: Context): String {
+    fun getAuthToken(context: Context): String {
         if (token == null) {
             val sharedPref = getSharedPreferences(context.applicationContext)
 
@@ -57,7 +57,16 @@ object TokenHandlerService {
         return token!!
     }
 
-    fun setToken(
+    fun getRefreshToken(): String? {
+//        if (refreshToken == null) {
+//            val sharedPref = getSharedPreferences(context.applicationContext)
+//            refreshToken = sharedPref.getString(REFRESH_TOKEN, null)
+//        }
+
+        return refreshToken
+    }
+
+    fun setTokens(
         context: Context,
         token: String,
         refreshToken: String,
@@ -79,11 +88,30 @@ object TokenHandlerService {
         }.apply()
     }
 
-    fun tokenIsExpired(context: Context): Boolean {
-        if (expiresAt == 0L) {
-            val sharedPref = getSharedPreferences(context.applicationContext)
-            expiresAt = sharedPref.getLong(EXPIRES_AT, 0L)
-        }
+    fun resetAuthToken(
+//        context: Context,
+        token: String,
+        expiresIn: Int,
+        unit: TimeUnit
+    ) {
+//        val appContext = context.applicationContext
+
+        val now = System.currentTimeMillis()
+        expiresAt = now + unit.toMillis(expiresIn.toLong())
+        this.token = token
+//
+//        val sharedPref = getSharedPreferences(appContext)
+//        sharedPref.edit().apply {
+//            putString(ACCESS_TOKEN, token)
+//            putLong(EXPIRES_AT, expiresAt)
+//        }.apply()
+    }
+
+    fun tokenIsExpired(): Boolean { // TODO: what if user isnt host and no token was ever saved?? do we still want to return true?
+//        if (expiresAt == 0L) {
+//            val sharedPref = getSharedPreferences(context.applicationContext)
+//            expiresAt = sharedPref.getLong(EXPIRES_AT, 0L)
+//        }
         return System.currentTimeMillis() > expiresAt
     }
 

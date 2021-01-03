@@ -20,5 +20,7 @@ import com.squareup.moshi.Json
 
 data class SearchResult(
     @Json(name = "tracks")
-    val tracks: Tracks
+    val tracks: Tracks,
+    @Json(name = "error")
+    val error: SpotifyError?
 )

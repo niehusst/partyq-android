@@ -68,12 +68,15 @@ object SpotifyAuthRepository {
         AuthenticationClient.openLoginActivity(handlerActivity, REQUEST_CODE, request)
     }
 
+    /* API methods */
 
     suspend fun getAuthTokens(code: String): SwapResult? {
         return api?.endPoints?.swapCodeForToken(code)
     }
 
-    suspend fun refreshAuthToken(refreshToken: String): RefreshResult? { // TODO : use
-        return api?.endPoints?.refreshToken(refreshToken)
+    suspend fun refreshAuthToken(refreshToken: String?): RefreshResult? {
+        return refreshToken?.let {
+            api?.endPoints?.refreshToken(refreshToken)
+        }
     }
 }
