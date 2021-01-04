@@ -33,7 +33,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SearchAdapter(
+    private val viewModel: SearchFragmentViewModel
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var recyclerView: RecyclerView? = null
     var searchPage: Tracks? = null
@@ -152,9 +154,7 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         private fun performSearch(url: String) {
             // TODO somehow tie to viewLifeCycle? viewmodel? custom coroutine scope?
-            GlobalScope.launch(Dispatchers.IO) {
-                SpotifyRepository.searchSongsForLocalResult(url, isHost, isPaged = true)
-            }
+            viewModel.pagedSearch(url, isHost)
         }
     }
 

@@ -36,7 +36,7 @@ class SearchFragment : Fragment() {
 
     private lateinit var binding: SearchFragmentBinding
     private val viewModel by viewModels<SearchFragmentViewModel>()
-    private val adapter = SearchAdapter()
+    private lateinit var adapter: SearchAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +51,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapter = SearchAdapter(viewModel)
         binding.searchResults.adapter = adapter
         setObservers()
         setSearchListener()
