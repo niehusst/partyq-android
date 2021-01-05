@@ -19,7 +19,7 @@ interface SpotifyAuthApiService {
 
     @FormUrlEncoded
     @POST("/api/token")
-    suspend fun refreshToken(
+    suspend fun refreshAuthToken(
         @Field("refresh_token") refreshToken: String,
         @Field("grant_type") grantType: String = "refresh_token"
     ): RefreshResult

@@ -16,12 +16,6 @@
 
 package com.niehusst.partyq.services
 
-import android.content.Context
-import android.content.SharedPreferences
-import com.niehusst.partyq.SharedPrefNames.ACCESS_TOKEN
-import com.niehusst.partyq.SharedPrefNames.EXPIRES_AT
-import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
-import com.niehusst.partyq.SharedPrefNames.REFRESH_TOKEN
 import java.util.concurrent.TimeUnit
 
 object TokenHandlerService {
@@ -30,100 +24,52 @@ object TokenHandlerService {
     private var refreshToken: String? = null
     private var expiresAt: Long = 0L
 
-    private fun getSharedPreferences(appContext: Context): SharedPreferences {
-        return appContext.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
-    }
-
     /**
-     * Fetch the Spotify OAuth token from local memory or from shared prefs if not currently
-     * in local `token` field.
+     * Get the Spotify OAuth token or throw an Exception if it's invalid.
      *
-     * @param context - Android app context for loading data from shared prefs if necessary
-     * @throws Exception when no token is saved locally/in shared prefs or when token is expired
+     * @throws Exception when no token is saved locally or when token is expired
      * @return token - The Spotify OAuth token string for authenticating Spotify API calls
      */
-    fun getAuthToken(/*context: Context*/): String {
-//        if (token == null) {
-//            val sharedPref = getSharedPreferences(context.applicationContext)
-//
-//            token = sharedPref.getString(ACCESS_TOKEN, null)
-//            expiresAt = sharedPref.getLong(EXPIRES_AT, 0L)
-//
-//            if (token == null || expiresAt < System.currentTimeMillis()) {
-//                throw Exception("Token is expired or doesn't exist")
-//            }
-//        }
-
+    fun getAuthToken(): String {
+        if (token == null || expiresAt < System.currentTimeMillis()) {
+            throw Exception("Token is expired or doesn't exist")
+        }
         return token!!
     }
 
     fun getRefreshToken(): String? {
-//        if (refreshToken == null) {
-//            val sharedPref = getSharedPreferences(context.applicationContext)
-//            refreshToken = sharedPref.getString(REFRESH_TOKEN, null)
-//        }
-
         return refreshToken
     }
 
     fun setTokens(
-        context: Context,
         token: String,
         refreshToken: String,
         expiresIn: Int,
         unit: TimeUnit
     ) {
-        val appContext = context.applicationContext
-
         val now = System.currentTimeMillis()
         expiresAt = now + unit.toMillis(expiresIn.toLong())
         this.token = token
         this.refreshToken = refreshToken
-
-        val sharedPref = getSharedPreferences(appContext)
-        sharedPref.edit().apply {
-            putString(ACCESS_TOKEN, token)
-            putLong(EXPIRES_AT, expiresAt)
-            putString(REFRESH_TOKEN, refreshToken)
-        }.apply()
     }
 
     fun resetAuthToken(
-//        context: Context,
         token: String,
         expiresIn: Int,
         unit: TimeUnit
     ) {
-//        val appContext = context.applicationContext
-
         val now = System.currentTimeMillis()
         expiresAt = now + unit.toMillis(expiresIn.toLong())
         this.token = token
-//
-//        val sharedPref = getSharedPreferences(appContext)
-//        sharedPref.edit().apply {
-//            putString(ACCESS_TOKEN, token)
-//            putLong(EXPIRES_AT, expiresAt)
-//        }.apply()
     }
 
-    fun tokenIsExpired(): Boolean { // TODO: what if user isnt host and no token was ever saved?? do we still want to return true?
-//        if (expiresAt == 0L) {
-//            val sharedPref = getSharedPreferences(context.applicationContext)
-//            expiresAt = sharedPref.getLong(EXPIRES_AT, 0L)
-//        }
+    fun tokenIsExpired(): Boolean {
         return System.currentTimeMillis() > expiresAt
     }
 
-    fun clearToken(context: Context) {
+    fun clearToken() {
         token = null
         refreshToken = null
         expiresAt = 0L
-
-        val sharedPref = getSharedPreferences(context.applicationContext)
-        sharedPref.edit()
-            .remove(ACCESS_TOKEN)
-            .remove(REFRESH_TOKEN)
-            .apply()
     }
 }

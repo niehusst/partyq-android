@@ -17,14 +17,12 @@
 package com.niehusst.partyq.repository
 
 import android.app.Activity
-import android.content.Context
 import com.niehusst.partyq.SpotifySharedInfo.REDIRECT_URI
 import com.niehusst.partyq.SpotifySharedInfo.REQUEST_CODE
 import com.niehusst.partyq.network.SpotifyAuthApi
 import com.niehusst.partyq.network.models.auth.RefreshResult
 import com.niehusst.partyq.network.models.auth.SwapResult
 import com.niehusst.partyq.services.KeyFetchService
-import com.niehusst.partyq.services.UserTypeService
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
 import com.spotify.sdk.android.authentication.AuthenticationResponse
@@ -76,7 +74,7 @@ object SpotifyAuthRepository {
 
     suspend fun refreshAuthToken(refreshToken: String?): RefreshResult? {
         return refreshToken?.let {
-            api?.endPoints?.refreshToken(refreshToken)
+            api?.endPoints?.refreshAuthToken(refreshToken)
         }
     }
 }

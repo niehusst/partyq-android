@@ -26,12 +26,8 @@ import com.niehusst.partyq.databinding.SearchPageItemBinding
 import com.niehusst.partyq.databinding.SearchResultItemBinding
 import com.niehusst.partyq.network.models.api.Item
 import com.niehusst.partyq.network.models.api.Tracks
-import com.niehusst.partyq.repository.SpotifyRepository
 import com.niehusst.partyq.services.QueueService
 import com.niehusst.partyq.services.UserTypeService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class SearchAdapter(
     private val viewModel: SearchFragmentViewModel

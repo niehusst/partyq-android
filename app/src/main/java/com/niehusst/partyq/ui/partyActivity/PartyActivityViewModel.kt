@@ -48,7 +48,7 @@ class PartyActivityViewModel : ViewModel() {
         SearchResultHandler.clearSearch()
         QueueService.clearQueue()
         UserTypeService.clearHostData(context)
-        TokenHandlerService.clearToken(context)
+        TokenHandlerService.clearToken()
         SpotifyRepository.stop()
         SpotifyAuthRepository.stop()
     }

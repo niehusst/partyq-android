@@ -53,9 +53,8 @@ class SpotifyLoginViewModel : ViewModel() {
         }
     }
 
-    fun saveTokens(tokens: SwapResult, context: Context) {
+    fun saveTokens(tokens: SwapResult) {
         TokenHandlerService.setTokens(
-            context,
             tokens.accessToken,
             tokens.refreshToken,
             tokens.secondsUntilExpiration,

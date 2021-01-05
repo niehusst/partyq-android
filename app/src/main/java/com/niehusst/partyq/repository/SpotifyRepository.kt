@@ -35,7 +35,7 @@ object SpotifyRepository {
      * Precondition:
      *      requires OAuth token is set in TokenHandlerService before this method is called.
      */
-    fun start(isHost: Boolean /*ctx: Context*/) {
+    fun start(isHost: Boolean) {
         if (isHost) {
             api = SpotifyApi(TokenHandlerService.getAuthToken())
         }
