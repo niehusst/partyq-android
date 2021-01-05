@@ -16,14 +16,12 @@
 
 package com.niehusst.partyq.repository
 
-import android.content.Context
 import com.niehusst.partyq.network.SpotifyApi
 import com.niehusst.partyq.network.Status
 import com.niehusst.partyq.network.models.api.SearchResult
 import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.services.SearchResultHandler
 import com.niehusst.partyq.services.TokenHandlerService
-import com.niehusst.partyq.services.UserTypeService
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -93,25 +91,8 @@ object SpotifyRepository {
      * @throws java.net.UnknownHostException - when calling device has no network connection
      */
     suspend fun getPagedSearchTrackResults(reqUrl: String): SearchResult? {
-        val result = api?.endPoints?.getSearchResultPage(reqUrl)
-
-        Timber.e("BIGGYCHEESE checking token exp")
-        // see if failure due to expired token
-        return if (result?.error?.status == 401 && TokenHandlerService.tokenIsExpired()) {
-            Timber.e("BIGGYCHEESE getting refresh token")
-            if (attemptTokenRefresh()) {
-                // restart api repo
-                start(true)
-                // try again now that token has been refreshed
-                getPagedSearchTrackResults(reqUrl)
-            } else {
-                // couldn't refresh token to fix error
-                null
-            }
-        } else {
-            Timber.e("BIGGYCHEESE was not exp")
-            result
-        }
+        ensureTokenValidity()
+        return api?.endPoints?.getSearchResultPage(reqUrl)
     }
 
     /**
@@ -122,45 +103,35 @@ object SpotifyRepository {
      * @throws java.net.UnknownHostException - when calling device has no network connection
      */
     suspend fun getSearchTrackResults(query: String): SearchResult? {
-        val result = api?.endPoints?.searchTracks(query, "track")
-        // TODO: pass some bool to indicate whether this is a reattempt? if fail on reattempt dont try again to avoid inf recursion?
-        Timber.e("BIGGYCHEESE checking token exp")
-        // see if failure due to expired token
-        return if (result?.error?.status == 401 && TokenHandlerService.tokenIsExpired()) {
-            Timber.e("BIGGYCHEESE getting refresh token")
-            if (attemptTokenRefresh()) {
-                // restart api repo
-                start(true)
-                // try again now that token has been refreshed
-                getSearchTrackResults(query)
-            } else {
-                // couldn't refresh token to fix error
-                null
-            }
-        } else {
-            Timber.e("BIGGYCHEESE was not exp")
-            result
-        }
+        ensureTokenValidity()
+        return api?.endPoints?.searchTracks(query, "track")
     }
 
-    private suspend fun attemptTokenRefresh(): Boolean {
-        val refreshed = SpotifyAuthRepository.refreshAuthToken(
-            TokenHandlerService.getRefreshToken()
-        )
-
-        return if (refreshed != null) {
-            TokenHandlerService.resetAuthToken(
-                refreshed.accessToken,
-                refreshed.secondsUntilExpiration,
-                TimeUnit.SECONDS
+    /**
+     * Make a call to the Spotify auth API to get a new OAuth token for the Spotify API if the
+     * previous token was expired.
+     * This function is run for the side-effect of getting and saving a refreshed OAuth token into
+     * `TokenHandlerService` when the previous token was expired to avoid 401 errors.
+     */
+    private suspend fun ensureTokenValidity() {
+        if (TokenHandlerService.tokenIsExpired()) {
+            val refreshed = SpotifyAuthRepository.refreshAuthToken(
+                TokenHandlerService.getRefreshToken()
             )
-            Timber.e("BIGGYCHEESE refresh succ now trying again")
-            // token was refreshed
-            true
-        } else {
-            Timber.e("BIGGYCHEESE refresh hecked up")
-            // refresh didn't work
-            false
-        }
+
+            if (refreshed != null) {
+                // save refreshed OAuth token
+                TokenHandlerService.resetAuthToken(
+                    refreshed.accessToken,
+                    refreshed.secondsUntilExpiration,
+                    TimeUnit.SECONDS
+                )
+
+                // restart api repo with new refreshed token
+                start(true)
+            } else {
+                Timber.e("Token refresh failed")
+            }
+        } // else no-op; token was not yet expired
     }
 }
