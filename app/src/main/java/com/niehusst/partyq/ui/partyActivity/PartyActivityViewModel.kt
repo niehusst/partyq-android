@@ -18,6 +18,7 @@ package com.niehusst.partyq.ui.partyActivity
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import com.niehusst.partyq.repository.SpotifyAuthRepository
 import com.niehusst.partyq.repository.SpotifyRepository
 import com.niehusst.partyq.services.*
 import timber.log.Timber
@@ -36,8 +37,8 @@ class PartyActivityViewModel : ViewModel() {
     }
 
     fun startSpotifyPlayerService(context: Context) {
-        SpotifyRepository.start(context)
-        SpotifyPlayerService.start(context, KeyFetchService.getSpotifyKey())
+        SpotifyRepository.start(UserTypeService.isHost(context))
+        SpotifyPlayerService.start(context, KeyFetchService.getSpotifyId())
     }
 
     fun resetAllServices(context: Context) {
@@ -47,7 +48,8 @@ class PartyActivityViewModel : ViewModel() {
         SearchResultHandler.clearSearch()
         QueueService.clearQueue()
         UserTypeService.clearHostData(context)
-        TokenHandlerService.clearToken(context)
+        TokenHandlerService.clearToken()
         SpotifyRepository.stop()
+        SpotifyAuthRepository.stop()
     }
 }

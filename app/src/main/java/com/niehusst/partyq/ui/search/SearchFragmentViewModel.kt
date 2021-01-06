@@ -35,4 +35,11 @@ class SearchFragmentViewModel : ViewModel() {
             SpotifyRepository.searchSongsForLocalResult(query, isHost, isPaged = false)
         }
     }
+
+    fun pagedSearch(url: String, isHost: Boolean) {
+        SearchResultHandler.setStatus(Status.LOADING)
+        viewModelScope.launch(Dispatchers.IO) {
+            SpotifyRepository.searchSongsForLocalResult(url, isHost, isPaged = true)
+        }
+    }
 }

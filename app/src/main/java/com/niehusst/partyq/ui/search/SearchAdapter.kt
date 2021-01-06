@@ -26,14 +26,12 @@ import com.niehusst.partyq.databinding.SearchPageItemBinding
 import com.niehusst.partyq.databinding.SearchResultItemBinding
 import com.niehusst.partyq.network.models.api.Item
 import com.niehusst.partyq.network.models.api.Tracks
-import com.niehusst.partyq.repository.SpotifyRepository
 import com.niehusst.partyq.services.QueueService
 import com.niehusst.partyq.services.UserTypeService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
-class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SearchAdapter(
+    private val viewModel: SearchFragmentViewModel
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var recyclerView: RecyclerView? = null
     var searchPage: Tracks? = null
@@ -135,7 +133,7 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
             binding.nextPage.setOnClickListener {
                 nextPageUrl?.run {
-                    performSearch(nextPageUrl)
+                    viewModel.pagedSearch(nextPageUrl, isHost)
                 }
                 // scroll to top to see new results
                 recyclerView?.smoothScrollToPosition(0)
@@ -143,17 +141,10 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
             binding.prevPage.setOnClickListener {
                 prevPageUrl?.run {
-                    performSearch(prevPageUrl)
+                    viewModel.pagedSearch(prevPageUrl, isHost)
                 }
                 // scroll to top to see new results
                 recyclerView?.smoothScrollToPosition(0)
-            }
-        }
-
-        private fun performSearch(url: String) {
-            // TODO somehow tie to viewLifeCycle? viewmodel? custom coroutine scope?
-            GlobalScope.launch(Dispatchers.IO) {
-                SpotifyRepository.searchSongsForLocalResult(url, isHost, isPaged = true)
             }
         }
     }

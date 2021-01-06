@@ -18,9 +18,9 @@ package com.niehusst.partyq.network.models.api
 
 import com.squareup.moshi.Json
 
-data class SearchResult(
-    @Json(name = "tracks")
-    val tracks: Tracks,
-    @Json(name = "error")
-    val error: SpotifyError?
+data class SpotifyError(
+    @Json(name = "status")
+    val status: Int,
+    @Json(name = "message")
+    val message: String
 )

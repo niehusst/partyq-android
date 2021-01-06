@@ -17,24 +17,56 @@
 package com.niehusst.partyq.ui.spotifyLogin
 
 import android.app.Activity
+import android.content.Context
 import androidx.lifecycle.*
-import com.niehusst.partyq.services.SpotifyAuthenticator
+import com.niehusst.partyq.network.models.auth.SwapResult
+import com.niehusst.partyq.repository.SpotifyAuthRepository
+import com.niehusst.partyq.services.PartyCodeHandler
+import com.niehusst.partyq.services.TokenHandlerService
+import com.niehusst.partyq.services.UserTypeService
+import kotlinx.coroutines.*
+import java.util.concurrent.TimeUnit
 
 class SpotifyLoginViewModel : ViewModel() {
 
     private val _loading: MutableLiveData<Boolean> = MutableLiveData(false)
     val loading: LiveData<Boolean> = _loading
 
+    private val _tokenResponse: MutableLiveData<SwapResult?> = MutableLiveData(null)
+    val tokenResponse: LiveData<SwapResult?> = _tokenResponse
+
     /**
      * Delegate to SpotifyAuthenticationService, allowing later access to AppRemote connection
      */
     fun connectToSpotify(handlerActivity: Activity) {
         _loading.value = true
-        SpotifyAuthenticator
-            .authenticateWithSpotfiy(handlerActivity)
+        SpotifyAuthRepository.authenticateWithSpotfiy(handlerActivity)
     }
 
     fun stopLoading() {
-        _loading.value = false
+        _loading.postValue(false)
+    }
+
+    fun swapCodeForTokenAsync(code: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _tokenResponse.postValue(SpotifyAuthRepository.getAuthTokens(code))
+        }
+    }
+
+    fun saveTokens(tokens: SwapResult) {
+        TokenHandlerService.setTokens(
+            tokens.accessToken,
+            tokens.refreshToken,
+            tokens.secondsUntilExpiration,
+            TimeUnit.SECONDS
+        )
+    }
+
+    fun setSelfAsHost(context: Context) {
+        val partyCode = PartyCodeHandler.createPartyCode(context)
+        UserTypeService.setSelfAsHost(
+            context,
+            partyCode
+        )
     }
 }

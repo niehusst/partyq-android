@@ -26,12 +26,13 @@ object PartyCodeHandler {
 
     private var code: String? = null
 
-    fun createPartyCode(context: Context) {
+    fun createPartyCode(context: Context): String {
         val r = Random(System.nanoTime())
         code = "${randDigit(r)}${randDigit(r)}${randDigit(r)}${randDigit(r)}"
 
         // save the code into shared prefs
         setPartyCode(code!!, context)
+        return code!!
     }
 
     private fun randDigit(r: Random) = r.nextInt(10)

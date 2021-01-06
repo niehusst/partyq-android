@@ -16,55 +16,60 @@
 
 package com.niehusst.partyq.services
 
-import android.content.Context
-import android.content.SharedPreferences
-import com.niehusst.partyq.SharedPrefNames.ACCESS_TOKEN
-import com.niehusst.partyq.SharedPrefNames.EXPIRES_AT
-import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import java.util.concurrent.TimeUnit
 
 object TokenHandlerService {
 
     private var token: String? = null
+    private var refreshToken: String? = null
     private var expiresAt: Long = 0L
 
-    private fun getSharedPreferences(appContext: Context): SharedPreferences {
-        return appContext.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
-    }
-
-    fun getToken(context: Context): String {
-        if (token == null) {
-            val sharedPref = getSharedPreferences(context.applicationContext)
-
-            token = sharedPref.getString(ACCESS_TOKEN, null)
-            expiresAt = sharedPref.getLong(EXPIRES_AT, 0L)
-
-            if (token == null || expiresAt < System.currentTimeMillis()) {
-                throw Exception("Token is expired or doesn't exist")
-            }
+    /**
+     * Get the Spotify OAuth token or throw an Exception if it's invalid.
+     *
+     * @throws Exception when no token is saved locally or when token is expired
+     * @return token - The Spotify OAuth token string for authenticating Spotify API calls
+     */
+    fun getAuthToken(): String {
+        if (token == null || expiresAt < System.currentTimeMillis()) {
+            throw Exception("Token is expired or doesn't exist")
         }
-
         return token!!
     }
 
-    fun setToken(context: Context, token: String, expiresIn: Int, unit: TimeUnit) {
-        val appContext = context.applicationContext
+    fun getRefreshToken(): String? {
+        return refreshToken
+    }
 
+    fun setTokens(
+        token: String,
+        refreshToken: String,
+        expiresIn: Int,
+        unit: TimeUnit
+    ) {
         val now = System.currentTimeMillis()
         expiresAt = now + unit.toMillis(expiresIn.toLong())
         this.token = token
-
-        val sharedPref = getSharedPreferences(appContext)
-        val editor = sharedPref.edit()
-        editor.putString(ACCESS_TOKEN, token)
-        editor.putLong(EXPIRES_AT, expiresAt)
-        editor.apply()
+        this.refreshToken = refreshToken
     }
 
-    fun clearToken(context: Context) {
-        val sharedPref = getSharedPreferences(context.applicationContext)
-        sharedPref.edit()
-            .remove(ACCESS_TOKEN)
-            .apply()
+    fun resetAuthToken(
+        token: String,
+        expiresIn: Int,
+        unit: TimeUnit
+    ) {
+        val now = System.currentTimeMillis()
+        expiresAt = now + unit.toMillis(expiresIn.toLong())
+        this.token = token
+    }
+
+    fun tokenIsExpired(): Boolean {
+        return System.currentTimeMillis() > expiresAt
+    }
+
+    fun clearToken() {
+        token = null
+        refreshToken = null
+        expiresAt = 0L
     }
 }

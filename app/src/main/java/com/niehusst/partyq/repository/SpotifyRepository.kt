@@ -16,15 +16,14 @@
 
 package com.niehusst.partyq.repository
 
-import android.content.Context
 import com.niehusst.partyq.network.SpotifyApi
 import com.niehusst.partyq.network.Status
 import com.niehusst.partyq.network.models.api.SearchResult
 import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.services.SearchResultHandler
 import com.niehusst.partyq.services.TokenHandlerService
-import com.niehusst.partyq.services.UserTypeService
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 object SpotifyRepository {
 
@@ -36,9 +35,9 @@ object SpotifyRepository {
      * Precondition:
      *      requires OAuth token is set in TokenHandlerService before this method is called.
      */
-    fun start(ctx: Context) {
-        if (UserTypeService.isHost(ctx)) {
-            api = SpotifyApi(TokenHandlerService.getToken(ctx))
+    fun start(isHost: Boolean) {
+        if (isHost) {
+            api = SpotifyApi(TokenHandlerService.getAuthToken())
         }
     }
 
@@ -92,6 +91,7 @@ object SpotifyRepository {
      * @throws java.net.UnknownHostException - when calling device has no network connection
      */
     suspend fun getPagedSearchTrackResults(reqUrl: String): SearchResult? {
+        ensureTokenValidity()
         return api?.endPoints?.getSearchResultPage(reqUrl)
     }
 
@@ -103,6 +103,35 @@ object SpotifyRepository {
      * @throws java.net.UnknownHostException - when calling device has no network connection
      */
     suspend fun getSearchTrackResults(query: String): SearchResult? {
+        ensureTokenValidity()
         return api?.endPoints?.searchTracks(query, "track")
+    }
+
+    /**
+     * Make a call to the Spotify auth API to get a new OAuth token for the Spotify API if the
+     * previous token was expired.
+     * This function is run for the side-effect of getting and saving a refreshed OAuth token into
+     * `TokenHandlerService` when the previous token was expired to avoid 401 errors.
+     */
+    private suspend fun ensureTokenValidity() {
+        if (TokenHandlerService.tokenIsExpired()) {
+            val refreshed = SpotifyAuthRepository.refreshAuthToken(
+                TokenHandlerService.getRefreshToken()
+            )
+
+            if (refreshed != null) {
+                // save refreshed OAuth token
+                TokenHandlerService.resetAuthToken(
+                    refreshed.accessToken,
+                    refreshed.secondsUntilExpiration,
+                    TimeUnit.SECONDS
+                )
+
+                // restart api repo with new refreshed token
+                start(true)
+            } else {
+                Timber.e("Token refresh failed")
+            }
+        } // else no-op; token was not yet expired
     }
 }

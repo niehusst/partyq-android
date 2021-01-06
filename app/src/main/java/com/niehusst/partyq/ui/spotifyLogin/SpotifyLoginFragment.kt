@@ -30,19 +30,17 @@ import androidx.navigation.fragment.findNavController
 import com.niehusst.partyq.BundleNames
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SpotifyLoginFragmentBinding
+import com.niehusst.partyq.repository.SpotifyAuthRepository
 import com.niehusst.partyq.ui.remediation.RemediationActivity
-import com.niehusst.partyq.services.PartyCodeHandler
-import com.niehusst.partyq.services.TokenHandlerService
-import com.niehusst.partyq.services.UserTypeService
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationResponse
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 
 class SpotifyLoginFragment : Fragment() {
 
     private lateinit var binding: SpotifyLoginFragmentBinding
     private val viewModel by viewModels<SpotifyLoginViewModel>()
+    private var firstLoad = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,10 +55,37 @@ class SpotifyLoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setObservers()
+        setClickListeners()
+    }
+
+    private fun setObservers() {
         viewModel.loading.observe(viewLifecycleOwner, Observer {
             binding.loading = it
         })
-        setClickListeners()
+
+        viewModel.tokenResponse.observe(viewLifecycleOwner, Observer { swapResult ->
+            if (swapResult != null) {
+                // save the OAuth token
+                viewModel.saveTokens(swapResult)
+
+                // create the party code and set self as host
+                viewModel.setSelfAsHost(requireContext())
+
+                launchPartyActivity()
+            } else {
+                if (!firstLoad) {
+                    // oops something went wrong swapping code for tokens
+                    viewModel.stopLoading()
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.auth_error,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                firstLoad = false
+            }
+        })
     }
 
     private fun setClickListeners() {
@@ -81,32 +106,16 @@ class SpotifyLoginFragment : Fragment() {
      */
     fun onAuthResult(resultCode: Int, intent: Intent?) {
         val response = AuthenticationClient.getResponse(resultCode, intent)
+        SpotifyAuthRepository.start()
 
-        when(response.type) {
-            AuthenticationResponse.Type.TOKEN -> {
-                // on success
-                // save the OAuth token
-                TokenHandlerService.setToken(
-                    requireContext(),
-                    response.accessToken,
-                    response.expiresIn,
-                    TimeUnit.SECONDS
-                )
-                // create the party code and set self as host
-                PartyCodeHandler.createPartyCode(requireContext())
-                UserTypeService.setSelfAsHost(
-                    requireContext(),
-                    PartyCodeHandler.getPartyCode(requireContext())!!
-                )
-
-                findNavController().navigate(R.id.partyActivity)
-
-                // finally, end the MainActivity so user can't go back to pre-login
-                activity?.finish()
+        when (response.type) {
+            AuthenticationResponse.Type.CODE -> {
+                viewModel.swapCodeForTokenAsync(response.code)
+                // result handled in `setObservers` from observing `tokenResponse` live data
             }
             AuthenticationResponse.Type.ERROR -> {
                 // on failure
-                Timber.e("Auth for code ${response.code} error: ${response.error}")
+                Timber.e("Auth error: ${response.error}")
                 viewModel.stopLoading()
                 if (response.error == "NO_INTERNET_CONNECTION") {
                     Toast.makeText(
@@ -119,12 +128,22 @@ class SpotifyLoginFragment : Fragment() {
                 }
             }
             else -> {
-                Timber.e("Auth for type ${response.type} code ${response.code} error: ${response.error}")
+                Timber.e("Auth for type ${response.type} error: ${response.error}")
                 // auth flow was likely cancelled before completion
                 viewModel.stopLoading()
-                Toast.makeText(requireContext(), R.string.auth_cancelled, Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    R.string.auth_cancelled,
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
+    }
+
+    private fun launchPartyActivity() {
+        findNavController().navigate(R.id.partyActivity)
+        // end the MainActivity so user can't go back to pre-login
+        activity?.finish()
     }
 
     private fun launchRemediationActivity() {
@@ -134,5 +153,6 @@ class SpotifyLoginFragment : Fragment() {
             context?.resources?.getString(R.string.generic_error_msg)
         )
         startActivity(intent)
+        activity?.finish()
     }
 }
