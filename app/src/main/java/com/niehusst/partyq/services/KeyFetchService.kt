@@ -48,7 +48,6 @@ class KeyFetchService {
         }
 
         fun getSpotifySecret(): String {
-            // TODO update getting started wiki to include new func
             return String(Base64.decode(getSpotifyClientSecret(), Base64.DEFAULT))
         }
     }

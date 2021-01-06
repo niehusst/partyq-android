@@ -133,7 +133,7 @@ class SearchAdapter(
 
             binding.nextPage.setOnClickListener {
                 nextPageUrl?.run {
-                    performSearch(nextPageUrl)
+                    viewModel.pagedSearch(nextPageUrl, isHost)
                 }
                 // scroll to top to see new results
                 recyclerView?.smoothScrollToPosition(0)
@@ -141,16 +141,11 @@ class SearchAdapter(
 
             binding.prevPage.setOnClickListener {
                 prevPageUrl?.run {
-                    performSearch(prevPageUrl)
+                    viewModel.pagedSearch(prevPageUrl, isHost)
                 }
                 // scroll to top to see new results
                 recyclerView?.smoothScrollToPosition(0)
             }
-        }
-
-        private fun performSearch(url: String) {
-            // TODO somehow tie to viewLifeCycle? viewmodel? custom coroutine scope?
-            viewModel.pagedSearch(url, isHost)
         }
     }
 
