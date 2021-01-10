@@ -59,13 +59,15 @@ class SearchFragment : Fragment() {
 
     private fun setObservers() {
         SearchResultHandler.searchResultSongs.observe(viewLifecycleOwner, Observer {
+            // load search result data into the search adapter
             adapter.searchResults = it
             adapter.searchPage = SearchResultHandler.searchResult
             binding.isResults = it.isNotEmpty()
             adapter.notifyDataSetChanged()
+            binding.searchResults.scrollToPosition(0)
         })
         SearchResultHandler.status.observe(viewLifecycleOwner, Observer {
-            when(it) {
+            when (it) {
                 Status.LOADING -> binding.loading = true
                 Status.ERROR -> {
                     // TODO: trigger snackbar or something w/ more detail?

@@ -135,16 +135,12 @@ class SearchAdapter(
                 nextPageUrl?.run {
                     viewModel.pagedSearch(nextPageUrl, isHost)
                 }
-                // scroll to top to see new results
-                recyclerView?.smoothScrollToPosition(0)
             }
 
             binding.prevPage.setOnClickListener {
                 prevPageUrl?.run {
                     viewModel.pagedSearch(prevPageUrl, isHost)
                 }
-                // scroll to top to see new results
-                recyclerView?.smoothScrollToPosition(0)
             }
         }
     }
