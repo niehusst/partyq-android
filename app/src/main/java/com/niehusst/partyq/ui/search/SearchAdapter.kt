@@ -33,7 +33,6 @@ class SearchAdapter(
     private val viewModel: SearchFragmentViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var recyclerView: RecyclerView? = null
     var searchPage: Tracks? = null
     var searchResults = listOf<Item>()
 
@@ -44,11 +43,6 @@ class SearchAdapter(
         } else {
             TYPE_ITEM
         }
-    }
-
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-        this.recyclerView = recyclerView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -81,8 +75,7 @@ class SearchAdapter(
             (holder as PageSearchViewHolder).bind(
                 pageNum ?: 0,
                 searchPage?.next,
-                searchPage?.previous,
-                recyclerView
+                searchPage?.previous
             )
         }
     }
@@ -126,7 +119,7 @@ class SearchAdapter(
         private val isHost: Boolean
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(currPage: Int, nextPageUrl: String?, prevPageUrl: String?, recyclerView: RecyclerView?) {
+        fun bind(currPage: Int, nextPageUrl: String?, prevPageUrl: String?) {
             binding.pageNum.text = (currPage+1).toString()
             binding.firstPage = prevPageUrl == null
             binding.lastPage = nextPageUrl == null
