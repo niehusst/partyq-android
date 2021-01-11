@@ -40,7 +40,6 @@ class SpotifyLoginFragment : Fragment() {
 
     private lateinit var binding: SpotifyLoginFragmentBinding
     private val viewModel by viewModels<SpotifyLoginViewModel>()
-    private var firstLoad = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,17 +63,17 @@ class SpotifyLoginFragment : Fragment() {
             binding.loading = it
         })
 
-        viewModel.tokenResponse.observe(viewLifecycleOwner, Observer { swapResult ->
-            if (swapResult != null) {
-                // save the OAuth token
-                viewModel.saveTokens(swapResult)
+        viewModel.tokenStatus.observe(viewLifecycleOwner, Observer {
+            if (it == SpotifyLoginViewModel.TokenStatus.RESULT) {
+                if (viewModel.tokenResult != null) {
+                    // save the OAuth token
+                    viewModel.saveTokens(viewModel.tokenResult!!)
 
-                // create the party code and set self as host
-                viewModel.setSelfAsHost(requireContext())
+                    // create the party code and set self as host
+                    viewModel.setSelfAsHost(requireContext())
 
-                launchPartyActivity()
-            } else {
-                if (!firstLoad) {
+                    launchPartyActivity()
+                } else {
                     // oops something went wrong swapping code for tokens
                     viewModel.stopLoading()
                     Toast.makeText(
@@ -83,7 +82,6 @@ class SpotifyLoginFragment : Fragment() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
-                firstLoad = false
             }
         })
     }
