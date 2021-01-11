@@ -32,8 +32,10 @@ class SpotifyLoginViewModel : ViewModel() {
     private val _loading: MutableLiveData<Boolean> = MutableLiveData(false)
     val loading: LiveData<Boolean> = _loading
 
-    private val _tokenResponse: MutableLiveData<SwapResult?> = MutableLiveData(null)
-    val tokenResponse: LiveData<SwapResult?> = _tokenResponse
+    private val _tokenStatus: MutableLiveData<TokenStatus> = MutableLiveData(TokenStatus.EMPTY)
+    val tokenStatus: LiveData<TokenStatus> = _tokenStatus
+
+    var tokenResult: SwapResult? = null
 
     /**
      * Delegate to SpotifyAuthenticationService, allowing later access to AppRemote connection
@@ -45,11 +47,13 @@ class SpotifyLoginViewModel : ViewModel() {
 
     fun stopLoading() {
         _loading.postValue(false)
+        _tokenStatus.postValue(TokenStatus.EMPTY)
     }
 
     fun swapCodeForTokenAsync(code: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _tokenResponse.postValue(SpotifyAuthRepository.getAuthTokens(code))
+            tokenResult = SpotifyAuthRepository.getAuthTokens(code)
+            _tokenStatus.postValue(TokenStatus.RESULT)
         }
     }
 
@@ -68,5 +72,10 @@ class SpotifyLoginViewModel : ViewModel() {
             context,
             partyCode
         )
+    }
+
+    enum class TokenStatus {
+        EMPTY,
+        RESULT
     }
 }
