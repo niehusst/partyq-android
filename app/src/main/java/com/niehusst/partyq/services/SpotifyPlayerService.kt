@@ -107,22 +107,25 @@ object SpotifyPlayerService {
         // catch PlayerState events so we can play songs from our queue back-to-back
         spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback {
             setTrackWasStarted(it)
-
+            Timber.e("BIGGYCHEESE checking spotify event")
             val isPaused = it.isPaused
             val position = it.playbackPosition
             val hasEnded = trackWasStarted && isPaused && position == 0L
             val songPlayingIsNotQueueHead = it.track?.uri != QueueService.peekQueue()?.uri
-
+            Timber.e("BIGGYCHEESE song ended: $hasEnded  song boid: $songPlayingIsNotQueueHead")
             if (hasEnded) {
                 trackWasStarted = false
                 QueueService.dequeueSong(context)
                 val nextSong = QueueService.peekQueue()
+                Timber.e("BIGGYCHEESE about to play ${nextSong?.name}")
                 if (nextSong == null) {
                     // pause before Spotify autoplay starts a random song
                     pauseSong()
                 } else {
                     playSong(nextSong.uri)
                 }
+                Timber.e("BIGGYCHEESE playing ${nextSong?.name} 'successfully'")
+
 
                 // new song has started, so old skip votes are nullified
                 SkipSongHandler.clearSkipCount()
@@ -133,6 +136,7 @@ object SpotifyPlayerService {
                  * until it gets it right.
                  */
                 val correctCurrSong = QueueService.peekQueue()
+                Timber.e("BIGGYCHEESE playing: ${it.track?.name}  but expected: ${correctCurrSong?.name}")
                 if (correctCurrSong == null) {
                     // pause the currently playing Spotify autoplay random song
                     pauseSong()
@@ -161,19 +165,34 @@ object SpotifyPlayerService {
      * by `songUri`.
      */
     fun playSong(songUri: String) {
-        spotifyAppRemote?.playerApi?.play(songUri)
+        spotifyAppRemote?.playerApi?.play(songUri)?.setResultCallback {
+            Timber.e("BIGGYCHEESE success playing $it")
+        }?.setErrorCallback {
+            Timber.e("BIGGYCHEESE $it") //TODO biggycheese
+        }
     }
 
     fun pauseSong() {
-        spotifyAppRemote?.playerApi?.pause()
+        spotifyAppRemote?.playerApi?.pause()?.setResultCallback {
+            Timber.e("BIGGYCHEESE pausing")
+        }
     }
 
     fun resumeSong() {
-        spotifyAppRemote?.playerApi?.resume()
+        spotifyAppRemote?.playerApi?.resume()?.setResultCallback {
+            Timber.e("BIGGYCHEESE success resuming $it")
+        }?.setErrorCallback {
+            Timber.e("BIGGYCHEESE $it") //TODO biggycheese
+        }
     }
 
-    fun skipSong() {
-        spotifyAppRemote?.playerApi?.skipNext()
+    fun skipSong(failureHandler: (() -> Unit)? = null) {
+        spotifyAppRemote?.playerApi?.skipNext()?.setResultCallback {
+            Timber.e("BIGGYCHEESE success skipping? $it")
+        }?.setErrorCallback {
+            Timber.e("-----BIGGYCHEESE skip err $it") //TODO biggycheese
+            failureHandler?.run { this() }
+        }
     }
 
     /**
