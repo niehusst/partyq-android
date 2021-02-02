@@ -30,7 +30,6 @@ object SkipSongHandler {
 
         skipCount++
         if (skipCount > numPartyGoers / 2) {
-            // skip song
             SpotifyPlayerService.skipSong()
 
             // clear registered votes for next song

@@ -24,6 +24,7 @@ import androidx.lifecycle.MutableLiveData
 import com.niehusst.partyq.BundleNames
 import com.niehusst.partyq.R
 import com.niehusst.partyq.SpotifySharedInfo
+import com.niehusst.partyq.network.models.api.Item
 import com.niehusst.partyq.ui.remediation.RemediationActivity
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
@@ -117,6 +118,8 @@ object SpotifyPlayerService {
                 trackWasStarted = false
                 QueueService.dequeueSong(context)
                 val nextSong = QueueService.peekQueue()
+                Timber.d("About to play ${nextSong?.name}")
+
                 if (nextSong == null) {
                     // pause before Spotify autoplay starts a random song
                     pauseSong()
@@ -152,6 +155,18 @@ object SpotifyPlayerService {
             trackWasStarted = true
         }
     }
+    
+    private fun ensureSongIsPlaying(currSong: Item?) {
+        // ensure that currSong is playing, if not null
+        spotifyAppRemote?.playerApi?.playerState?.setResultCallback { state ->
+            if (state.track == null) {
+                currSong?.let { song ->
+                    Timber.e("Current song: \"${song.name}\" was not playing; starting it now")
+                    playSong(song.uri)
+                }
+            }
+        }
+    }
 
     /**
      * Play the song specified by the given URI.
@@ -170,6 +185,9 @@ object SpotifyPlayerService {
 
     fun resumeSong() {
         spotifyAppRemote?.playerApi?.resume()
+
+        // enables user-initiated recovery from Spotify failing to play a song
+        ensureSongIsPlaying(QueueService.peekQueue())
     }
 
     fun skipSong() {
