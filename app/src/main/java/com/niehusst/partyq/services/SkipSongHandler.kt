@@ -16,8 +16,6 @@
 
 package com.niehusst.partyq.services
 
-import timber.log.Timber
-
 object SkipSongHandler {
 
     private var skipCount = 0
@@ -29,18 +27,10 @@ object SkipSongHandler {
     fun voteSkip() {
         // +1 to include the host in the count
         val numPartyGoers = CommunicationService.connectionEndpointIds.size + 1
-        Timber.e("BIGGYCHEESE skip vote registering")
+
         skipCount++
         if (skipCount > numPartyGoers / 2) {
-            Timber.e("BIGGYCHEESE skipping song")
-            // skip song
-            SpotifyPlayerService.skipSong {
-                // try playing queue head if skip fails
-                Timber.e("BIGGYCHEESE attempting to play song on skip fail")
-                QueueService.peekQueue()?.also { song ->
-                    SpotifyPlayerService.playSong(song.uri)
-                }
-            }
+            SpotifyPlayerService.skipSong()
 
             // clear registered votes for next song
             clearSkipCount()
@@ -48,8 +38,6 @@ object SkipSongHandler {
     }
 
     fun clearSkipCount() {
-        Timber.e("BIGGYCHEESE reseting count $skipCount")
         skipCount = 0
-        Timber.e("BIGGYCHEESE count now $skipCount")
     }
 }
