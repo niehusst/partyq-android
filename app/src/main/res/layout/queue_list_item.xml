@@ -24,6 +24,18 @@
         android:background="@color/colorSurface">
 
         <ImageView
+            android:id="@+id/spotify_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/iconWH"
+            android:layout_marginStart="@dimen/largePadding"
+            android:layout_marginTop="@dimen/largePadding"
+            android:src="@drawable/spotify_logo_rgb_black"
+            android:scaleType="fitStart"
+            android:importantForAccessibility="no"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <ImageView
             android:id="@+id/thumbnail"
             android:layout_width="@dimen/thumbnailWH"
             android:layout_height="@dimen/thumbnailWH"
@@ -41,13 +53,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/largePadding"
             android:layout_marginEnd="@dimen/largePadding"
-            android:layout_marginTop="@dimen/largePadding"
+            android:layout_marginTop="@dimen/mediumPadding"
             android:textColor="@color/onColorSurface"
             android:textSize="@dimen/textLarge"
             app:layout_constraintBottom_toTopOf="@id/artist_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/thumbnail"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spotify_logo"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Title" />
 
