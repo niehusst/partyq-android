@@ -16,8 +16,9 @@
 
 package com.niehusst.partyq.ui.nowPlaying
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,7 +53,6 @@ class NowPlayingFragment : Fragment() {
         binding.isHost = UserTypeService.isHost(requireContext())
         viewModel.currItem = QueueService.peekQueue()
         bindItem(viewModel.currItem)
-        binding.spotifyLink.movementMethod = LinkMovementMethod()
 
         QueueService.dataChangedTrigger.observe(viewLifecycleOwner, Observer {
             if (viewModel.isNewCurrItem()) {
@@ -63,19 +63,24 @@ class NowPlayingFragment : Fragment() {
         })
     }
 
-    private fun bindItem(item: Item?) {
-        item?.also {
-            binding.songName = it.name
-            binding.songArtist = it.artistsAsPrettyString()
-            binding.songLink = it.getSpotifyLink()
+    private fun bindItem(itemToBind: Item?) {
+        itemToBind?.also { item ->
+            binding.songName = item.name
+            binding.songArtist = item.artistsAsPrettyString()
+
             // Get first image since it should be the largest (last is smallest)
             Glide.with(this)
                 .load(item.album.images?.firstOrNull()?.url)
                 .error(R.drawable.album)
                 .fitCenter()
                 .into(binding.albumImage)
+
+            // set spotify link for this item
+            binding.openSpotifyButton.setOnClickListener {
+                openSpotifyFromLink(item.getSpotifyLink())
+            }
         }
-        binding.noSong = item == null
+        binding.noSong = itemToBind == null
     }
 
     private fun setClickListeners() {
@@ -109,5 +114,25 @@ class NowPlayingFragment : Fragment() {
         )
         binding.playToggleButton.tag = "play"
         binding.playToggleButton.contentDescription = getString(R.string.play_song)
+    }
+
+    private fun openSpotifyFromLink(linkUri: String) {
+        val linkIntent = Intent(Intent.ACTION_VIEW).apply {
+            data = if (UserTypeService.isHost(requireContext())) {
+                // deeplink open spotify
+                Uri.parse(linkUri)
+            } else {
+                // link to spotify app store listing
+                Uri.parse(getString(R.string.spotify_app_store_link))
+            }
+
+            // attribute partyq as the referrer
+            putExtra(
+                Intent.EXTRA_REFERRER,
+                Uri.parse("android-app://" + binding.root.context.packageName)
+            )
+        }
+
+        startActivity(linkIntent)
     }
 }

@@ -148,7 +148,7 @@ class SearchAdapter(
                         Uri.parse("spotify:")
                     } else {
                         // link to spotify app store listing
-                        Uri.parse("http://play.google.com/store/apps/details?id=com.spotify.music")
+                        Uri.parse(binding.root.context.getString(R.string.spotify_app_store_link))
                     }
 
                     // attribute partyq as the referrer

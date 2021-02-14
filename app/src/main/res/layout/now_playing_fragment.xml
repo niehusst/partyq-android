@@ -27,9 +27,6 @@
             name="songArtist"
             type="String" />
         <variable
-            name="songLink"
-            type="String" />
-        <variable
             name="isHost"
             type="Boolean" />
         <variable
@@ -42,23 +39,37 @@
         android:layout_height="match_parent"
         android:background="@color/primary200">
 
-        <TextView
-            android:id="@+id/spotify_link"
+        <ImageView
+            android:id="@+id/spotify_logo"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/iconWH"
+            android:layout_marginTop="@dimen/mediumPadding"
+            android:importantForAccessibility="no"
+            android:src="@drawable/spotify_logo_rgb_black"
+            app:layout_constraintTop_toTopOf="@id/open_spotify_button"
+            app:layout_constraintBottom_toBottomOf="@id/open_spotify_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/open_spotify_button"
+            isGone="@{noSong}"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/open_spotify_button"
+            style="@style/PartyqButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/mediumPadding"
-            android:text="@{String.format(@string/see_song_on_spotify_at_link, songLink)}"
-            android:textColor="@color/onBackgroundColorLight"
-            android:textIsSelectable="true"
-            android:textAlignment="center"
-            android:autoLink="web"
-            app:layout_constraintBottom_toTopOf="@id/album_image"
+            android:layout_margin="@dimen/mediumPadding"
+            android:text="@{isHost ? @string/open_spotify : @string/get_spotify_free}"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/black"
+            app:icon="@drawable/ic_spotify"
+            app:iconSize="@dimen/iconWH"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toEndOf="@id/spotify_logo"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            tools:text="See song on Spotify at: "
-            isGone="@{noSong}"/>
+            isGone="@{noSong}"
+            tools:text="@string/open_spotify"/>
 
         <ImageView
             android:id="@+id/album_image"
@@ -73,7 +84,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spotify_link"
+            app:layout_constraintTop_toBottomOf="@id/open_spotify_button"
             isGone="@{noSong}"/>
 
         <TextView

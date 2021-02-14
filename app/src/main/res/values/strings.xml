@@ -94,6 +94,7 @@
     <string name="leave">Leave</string>
     <string name="open_spotify">Open Spotify</string>
     <string name="get_spotify_free">Get Spotify Free</string>
+    <string name="spotify_app_store_link">http://play.google.com/store/apps/details?id=com.spotify.music</string>
 
     <!-- Search -->
     <string name="search_songs">Search songs</string>
