@@ -92,6 +92,8 @@
     <string name="leave_confirmation_msg_host">Are you sure you want to leave the party? This will also end the party for all your guests.</string>
     <string name="cancel">Cancel</string>
     <string name="leave">Leave</string>
+    <string name="open_spotify">Open Spotify</string>
+    <string name="get_spotify_free">Get Spotify Free</string>
 
     <!-- Search -->
     <string name="search_songs">Search songs</string>

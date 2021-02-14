@@ -16,8 +16,11 @@
 
 package com.niehusst.partyq.ui.search
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
@@ -28,6 +31,7 @@ import com.niehusst.partyq.network.models.api.Item
 import com.niehusst.partyq.network.models.api.Tracks
 import com.niehusst.partyq.services.QueueService
 import com.niehusst.partyq.services.UserTypeService
+
 
 class SearchAdapter(
     private val viewModel: SearchFragmentViewModel
@@ -123,6 +127,7 @@ class SearchAdapter(
             binding.pageNum.text = (currPage+1).toString()
             binding.firstPage = prevPageUrl == null
             binding.lastPage = nextPageUrl == null
+            binding.isHost = isHost
 
             binding.nextPage.setOnClickListener {
                 nextPageUrl?.run {
@@ -134,6 +139,30 @@ class SearchAdapter(
                 prevPageUrl?.run {
                     viewModel.pagedSearch(prevPageUrl, isHost)
                 }
+            }
+
+            binding.openSpotifyButton.setOnClickListener {
+                val linkIntent = Intent(Intent.ACTION_VIEW).apply {
+                    data = if (isHost) {
+                        // deeplink open spotify
+                        Uri.parse("spotify:")
+                    } else {
+                        // link to spotify app store listing
+                        Uri.parse("http://play.google.com/store/apps/details?id=com.spotify.music")
+                    }
+
+                    // attribute partyq as the referrer
+                    putExtra(
+                        Intent.EXTRA_REFERRER,
+                        Uri.parse("android-app://" + binding.root.context.packageName)
+                    )
+                }
+
+                startActivity(
+                    binding.root.context,
+                    linkIntent,
+                    null // no options
+                )
             }
         }
     }
