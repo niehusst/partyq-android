@@ -32,7 +32,6 @@ import com.niehusst.partyq.network.models.api.Tracks
 import com.niehusst.partyq.services.QueueService
 import com.niehusst.partyq.services.UserTypeService
 
-
 class SearchAdapter(
     private val viewModel: SearchFragmentViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
