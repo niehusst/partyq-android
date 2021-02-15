@@ -21,9 +21,11 @@
         <variable
             name="firstPage"
             type="Boolean" />
-
         <variable
             name="lastPage"
+            type="Boolean" />
+        <variable
+            name="isHost"
             type="Boolean" />
     </data>
 
@@ -34,6 +36,22 @@
         android:padding="@dimen/mediumPadding">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/open_spotify_button"
+            style="@style/PartyqButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{isHost ? @string/open_spotify : @string/get_spotify_free}"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/black"
+            app:icon="@drawable/ic_spotify"
+            app:iconSize="@dimen/iconWH"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/open_spotify"/>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/prev_page"
             style="@style/PartyqButton.Style2"
             android:layout_width="wrap_content"
@@ -41,7 +59,7 @@
             android:text="@string/prev"
             android:drawableLeft="@drawable/ic_baseline_keyboard_arrow_left_24"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/open_spotify_button"
             isGone="@{firstPage}"
             tools:ignore="RtlHardcoded" />
 
@@ -52,7 +70,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/open_spotify_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="1"/>
@@ -65,7 +83,7 @@
             android:text="@string/next"
             android:drawableRight="@drawable/ic_baseline_keyboard_arrow_right_24"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/open_spotify_button"
             isGone="@{lastPage}"
             tools:ignore="RtlHardcoded"/>
 
