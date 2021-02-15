@@ -58,7 +58,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
-                isGone="@{true}"/>
+                isGone="@{noSong}"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/open_spotify_button"

@@ -44,6 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/iconWH"
             android:layout_marginTop="@dimen/mediumPadding"
+            android:layout_marginStart="@dimen/smallPadding"
             android:importantForAccessibility="no"
             android:src="@drawable/spotify_logo_rgb_black"
             app:layout_constraintTop_toTopOf="@id/open_spotify_button"
