@@ -1,26 +1,29 @@
 package com.niehusst.partyq.utility
 
 import android.content.Context
+import android.content.DialogInterface
+import android.graphics.Color
+import android.view.Gravity
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.niehusst.partyq.R
 import com.niehusst.partyq.SharedPrefNames
 
-object EulaDialog {
+class EulaDialog(
+    private val activity: AppCompatActivity
+) : AlertDialog(activity) {
 
     /**
      * Show the user the EULA. If they reject it, they are not allowed to use the app.
-     *
-     * @param activity - The activity to close if the license agreement is rejected
      */
-    fun showDialog(activity: AppCompatActivity) {
+    fun showDialog() {
         val editor = activity.getSharedPreferences(
             SharedPrefNames.PREFS_FILE_NAME, Context.MODE_PRIVATE).edit()
-        val dialog = AlertDialog.Builder(activity)
+        val builder = Builder(activity)
 
-        dialog.apply {
+        builder.apply {
             setTitle(R.string.license_agreement)
-            setMessage(R.string.)
+            setMessage(R.string.eula)
 
             setPositiveButton(R.string.agree) { dialog, _ ->
                 // mark that this user has agreed
@@ -37,6 +40,6 @@ object EulaDialog {
             setCancelable(false)
         }
 
-        dialog.create().show()
+        builder.create().show()
     }
 }

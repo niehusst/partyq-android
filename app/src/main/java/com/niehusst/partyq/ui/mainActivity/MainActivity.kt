@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         val prefs = getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
         // prompt user for EULA agreement if they've never agreed before
         if (!prefs.getBoolean(AGREED_TO_EULA, false)) {
-            EulaDialog.showDialog(this)
+            EulaDialog(this).showDialog()
         }
     }
 
