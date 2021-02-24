@@ -39,7 +39,8 @@
     <!-- Legal -->
     <string name="legal_title">Legal Information</string>
     <string name="legal_privacy_policy_title">Privacy Policy</string>
-    <string name="legal_privacy_policy_content">The partyq app does not keep or store any of your Spotify data, or any other personal data. It is only used within the context of the app to perform the necessary functions and is immediately released when no longer in use.\n\nThe full partyq Privacy Policy can be found at <a href="https://github.com/niehusst/partyq/blob/main/PRIVACY.md">https://github.com/niehusst/partyq/blob/main/PRIVACY.md</a></string>
+    <string name="legal_privacy_policy_content">The partyq app does not store or share any of your Spotify data, or any other personal data. It is only used within the context of the app to perform the necessary functions and is immediately released when no longer in use.\n\nThe full partyq Privacy Policy can be found at <a href="https://github.com/niehusst/partyq/blob/main/PRIVACY.md">https://github.com/niehusst/partyq/blob/main/PRIVACY.md</a></string>
+    <string name="legal_eula_content">The partyq app is legally required under the Spotify Developer Terms of Service to have all partyq users agree to an enforceable license that, in short, prohibits you from misusing the Spotify SDK used in this app and frees Spotify from any liability or warranty.\n\nThe full partyq End User License Agreement can be found at <a href="https://github.com/niehusst/partyq/blob/main/LICENSE.partyq-EULA">https://github.com/niehusst/partyq/blob/main/LICENSE.partyq-EULA</a></string>
     <string name="legal_acks_title">Open Source Acknowledgments</string>
     <string name="legal_acks_intro">Many open source tools and libraries were used in the creation of the partyq app. Below is a list of the tools used and their corresponding licenses:</string>
     <string name="legal_partyq_lic_title">The partyq License</string>

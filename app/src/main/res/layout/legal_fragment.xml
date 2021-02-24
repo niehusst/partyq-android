@@ -79,6 +79,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/largePadding"
+                    android:text="@string/license_agreement"/>
+
+                <TextView
+                    android:id="@+id/partyq_eula"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/legal_eula_content" />
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Large"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/largePadding"
                     android:text="@string/legal_acks_title"/>
                 <!-- third party licensing -->
 
