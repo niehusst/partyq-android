@@ -8,7 +8,7 @@ Note that many of the Spotify API and AppRemote endpoints that this app depends 
 
 ## Contributing
 
-This is an open-source project, so contributions are welcome! To see full environment setup instructions, go to the [project wiki](https://github.com/niehusst/partyq/wiki/Development-Setup).
+This is an open-source project, so contributions are welcome! To see full environment setup instructions, go to the [project wiki](https://github.com/niehusst/partyq-android/wiki/Development-Setup).
 
 ## Acknowledgements
 * Android Architecture Components samples (for bottom nav view code with Jetpack navigation)
@@ -18,6 +18,11 @@ This is an open-source project, so contributions are welcome! To see full enviro
 * **Liam Niehus-Staab** - [niehusst](https://github.com/niehusst)
 
 ## License
+
+This work is dual-licensed under Apache 2.0 AND an End User License Agreement that protects Spotify's intellectual property and licensing.
+
+The specifics can be found in `LICENSE*` files in the root of this project directory.
+
 ```
 Copyright 2020 Liam Niehus-Staab
 

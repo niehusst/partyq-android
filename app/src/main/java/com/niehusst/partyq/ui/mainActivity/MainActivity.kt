@@ -16,6 +16,7 @@
 
 package com.niehusst.partyq.ui.mainActivity
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -28,6 +29,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.niehusst.partyq.BundleNames
 import com.niehusst.partyq.R
+import com.niehusst.partyq.SharedPrefNames.AGREED_TO_EULA
+import com.niehusst.partyq.SharedPrefNames.PREFS_FILE_NAME
 import com.niehusst.partyq.SpotifySharedInfo
 import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.ui.about.AboutFragment
@@ -35,6 +38,7 @@ import com.niehusst.partyq.ui.legal.LegalFragment
 import com.niehusst.partyq.ui.support.SupportFragment
 import com.niehusst.partyq.ui.remediation.RemediationActivity
 import com.niehusst.partyq.ui.spotifyLogin.SpotifyLoginFragment
+import com.niehusst.partyq.utility.EulaDialog
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
@@ -50,6 +54,15 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         NavigationUI.setupActionBarWithNavController(this, navController)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val prefs = getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
+        // prompt user for EULA agreement if they've never agreed before
+        if (!prefs.getBoolean(AGREED_TO_EULA, false)) {
+            EulaDialog.showDialog(this)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

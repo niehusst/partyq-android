@@ -40,11 +40,10 @@ class LegalFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // link github URL
+        // link href URLs in view text
         binding.partyqLicText.movementMethod = LinkMovementMethod.getInstance()
-
-        // link Privacy Policy URL
         binding.partyqPrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()
+        binding.partyqEula.movementMethod = LinkMovementMethod.getInstance()
     }
 
     companion object {

@@ -31,4 +31,6 @@ object SharedPrefNames {
     const val IS_HOST = "is_host"
     // Boolean - indicates whether the user has just joined a party
     const val PARTY_FIRST_START = "party_first_start"
+    // Boolean - indicates whether the user has ever agreed to the EULA before
+    const val AGREED_TO_EULA = "agreed_to_eula"
 }
