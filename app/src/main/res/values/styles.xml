@@ -39,4 +39,24 @@
     <style name="PartyqButton.Style2" parent="PartyqButton">
         <item name="android:backgroundTint">@color/secondaryLightColor</item>
     </style>
+
+    <style name="Theme.AppCompat.Light.Dialog.Alert.EULA" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveAlertButton</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/PositiveAlertButton</item>
+
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeAlertButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/NegativeAlertButton</item>
+    </style>
+    <style name="PositiveAlertButton">
+        <item name="android:layout_marginStart">@dimen/mediumPadding</item>
+        <item name="android:layout_marginEnd">@dimen/mediumPadding</item>
+        <item name="android:backgroundTint">@color/colorSuccess</item>
+        <item name="android:textColor">@color/onColorSuccess</item>
+    </style>
+    <style name="NegativeAlertButton">
+        <item name="android:layout_marginStart">@dimen/mediumPadding</item>
+        <item name="android:layout_marginEnd">@dimen/mediumPadding</item>
+        <item name="android:backgroundTint">@color/colorError</item>
+        <item name="android:textColor">@color/onColorError</item>
+    </style>
 </resources>

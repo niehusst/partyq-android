@@ -59,9 +59,10 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         val prefs = getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
+        prefs.edit().remove(AGREED_TO_EULA).apply() // TODO: kill
         // prompt user for EULA agreement if they've never agreed before
         if (!prefs.getBoolean(AGREED_TO_EULA, false)) {
-            EulaDialog(this).showDialog()
+            EulaDialog.showDialog(this)
         }
     }
 

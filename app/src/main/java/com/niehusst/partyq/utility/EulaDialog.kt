@@ -1,25 +1,20 @@
 package com.niehusst.partyq.utility
 
 import android.content.Context
-import android.content.DialogInterface
-import android.graphics.Color
-import android.view.Gravity
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.niehusst.partyq.R
 import com.niehusst.partyq.SharedPrefNames
 
-class EulaDialog(
-    private val activity: AppCompatActivity
-) : AlertDialog(activity) {
+object EulaDialog {
 
     /**
      * Show the user the EULA. If they reject it, they are not allowed to use the app.
      */
-    fun showDialog() {
+    fun showDialog(activity: AppCompatActivity) {
         val editor = activity.getSharedPreferences(
             SharedPrefNames.PREFS_FILE_NAME, Context.MODE_PRIVATE).edit()
-        val builder = Builder(activity)
+        val builder = AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog_Alert_EULA)
 
         builder.apply {
             setTitle(R.string.license_agreement)
