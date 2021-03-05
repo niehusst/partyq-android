@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -102,6 +103,7 @@ dependencies {
     implementation "com.google.android.material:material:$materialVersion"
     implementation "com.google.code.gson:gson:2.8.5"
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation "com.jakewharton.timber:timber:$timberVersion"
     implementation 'com.spotify.android:auth:1.1.0'
     implementation "com.squareup.retrofit2:converter-moshi:2.4.0"

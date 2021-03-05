@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.niehusst.partyq.BundleNames
 import com.niehusst.partyq.R
 import com.niehusst.partyq.databinding.SpotifyLoginFragmentBinding
@@ -108,6 +109,9 @@ class SpotifyLoginFragment : Fragment() {
 
         when (response.type) {
             AuthenticationResponse.Type.CODE -> {
+                // tell crashlytics this user is now a host
+                FirebaseCrashlytics.getInstance().setCustomKey("isHost", true)
+
                 viewModel.swapCodeForTokenAsync(response.code)
                 // result handled in `setObservers` from observing `tokenResponse` live data
             }

@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.niehusst.partyq.BundleNames
 import com.niehusst.partyq.R
 import com.niehusst.partyq.SharedPrefNames.AGREED_TO_EULA
@@ -54,6 +55,9 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         NavigationUI.setupActionBarWithNavController(this, navController)
+
+        // set Firebase key to indicate whether a user's host status
+        FirebaseCrashlytics.getInstance().setCustomKey("isHost", false)
     }
 
     override fun onStart() {
