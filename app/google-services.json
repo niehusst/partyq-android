@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1061192947637",
+    "project_id": "partyq-3f40c",
+    "storage_bucket": "partyq-3f40c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061192947637:android:14fbd6b9abf2abc9acabfc",
+        "android_client_info": {
+          "package_name": "com.niehusst.partyq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1061192947637-fo97hlb364vuko6p19rc8ahg88kkid6k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.niehusst.partyq",
+            "certificate_hash": "68174e1fc7d16c5ed039d377d98fec008a7a63fb"
+          }
+        },
+        {
+          "client_id": "1061192947637-fu37smv767fri8niqm9h0doiq6rt0t9f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDGggNl7HGX9s26y_5Rpnpws4ZgiFBEbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1061192947637-fu37smv767fri8niqm9h0doiq6rt0t9f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
