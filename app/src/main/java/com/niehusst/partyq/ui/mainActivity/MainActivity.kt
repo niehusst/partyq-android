@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         NavigationUI.setupActionBarWithNavController(this, navController)
 
-        // set Firebase key to indicate whether a user's host status
+        // set Firebase key to indicate a user's host status
         FirebaseCrashlytics.getInstance().setCustomKey("isHost", false)
     }
 
