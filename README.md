@@ -1,6 +1,6 @@
 # partyq
 
-[![niehusst](https://circleci.com/gh/niehusst/partyq.svg?style=svg)](https://app.circleci.com/pipelines/github/niehusst/partyq)
+[![niehusst](https://circleci.com/gh/niehusst/partyq-android.svg?style=svg)](https://app.circleci.com/pipelines/github/niehusst/partyq-android)
 
 partyq is a music queue app that uses Spotify to play music. If one person has Spotify premium (and the Spotify app on their device) they can use partyq to host a music party for a group of people with partyq who don't have Spotify (and are nearby/connected to the same wifi). Everyone connected to the party can search for and add songs to a shared queue, while the host device plays the music using Spotify.
     
