@@ -28,9 +28,10 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# preserve the line number information for
+# debugging stack traces in firebase
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
@@ -98,6 +99,10 @@
 # keep all network serialized models
 -keep class com.niehusst.partyq.network.models.** { *; }
 
-
 # ignore unimportant warnings
 -dontwarn java.lang.instrument.ClassFileTransformer
+
+# keep crashlytics
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
+
