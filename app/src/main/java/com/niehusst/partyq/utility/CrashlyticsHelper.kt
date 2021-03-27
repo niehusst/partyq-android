@@ -57,7 +57,6 @@ object CrashlyticsHelper {
                 }
             }
         }
-
     }
 
     enum class FirebaseKeys(val key: String) {
