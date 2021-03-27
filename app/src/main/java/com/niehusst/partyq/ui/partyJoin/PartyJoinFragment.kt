@@ -99,7 +99,7 @@ class PartyJoinFragment : Fragment() {
         CommunicationService.connected.observe(viewLifecycleOwner, Observer { status ->
             when(status) {
                 Status.SUCCESS -> {
-                    Timber.d("Successfully connected to a party")
+                    Timber.i("Successfully connected to a party")
                     viewModel.setGuestData(requireContext())
 
                     // nav to party and end MainActivity so user can't go back to pre-login

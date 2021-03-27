@@ -22,6 +22,7 @@ import com.niehusst.partyq.network.models.api.SearchResult
 import com.niehusst.partyq.services.CommunicationService
 import com.niehusst.partyq.services.SearchResultHandler
 import com.niehusst.partyq.services.TokenHandlerService
+import com.niehusst.partyq.utility.CrashlyticsHelper
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 

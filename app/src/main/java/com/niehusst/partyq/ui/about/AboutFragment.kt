@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.niehusst.partyq.databinding.AboutFragmentBinding
+import com.niehusst.partyq.utility.CrashlyticsHelper
 import timber.log.Timber
 
 class AboutFragment : BottomSheetDialogFragment() {

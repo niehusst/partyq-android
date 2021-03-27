@@ -27,7 +27,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.niehusst.partyq.BundleNames
 import com.niehusst.partyq.R
 import com.niehusst.partyq.SharedPrefNames.AGREED_TO_EULA
@@ -39,6 +38,7 @@ import com.niehusst.partyq.ui.legal.LegalFragment
 import com.niehusst.partyq.ui.support.SupportFragment
 import com.niehusst.partyq.ui.remediation.RemediationActivity
 import com.niehusst.partyq.ui.spotifyLogin.SpotifyLoginFragment
+import com.niehusst.partyq.utility.CrashlyticsHelper
 import com.niehusst.partyq.utility.EulaDialog
 import timber.log.Timber
 
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController)
 
         // set Firebase key to indicate a user's host status
-        FirebaseCrashlytics.getInstance().setCustomKey("isHost", false)
+        CrashlyticsHelper.setCustomKey(CrashlyticsHelper.FirebaseKeys.IS_HOST, false)
     }
 
     override fun onStart() {
