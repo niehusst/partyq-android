@@ -48,7 +48,7 @@ object CompressionUtility {
 
             output.toByteArray()
         } catch (ex: Exception) {
-            Timber.e("Compression error: $ex")
+            Timber.e(ex)
             // something went wrong trying to compress, so we'll just send it uncompressed
             inputString.toByteArray(Charsets.UTF_8)
         }
@@ -74,7 +74,7 @@ object CompressionUtility {
             val decompressedBytes = output.toByteArray()
             String(decompressedBytes, 0, decompressedBytes.size, Charsets.UTF_8)
         } catch (ex: Exception) {
-            Timber.e("Decompression error: $ex")
+            Timber.e(ex)
             // something went wrong decompressing, so just create String directly from bytes
             String(compressedBytes, Charsets.UTF_8)
         }

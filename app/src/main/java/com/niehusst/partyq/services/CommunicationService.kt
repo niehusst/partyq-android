@@ -37,6 +37,7 @@ import com.niehusst.partyq.utility.PayloadBuilder.buildUpdatedQueuePayload
 import com.niehusst.partyq.network.models.connection.Type
 import com.niehusst.partyq.repository.SpotifyRepository
 import com.niehusst.partyq.utility.CompressionUtility.decompress
+import com.niehusst.partyq.utility.CrashlyticsHelper
 import com.niehusst.partyq.utility.PayloadBuilder.buildPagedSearchPayload
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -95,10 +96,10 @@ object CommunicationService {
                 override fun onConnectionInitiated(endpointId: String, connectionInfo: ConnectionInfo) {
                     // verify matching party code before accepting connection
                     if (connectionInfo.endpointName == partyCode) {
-                        Timber.d("Accepting connection to $endpointId")
+                        Timber.i("Accepting connection to $endpointId")
                         connectionsClient.acceptConnection(endpointId, payloadHandlerCallBacks)
                     } else {
-                        Timber.d("Rejecting connection due to mismatched party code ${connectionInfo.endpointName}")
+                        Timber.i("Rejecting connection due to mismatched party code ${connectionInfo.endpointName}")
                         connectionsClient.rejectConnection(endpointId)
                     }
                 }
@@ -122,7 +123,7 @@ object CommunicationService {
             },
             advertOptions
         ).addOnFailureListener { Timber.e("Advertising failed to start: $it") }
-            .addOnSuccessListener { Timber.d("Started advertising successfully") }
+            .addOnSuccessListener { Timber.i("Started advertising successfully") }
         // TODO: add on failure listener to stop app if we cant connect people to party??
     }
 
@@ -141,12 +142,12 @@ object CommunicationService {
                 override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
                     // double check verify that party codes match before attempting connection
                     if (info.endpointName == inputPartyCode) {
-                        Timber.d("Attempting connection to $endpointId")
+                        Timber.i("Attempting connection to $endpointId")
                         connectionsClient.requestConnection(
                             inputPartyCode,
                             endpointId,
                             buildGuestConnectionLifecycleCallback(inputPartyCode)
-                        ).addOnSuccessListener { Timber.d("Connection requested successfully") }
+                        ).addOnSuccessListener { Timber.i("Connection requested successfully") }
                             .addOnFailureListener { Timber.e("Connection request failed: $it") }
                     }
                 }
@@ -158,7 +159,7 @@ object CommunicationService {
             },
             discoverOptions
         ).addOnFailureListener { Timber.e("Failed to start discovery: $it") }
-            .addOnSuccessListener { Timber.d("Discovery started successfully") }
+            .addOnSuccessListener { Timber.i("Discovery started successfully") }
 
         // timeout discovery so guest isn't left hanging if no host is found
         startDiscoveryTimer()
@@ -170,7 +171,7 @@ object CommunicationService {
                 // only connect if the party codes are the same
                 if (info.endpointName == inputPartyCode) {
                     connectionsClient.acceptConnection(endpointId, payloadHandlerCallBacks)
-                        .addOnSuccessListener { Timber.d("Connection accepted successfully") }
+                        .addOnSuccessListener { Timber.i("Connection accepted successfully") }
                         .addOnFailureListener { Timber.e("Accepting connection failed: $it") }
                 }
             }
@@ -311,7 +312,8 @@ object CommunicationService {
                         SpotifyRepository.getSearchTrackResults(query)
                     }
                 } catch (ex: Throwable) {
-                    Timber.e("Error doing search for $requestingEndpointId:\n $ex")
+                    Timber.e("Error doing search query \"$query\" for endpoint $requestingEndpointId:\n $ex")
+                    CrashlyticsHelper.recordException(ex)
                     // make sure guest gets a response back; null indicating error
                     null
                 }
@@ -363,7 +365,6 @@ object CommunicationService {
             if (payload.type == BYTES) {
                 // decompress payload and rebuild the ConnectionPayload obj
                 val decompressedPayload = payload.asBytes()?.let { decompress(it) }
-                Timber.d("Received payload $decompressedPayload")
                 val parsedPayload = decompressedPayload?.let { json ->
                     PayloadBuilder.reconstructFromJson(
                         json,

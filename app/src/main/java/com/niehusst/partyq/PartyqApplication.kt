@@ -17,13 +17,18 @@
 package com.niehusst.partyq
 
 import android.app.Application
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.niehusst.partyq.utility.CrashlyticsHelper
 import timber.log.Timber
 
 class PartyqApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        if (BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
+            CrashlyticsHelper.instance = FirebaseCrashlytics.getInstance()
+            Timber.plant(CrashlyticsHelper.getCrashReportingTree())
+        } else {
             Timber.plant(Timber.DebugTree())
         }
     }

@@ -64,7 +64,7 @@ object SpotifyPlayerService {
                 connectionParams,
                 object : Connector.ConnectionListener {
                     override fun onConnected(appRemote: SpotifyAppRemote) {
-                        Timber.d("Connected to Spotify!")
+                        Timber.i("Connected to Spotify!")
                         spotifyAppRemote = appRemote
                         updateUserHasSpotifyPremium()
                         startAutoPlay(context)

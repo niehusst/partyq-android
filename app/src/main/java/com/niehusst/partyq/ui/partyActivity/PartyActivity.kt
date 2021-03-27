@@ -217,6 +217,7 @@ class PartyActivity : AppCompatActivity() {
      *                  the guest voluntarily left the party (false). Indicates which text to show.
      */
     private fun disconnect(forced: Boolean) {
+        Timber.i("Disconnected from party. By force: $forced")
         // clean up party state
         viewModel.resetAllServices(this)
 
