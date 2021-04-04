@@ -14,7 +14,7 @@ android {
         applicationId "com.niehusst.partyq"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 3
+        versionCode 4
         versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
