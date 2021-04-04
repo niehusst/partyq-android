@@ -78,7 +78,11 @@ object SpotifyRepository {
         } else {
             // the Nearby Connections callbacks (in CommunicationService) will redirect the
             // results to SearchResultsHandler for us
-            CommunicationService.sendQuery(query)
+            if (isPaged) {
+                CommunicationService.sendPagedSearch(query)
+            } else {
+                CommunicationService.sendQuery(query)
+            }
         }
     }
 
