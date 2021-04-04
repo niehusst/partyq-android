@@ -72,6 +72,7 @@ class NowPlayingFragment : Fragment() {
             Glide.with(this)
                 .load(item.album.images?.firstOrNull()?.url)
                 .error(R.drawable.album)
+                .placeholder(R.drawable.album)
                 .fitCenter()
                 .into(binding.albumImage)
 

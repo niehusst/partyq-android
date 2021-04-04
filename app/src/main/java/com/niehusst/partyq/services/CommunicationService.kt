@@ -124,7 +124,7 @@ object CommunicationService {
             advertOptions
         ).addOnFailureListener { Timber.e("Advertising failed to start: $it") }
             .addOnSuccessListener { Timber.i("Started advertising successfully") }
-        // TODO: add on failure listener to stop app if we cant connect people to party??
+        // TODO: add on failure listener to alert user/try again if we cant connect people to party?
     }
 
     /**

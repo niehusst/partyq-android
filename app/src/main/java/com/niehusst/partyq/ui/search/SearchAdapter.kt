@@ -94,6 +94,7 @@ class SearchAdapter(
             Glide.with(binding.root)
                 .load(item.album.images?.lastOrNull()?.url)
                 .error(R.drawable.album)
+                .placeholder(R.drawable.album)
                 .fitCenter()
                 .into(binding.thumbnail)
 
