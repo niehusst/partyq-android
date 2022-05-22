@@ -89,6 +89,7 @@ jobs:
 workflows:
   branch-validation:
     jobs:
+      - debug
       - build
       - lint:
           requires:
