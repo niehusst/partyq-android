@@ -33,9 +33,9 @@ jobs:
     <<: *defaults
     steps:
       - run:
-        name: debugging env
-        command: |
-            echo "CIRCLE_REPOSITORY_URL"
+          name: debugging
+          command: |
+            echo "$CIRCLE_REPOSITORY_URL"
             cat ~/.gitconfig
       - checkout
   build:
