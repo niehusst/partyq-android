@@ -29,6 +29,15 @@ attach_workspace: &attach_workspace
 
 version: 2.1
 jobs:
+  debug:
+    <<: *defaults
+    steps:
+      - run:
+        name: debugging env
+        command: |
+            echo "CIRCLE_REPOSITORY_URL"
+            cat ~/.gitconfig
+      - checkout
   build:
     <<: *defaults
     steps:
