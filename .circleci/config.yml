@@ -1,96 +1,11 @@
-aliases:
-  - &root_dir
-    ~/code
-
-  - &set_secrets_from_env_vars
-    # write circleci env vars into local files
-    name: Generate secrets files
-    command: |
-      echo "SPOTIFY_CLIENT_ID="$SPOTIFY_CLIENT_ID > apikey.properties
-      echo $PARTYQ_KEYSTORE_FILE | base64 --decode > partyq_release.jks
-      echo $GOOGLE_SERVICES_FILE | base64 --decode > app/google-services.json
-
-defaults: &defaults
-  working_directory: *root_dir
-  docker: # pins a docker image that runs android w/ jdk8
-    - image: circleci/android:api-30-node #@sha256:7d23b280b7d1994ce9f9e8ebd124280d12d94fce531d9a6418ad3c4c68cb29d3
-  environment:
-    JVM_OPTS: -Xmx3200m -XX:+IgnoreUnrecognizedVMOptions
-    GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.workers.max=2
-
-restore_deps: &restore_deps
-  restore_cache:
-    key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-
-attach_workspace: &attach_workspace
-  attach_workspace:
-    at: *root_dir
-
-add_git_fingerprint: &add_git_fingerprint
-  add_ssh_keys:
-    fingerprints:
-      - "cf:5b:4f:e1:b1:ee:67:ae:de:0e:5d:af:1a:6d:9d:bf"
-
 version: 2.1
-jobs:
-  build:
-    <<: *defaults
-    steps:
-      - *add_git_fingerprint
-      - checkout
-      - *restore_deps
-      - run: *set_secrets_from_env_vars
-      - run:
-          name: Download Dependencies
-          command: ./gradlew androidDependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
-  lint:
-    <<: *defaults
-    steps:
-      - *add_git_fingerprint
-      - checkout
-      - *attach_workspace
-      - *restore_deps
-      - run: *set_secrets_from_env_vars
-      - run:
-          name: Lint
-          command: ./gradlew lint --stacktrace --status
-
-  unit-tests:
-    <<: *defaults
-    parallelism: 2
-    steps:
-      - *add_git_fingerprint
-      - checkout
-      - *attach_workspace
-      - *restore_deps
-      - run: *set_secrets_from_env_vars
-      - run:
-          name: Run Unit Tests
-          command: ./gradlew test --stacktrace
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
-          when: always
-      - store_test_results:
-          path: ~/test-results
-      - store_artifacts:
-          path: ~/test-results/junit
-
-# See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
-
+orbs:
+  android: circleci/android@1.0.3
 workflows:
-  branch-validation:
+  debug:
     jobs:
-      - build
-      - lint:
-          requires:
-            - build
-      - unit-tests:
-          requires:
-            - build
+      - checkout
+      - run:
+          name: test if checkout works
+          command: echo "did it work?"
+
