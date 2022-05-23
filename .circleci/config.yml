@@ -35,9 +35,11 @@ jobs:
       - run:
           name: debugging
           command: |
+            set +e
             echo "$CIRCLE_REPOSITORY_URL"
             DIRS=$(find ~ -name ".gitconfig")
             cat "$DIRS"
+            set -e
       - checkout
   build:
     <<: *defaults
