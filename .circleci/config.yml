@@ -1,11 +1,18 @@
 version: 2.1
 orbs:
   android: circleci/android@1.0.3
-workflows:
+jobs:
   debug:
-    jobs:
+    machine:
+      image: android:202102-01
+    resource_class: large
+    steps:
       - checkout
       - run:
           name: test if checkout works
           command: echo "did it work?"
+workflows:
+  debugging:
+    jobs:
+      - debug
 
