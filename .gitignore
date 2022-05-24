@@ -75,7 +75,7 @@ fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
 # google play service account key for fastlane
-pc-api-6893263921373479988-596-38c226d19a8f.json
+api-play-store-key.json
 
 # Version control
 vcs.xml

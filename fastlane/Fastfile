@@ -10,8 +10,7 @@
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
 
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
+update_fastlane
 
 default_platform(:android)
 
@@ -21,13 +20,21 @@ platform :android do
     gradle(task: "test")
   end
 
+  desc "Build"
+  lane :build do
+    gradle(task: "clean assembleRelease")
+  end
+
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
-    gradle(task: "clean assembleRelease")
-    crashlytics
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
+    build
+
+    firebase_app_distribution(
+      app: ENV['FIREBASE_APP_ID'],
+      firebase_cli_token: ENV['FIREBASE_TOKEN'],
+      groups: "group-one",
+      release_notes: "Lots of amazing new features to test out!"
+    )
   end
 
   desc "Deploy a new version to the Google Play"
