@@ -10,10 +10,11 @@ aliases:
       echo $PARTYQ_KEYSTORE_FILE | base64 --decode > partyq_release.jks
       echo $GOOGLE_SERVICES_FILE | base64 --decode > app/google-services.json
 
+orbs:
+  android: circleci/android@1.0.3
+
 defaults: &defaults
   working_directory: *root_dir
-  docker:
-    - image: circleci/android@1.0.3
   machine:
       image: android:202102-01
   resource_class: large
