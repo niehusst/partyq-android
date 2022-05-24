@@ -52,6 +52,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
         release {
             minifyEnabled true
             shrinkResources true
@@ -110,6 +114,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    testImplementation project(path: ':app')
+    androidTestImplementation project(path: ':app')
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
 
     // Architecture deps
