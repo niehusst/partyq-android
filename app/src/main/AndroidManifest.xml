@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.niehusst.partyq">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Required for Nearby Connections API -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -24,7 +23,8 @@
             android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".ui.partyEnd.PartyEndActivity"/>
         <activity android:name=".ui.remediation.RemediationActivity"/>
-        <activity android:name=".ui.mainActivity.MainActivity">
+        <activity android:name=".ui.mainActivity.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
