@@ -16,7 +16,7 @@ defaults: &defaults
     - image: circleci/android@1.0.3
   machine:
       image: android:202102-01
-    resource_class: large
+  resource_class: large
   environment:
     JVM_OPTS: -Xmx3200m -XX:+IgnoreUnrecognizedVMOptions
     GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.workers.max=2
