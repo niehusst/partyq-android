@@ -133,13 +133,13 @@ workflows:
           type: approval
           requires:
             - unit-tests
-      - deploy-beta
+      - deploy-beta:
           requires:
             - hold-for-beta
       - hold-for-release:
           type: approval
           requires:
             - deploy-beta
-      - deploy-release
+      - deploy-release:
           requires:
             - hold-for-release
