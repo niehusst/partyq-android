@@ -86,6 +86,36 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
 
+  deploy-beta:
+    <<: *defaults
+    steps:
+      - *add_git_fingerprint
+      - checkout
+      - *attach_workspace
+      - *restore_deps
+      - run: *set_secrets_from_env_vars
+      - run: 
+          name: Install fastlane
+          command: bundle install
+      - run:
+          name: Fastlane deploy
+          command: bundle exec fastlane beta
+
+  deploy-release:
+    <<: *defaults
+    steps:
+      - *add_git_fingerprint
+      - checkout
+      - *attach_workspace
+      - *restore_deps
+      - run: *set_secrets_from_env_vars
+      - run: 
+          name: Install fastlane
+          command: bundle install
+      - run:
+          name: Fastlane deploy
+          command: bundle exec fastlane deploy
+
 # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
 
 workflows:
@@ -98,3 +128,17 @@ workflows:
       - unit-tests:
           requires:
             - build
+      - hold-for-beta:
+          type: approval
+          requires:
+            - unit-tests
+      - deploy-beta
+          requires:
+            - hold-for-beta
+      - hold-for-release:
+          type: approval
+          requires:
+            - deploy-beta
+      - deploy-release
+          requires:
+            - hold-for-release
