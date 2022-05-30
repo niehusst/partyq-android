@@ -85,6 +85,6 @@ class PartyConnectFragmentTest {
 
     private fun mockSpotify() {
         mockkObject(SpotifyAuthRepository)
-        every { SpotifyAuthRepository.authenticateWithSpotfiy(any(), any(), any()) } returns Unit
+        every { SpotifyAuthRepository.authenticateWithSpotfiy(any()) } returns Unit
     }
 }

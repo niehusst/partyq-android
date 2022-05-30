@@ -7,13 +7,19 @@ aliases:
     name: Generate secrets files
     command: |
       echo "SPOTIFY_CLIENT_ID="$SPOTIFY_CLIENT_ID > apikey.properties
-      echo $PARTYQ_KEYSTORE_FILE | base64 --decode > partyq_release.jks
-      echo $GOOGLE_SERVICES_FILE | base64 --decode > app/google-services.json
+      echo "$PARTYQ_KEYSTORE_FILE" | base64 --decode > app/partyq_release.jks
+      echo "$GOOGLE_SERVICES_FILE" | base64 --decode > app/google-services.json
+      echo "$PLAY_STORE_SERVICE_ACCOUNT_FILE" | base64 --decode > api-play-store-key.json
+      echo "$KEYS_C_FILE" | base64 --decode > app/src/main/jni/keys.c
+
+orbs:
+  android: circleci/android@1.0.3
 
 defaults: &defaults
   working_directory: *root_dir
-  docker: # pins a docker image that runs android w/ jdk8
-    - image: circleci/android@sha256:7d23b280b7d1994ce9f9e8ebd124280d12d94fce531d9a6418ad3c4c68cb29d3
+  machine:
+      image: android:202102-01
+  resource_class: large
   environment:
     JVM_OPTS: -Xmx3200m -XX:+IgnoreUnrecognizedVMOptions
     GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.workers.max=2
@@ -26,12 +32,17 @@ attach_workspace: &attach_workspace
   attach_workspace:
     at: *root_dir
 
+add_git_fingerprint: &add_git_fingerprint
+  add_ssh_keys:
+    fingerprints:
+      - "cf:5b:4f:e1:b1:ee:67:ae:de:0e:5d:af:1a:6d:9d:bf"
 
 version: 2.1
 jobs:
   build:
     <<: *defaults
     steps:
+      - *add_git_fingerprint
       - checkout
       - *restore_deps
       - run: *set_secrets_from_env_vars
@@ -45,6 +56,7 @@ jobs:
   lint:
     <<: *defaults
     steps:
+      - *add_git_fingerprint
       - checkout
       - *attach_workspace
       - *restore_deps
@@ -57,6 +69,7 @@ jobs:
     <<: *defaults
     parallelism: 2
     steps:
+      - *add_git_fingerprint
       - checkout
       - *attach_workspace
       - *restore_deps
@@ -75,6 +88,36 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
 
+  deploy-beta:
+    <<: *defaults
+    steps:
+      - *add_git_fingerprint
+      - checkout
+      - *attach_workspace
+      - *restore_deps
+      - run: *set_secrets_from_env_vars
+      - run: 
+          name: Install fastlane
+          command: bundle install
+      - run:
+          name: Fastlane deploy
+          command: bundle exec fastlane beta
+
+  deploy-release:
+    <<: *defaults
+    steps:
+      - *add_git_fingerprint
+      - checkout
+      - *attach_workspace
+      - *restore_deps
+      - run: *set_secrets_from_env_vars
+      - run: 
+          name: Install fastlane
+          command: bundle install
+      - run:
+          name: Fastlane deploy
+          command: bundle exec fastlane deploy
+
 # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
 
 workflows:
@@ -87,3 +130,17 @@ workflows:
       - unit-tests:
           requires:
             - build
+      - hold-for-beta:
+          type: approval
+          requires:
+            - unit-tests
+      - deploy-beta:
+          requires:
+            - hold-for-beta
+      - hold-for-release:
+          type: approval
+          requires:
+            - deploy-beta
+      - deploy-release:
+          requires:
+            - hold-for-release

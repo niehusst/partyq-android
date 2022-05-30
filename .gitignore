@@ -61,7 +61,7 @@ keystore.properties
 .cxx/
 
 # Google Services (e.g. APIs or Firebase)
-#google-services.json
+google-services.json
 
 # Freeline
 freeline.py
@@ -74,6 +74,8 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+# google play service account key for fastlane
+api-play-store-key.json
 
 # Version control
 vcs.xml
