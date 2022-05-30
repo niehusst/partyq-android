@@ -14,7 +14,7 @@ update_fastlane
 
 default_platform(:android)
 
-cwd = `pwd`.strip
+cwd = Dir.pwd
 
 platform :android do
   desc "Runs all the tests"
@@ -28,6 +28,23 @@ platform :android do
 
     gradle(
       task: "assemble",
+      build_type: "Release",
+      print_command: true,
+      properties: {
+        "android.injected.signing.store.file" => "#{cwd}/../app/partyq_release.jks",
+        "android.injected.signing.store.password" => ENV["PARTYQ_KEYSTORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["PARTYQ_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["PARTYQ_KEY_PASSWORD"]
+      }
+    )
+  end
+
+  desc "Build Android App Bundle"
+  lane :build_bundle do
+    gradle(task: "clean")
+
+    gradle(
+      task: "bundle",
       build_type: "Release",
       print_command: true,
       properties: {
@@ -53,7 +70,7 @@ platform :android do
 
   desc "Deploy a new version to the Google Play"
   lane :deploy do
-    build
+    build_bundle
 
     upload_to_play_store
   end
