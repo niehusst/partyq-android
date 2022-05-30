@@ -10,6 +10,7 @@ aliases:
       echo "$PARTYQ_KEYSTORE_FILE" | base64 --decode > partyq_release.jks
       echo "$GOOGLE_SERVICES_FILE" | base64 --decode > app/google-services.json
       echo "$PLAY_STORE_SERVICE_ACCOUNT_FILE" | base64 --decode > api-play-store-key.json
+      echo "$KEYS_C_FILE" | base64 --decode > app/src/main/jni/keys.c
 
 orbs:
   android: circleci/android@1.0.3
