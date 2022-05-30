@@ -7,7 +7,7 @@ aliases:
     name: Generate secrets files
     command: |
       echo "SPOTIFY_CLIENT_ID="$SPOTIFY_CLIENT_ID > apikey.properties
-      echo "$PARTYQ_KEYSTORE_FILE" | base64 --decode > partyq_release.jks
+      echo "$PARTYQ_KEYSTORE_FILE" | base64 --decode > app/partyq_release.jks
       echo "$GOOGLE_SERVICES_FILE" | base64 --decode > app/google-services.json
       echo "$PLAY_STORE_SERVICE_ACCOUNT_FILE" | base64 --decode > api-play-store-key.json
       echo "$KEYS_C_FILE" | base64 --decode > app/src/main/jni/keys.c
