@@ -14,6 +14,8 @@ update_fastlane
 
 default_platform(:android)
 
+cwd = `pwd`.strip
+
 platform :android do
   desc "Runs all the tests"
   lane :test do
@@ -22,7 +24,19 @@ platform :android do
 
   desc "Build"
   lane :build do
-    gradle(task: "clean assembleRelease")
+    gradle(task: "clean")
+
+    gradle(
+      task: "assemble",
+      build_type: "Release",
+      print_command: true,
+      properties: {
+        "android.injected.signing.store.file" => "#{cwd}/../app/partyq_release.jks",
+        "android.injected.signing.store.password" => ENV["PARTYQ_KEYSTORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["PARTYQ_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["PARTYQ_KEY_PASSWORD"]
+      }
+    )
   end
 
   desc "Submit a new Beta Build to Crashlytics Beta"
