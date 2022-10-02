@@ -1,4 +1,4 @@
-# partyq
+# partyq Android
 
 [![niehusst](https://circleci.com/gh/niehusst/partyq-android.svg?style=svg)](https://app.circleci.com/pipelines/github/niehusst/partyq-android)
 
